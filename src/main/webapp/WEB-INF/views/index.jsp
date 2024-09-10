@@ -21,7 +21,8 @@
     <table id="content">
         <tr>
             <td>
-<%--                <jsp:include page="${pageContext.request.contextPath}" />--%>
+                <jsp:include page="${contentPage}" />
+                <jsp:include page="mainpage.jsp" />
             </td>
         </tr>
     </table>
