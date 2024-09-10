@@ -21,7 +21,7 @@
     <table id="content">
         <tr>
             <td>
-                <jsp:include page="${pageContext.request.contextPath}" />
+<%--                <jsp:include page="${pageContext.request.contextPath}" />--%>
             </td>
         </tr>
     </table>
