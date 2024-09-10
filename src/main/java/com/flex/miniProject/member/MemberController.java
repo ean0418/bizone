@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
     @RequestMapping(value = "/member", method= RequestMethod.GET)
     public String member(HttpServletRequest req) {
-        req.setAttribute("contentPage", "member/member.jsp");
-        return "index";
+        req.setAttribute("contentPage", "../member/member.jsp");
+        return "main/main";
     }
 }

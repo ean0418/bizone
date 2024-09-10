@@ -12,7 +12,7 @@ public class BoardController {
 
     @RequestMapping(value="/board", method=RequestMethod.GET)
     public String board(HttpServletRequest req) {
-        req.setAttribute("contentPage", "WEB-INF/views/board/board.jsp");
-        return "index";
+        req.setAttribute("contentPage", "../board/board.jsp");
+        return "main/main";
     }
 }

@@ -21,7 +21,7 @@
     <table id="content">
         <tr>
             <td>
-<%--                <jsp:include page="${requestScope.contentPage}" />--%>
+                <a href="/main"><img src="resources/image/map.png" alt=""/></a>
             </td>
         </tr>
     </table>
