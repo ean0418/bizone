@@ -14,21 +14,21 @@
     <table id="header">
         <tr>
             <td>
-                <jsp:include page="header.jsp" />
+                <jsp:include page="WEB-INF/views/header.jsp" />
             </td>
         </tr>
     </table>
     <table id="content">
         <tr>
             <td>
-                <jsp:include page="${pageContext.request.contextPath}" />
+<%--                <jsp:include page="${requestScope.contentPage}" />--%>
             </td>
         </tr>
     </table>
     <table id="footer">
         <tr>
             <td>
-                <jsp:include page="footer.jsp" />
+                <jsp:include page="WEB-INF/views/footer.jsp" />
             </td>
         </tr>
     </table>

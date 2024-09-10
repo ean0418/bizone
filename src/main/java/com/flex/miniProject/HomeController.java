@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController {
-    @RequestMapping(value="/")
+    @RequestMapping("/")
     public String home(HttpServletRequest req) {
         req.setAttribute("contentPage", "mainpage.jsp");
         return "index";
