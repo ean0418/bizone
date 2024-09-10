@@ -22,7 +22,6 @@
         <tr>
             <td>
                 <jsp:include page="${contentPage}" />
-                <jsp:include page="mainpage.jsp" />
             </td>
         </tr>
     </table>
