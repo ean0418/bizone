@@ -28,7 +28,15 @@ public class MemberDAO {
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
+            // 생일 파라미터 가져오기
+            String bm_birthday = req.getParameter("bm_birthday");
+
+            // bm_birthday가 null이 아니고 빈 값이 아닐 때만 파싱 시도
+            if (bm_birthday != null && !bm_birthday.trim().isEmpty()) {
+                m.setBm_birthday(sdf.parse(req.getParameter(bm_birthday)));
+            } else {
+                m.setBm_birthday(null);  // 생일 값이 없는 경우 null로 설정
+            }
             m.setBm_mail(req.getParameter("bm_mail"));
 
             String bm_addr1 = req.getParameter("bm_addr1");
