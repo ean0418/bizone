@@ -1,10 +1,7 @@
 package com.flex.miniProject.member;
 import org.apache.ibatis.session.SqlSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -21,8 +18,10 @@ public class MemberDAO {
         this.ss = ss;
     }
 
-    public void signup(bizone_member m, HttpServletRequest req) {
+    public void signup(Bizone_member m, HttpServletRequest req) {
         try {
+
+            System.out.println(req.getParameter("bm_id"));
             m.setBm_id(req.getParameter("bm_id"));
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
@@ -38,6 +37,7 @@ public class MemberDAO {
                 m.setBm_birthday(null);  // 생일 값이 없는 경우 null로 설정
             }
             m.setBm_mail(req.getParameter("bm_mail"));
+            System.out.println(m.getBm_id());
 
             String bm_addr1 = req.getParameter("bm_addr1");
             String bm_addr2 = req.getParameter("bm_addr2");
@@ -57,15 +57,15 @@ public class MemberDAO {
     }
 
 
-    public Members memberIdCheck(bizone_member m) {
+    public Members memberIdCheck(Bizone_member m) {
         return new Members(ss.getMapper(MemberMapper.class).getMemberById(m));
     }
 
-    public void login(bizone_member m, HttpServletRequest req) {
+    public void login(Bizone_member m, HttpServletRequest req) {
         try {
-            List<bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
+            List<Bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
             if (members.size() != 0) {
-                bizone_member dbM = members.get(0);
+                Bizone_member dbM = members.get(0);
 
 
                 if (dbM.getBm_pw().equals(m.getBm_pw())) {
@@ -97,7 +97,7 @@ public class MemberDAO {
 
     public void delete(HttpServletRequest req) {
         try {
-            bizone_member m = (bizone_member) req.getSession().getAttribute("loginMember");
+            Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
             if (ss.getMapper(MemberMapper.class).deleteMember(m) == 1) {
                 req.setAttribute("r", "탈퇴 성공");
                 req.getSession().setAttribute("loginMember", null);
@@ -114,7 +114,7 @@ public class MemberDAO {
 
     public void update(HttpServletRequest req) {
 
-        bizone_member m = (bizone_member) req.getSession().getAttribute("loginMember");
+        Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
 
 
 
