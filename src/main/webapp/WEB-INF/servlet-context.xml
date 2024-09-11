@@ -20,6 +20,9 @@
     <!-- 컴포넌트 스캔 -->
     <context:component-scan base-package="com.flex.miniProject" />
 
+    <!-- 추가함-세훈 -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/" />

@@ -21,7 +21,7 @@
 <table id="content">
   <tr>
     <td>
-      <jsp:include page="${contentPage}" />
+      <div><jsp:include page="${contentPage}" /></div>
     </td>
   </tr>
 </table>
