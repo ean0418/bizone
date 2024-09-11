@@ -8,6 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>회원 가입</title>
     <style>
         body {
@@ -69,10 +70,11 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="member.signup" method="post">
+    <form action="member.signup">
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
+                    <label for="bm_id">ID</label>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
                     <div id="msg"></div>
@@ -86,7 +88,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input name="bm_pw_confirm" placeholder="PASSWORD CHECK" autocomplete="off"
+                    <input id="bm_pw_confirm" placeholder="PASSWORD CHECK" autocomplete="off"
                            maxlength="10" class="i1" type="password">
                 </td>
             </tr>

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 public class MemberController {
@@ -18,12 +19,13 @@ public class MemberController {
         return "main/main";
     }
 
-    @RequestMapping(value = "/member.signup", method = RequestMethod.POST)
-    public String doSignup(@RequestParam(value = "bm_id", required = false) String id, Bizone_member m, HttpServletRequest req) {
+    @RequestMapping(value = "/member.signup", method = RequestMethod.GET)
+    public String doSignup(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws Exception {
+        System.out.println(m);
+        req.setCharacterEncoding("UTF-8");
+        res.setCharacterEncoding("UTF-8");
         System.out.println(m.getBm_id());
-        System.out.println(id);
-        mDAO.signup(m, req);
-        System.out.println(m.getBm_id());
+        mDAO.signupMember(m);
         req.setAttribute("contentPage", "../member/success.jsp");
         return "main/main";
     }

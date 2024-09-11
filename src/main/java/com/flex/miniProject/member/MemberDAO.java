@@ -1,57 +1,25 @@
 package com.flex.miniProject.member;
 import org.apache.ibatis.session.SqlSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
 public class MemberDAO {
 
+    @Autowired
+    private SqlSession ss;
 
-    private final SqlSession ss;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-    public MemberDAO(SqlSession ss) {
-        this.ss = ss;
-    }
-
-    public void signup(Bizone_member m, HttpServletRequest req) {
+    public void signupMember(Bizone_member m) {
         try {
-
-            System.out.println(req.getParameter("bm_id"));
-            m.setBm_id(req.getParameter("bm_id"));
-            m.setBm_pw(req.getParameter("bm_pw"));
-            m.setBm_name(req.getParameter("bm_name"));
-            m.setBm_name(req.getParameter("bm_nickname"));
-            m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-            // 생일 파라미터 가져오기
-            String bm_birthday = req.getParameter("bm_birthday");
-
-            // bm_birthday가 null이 아니고 빈 값이 아닐 때만 파싱 시도
-            if (bm_birthday != null && !bm_birthday.trim().isEmpty()) {
-                m.setBm_birthday(sdf.parse(req.getParameter(bm_birthday)));
-            } else {
-                m.setBm_birthday(null);  // 생일 값이 없는 경우 null로 설정
-            }
-            m.setBm_mail(req.getParameter("bm_mail"));
+            System.out.println(m);
             System.out.println(m.getBm_id());
-
-            String bm_addr1 = req.getParameter("bm_addr1");
-            String bm_addr2 = req.getParameter("bm_addr2");
-            String bm_addr3 = req.getParameter("bm_addr3");
-            String bm_address = bm_addr2 + "!" + bm_addr3 + "!" + bm_addr1;
-            m.setBm_address(bm_address);
-
-
-            if (ss.getMapper(MemberMapper.class).signupMember(m) == 1) {
-                req.setAttribute("r", "가입 성공");
-            }
+            ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("r", "가입 실패");
         }
 
     }
@@ -124,7 +92,7 @@ public class MemberDAO {
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
+//            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
             m.setBm_mail(req.getParameter("bm_mail"));
 
             String bm_addr1 = req.getParameter("bm_addr1");

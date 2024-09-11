@@ -1,6 +1,7 @@
 package com.flex.miniProject.member;
 
-import java.util.Date;
+
+import java.sql.Date;
 
 public class Bizone_member {
     private String bm_id;
