@@ -69,7 +69,7 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="member.signup" method="post">
+    <form action="member.signup" method="post" enctype="multipart/form-data">
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
