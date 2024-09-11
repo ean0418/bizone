@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flex.miniProject.member.MemberMapper">
+    <insert id="signupMember" parameterType="com.flex.miniProject.member.bizone_member">
+        insert into bizone_member values(#{bm_id}, #{bm_pw}, #{bm_name}, #{bm_nickname}, #{bm_address}, #{bm_phoneNum}, #{bm_birthday}, #{bm_mail})
+    </insert>
+    <select id="getMemberById" parameterType="com.flex.miniProject.member.bizone_member" resultType="com.flex.miniProject.member.bizone_member">
+        select * from bizone_member where bm_id = #{bm_id}
+    </select>
+    <delete id="deleteMember" parameterType="com.flex.miniProject.member.bizone_member">
+        delete from bizone_member where bm_id = #{bm_id}
+    </delete>
+    <update id="updateMember" parameterType="com.flex.miniProject.member.bizone_member">
+        update bizone_member set bm_pw = #{bm_pw}, bm_name = #{bm_name},bm_nickname = #{bm_nickname}, bm_address = #{bm_address}, bm_phoneNum = #{bm_phoneNum}, bm_mail = #{bm_mail} where bm_id = #{bm_id}
+    </update>
+</mapper>
