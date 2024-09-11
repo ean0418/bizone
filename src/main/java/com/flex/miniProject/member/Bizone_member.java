@@ -2,7 +2,7 @@ package com.flex.miniProject.member;
 
 import java.util.Date;
 
-public class bizone_member {
+public class Bizone_member {
     private String bm_id;
     private String bm_pw;
     private String bm_name;
@@ -12,11 +12,11 @@ public class bizone_member {
     private Date bm_birthday;
     private String bm_mail;
 
-    public bizone_member() {
+    public Bizone_member() {
 
     }
 
-    public bizone_member(String bm_id, String bm_pw, String bm_name, String bm_nickname, String bm_address, String bm_phoneNum, Date bm_birthday, String bm_mail) {
+    public Bizone_member(String bm_id, String bm_pw, String bm_name, String bm_nickname, String bm_address, String bm_phoneNum, Date bm_birthday, String bm_mail) {
         this.bm_id = bm_id;
         this.bm_pw = bm_pw;
         this.bm_name = bm_name;
