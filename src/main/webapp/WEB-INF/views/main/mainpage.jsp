@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>상권분석</title>
+    <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=695af2d9d27326c791e215b580236791&libraries=services,clusterer"></script>
     <style>
@@ -70,105 +71,35 @@
             margin: 0;
             font-size: 24px;
         }
+
+        .overlaybox {
+            background-color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        #selectedArea {
+            margin-top: 10px;
+        }
+
+        button {
+            margin-bottom: 20px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
     </style>
-    <script>
-        var map = null,
-            customOverlay = new kakao.maps.CustomOverlay({}),
-            kkoMap = {
-                initKko: function (o) {
-                    var e = o.mapId,
-                        t = document.getElementById(e),
-                        a = {
-                            center: new kakao.maps.LatLng(37.5665, 126.9780), // 서울시 중심
-                            level: 11, // 초기 확대 레벨 설정
-                        };
-                    map = new kakao.maps.Map(t, a);
-
-                    // GeoJSON 파일을 로드하여 지도에 다각형 표시
-                    $.getJSON("/resources/data/HangJeongDong_ver20230701.geojson", function (o) {
-                        let e = $(o.features);
-                        e.each(function () {
-                            kkoMap.getPolycode($(this)[0]);
-                        });
-                    });
-                },
-                getPolycode: function (o) {
-                    var e = [],
-                        t = o.geometry;
-                    if ("Polygon" == t.type) {
-                        var a = t.coordinates[0],
-                            n = { name: o.properties.adm_nm, path: [] };
-                        for (var s in a)
-                            e.push({ x: p[s][1], y: p[s][0] }),
-                                n.path.push(new kakao.maps.LatLng(a[s][1], a[s][0]));
-                        kkoMap.setPolygon(n, e);
-                    } else if ("MultiPolygon" == t.type)
-                        for (var s in t.coordinates) {
-                            var p = t.coordinates[s],
-                                n = { name: o.properties.adm_nm, path: [] };
-                            for (var r in p[0])
-                                e.push({ x: p[0][r][1], y: p[0][r][0] }),
-                                    n.path.push(new kakao.maps.LatLng(p[0][r][1], p[0][r][0]));
-                            kkoMap.setPolygon(n, e);
-                        }
-                },
-                setPolygon: function (o, e) {
-                    var t = new kakao.maps.Polygon({
-                        name: o.name,
-                        path: o.path,
-                        strokeWeight: 2,
-                        strokeColor: "#004c80",
-                        strokeOpacity: 0.8,
-                        fillColor: "#fff",
-                        fillOpacity: 0,
-                    });
-
-                    // 마우스 오버시 색상 변경 및 오버레이 표시
-                    kakao.maps.event.addListener(t, "mouseover", function (a) {
-                        t.setOptions({ fillColor: "#09f" }),
-                            customOverlay.setPosition(kkoMap.centroid(e)),
-                            customOverlay.setContent(
-                                "<div class='overlaybox'>" + o.name + "</div>"
-                            ),
-                            customOverlay.setMap(map);
-                    });
-
-                    // 마우스 아웃시 색상 복구 및 오버레이 숨기기
-                    kakao.maps.event.addListener(t, "mouseout", function () {
-                        t.setOptions({ fillColor: "#fff" }), customOverlay.setMap(null);
-                    });
-
-                    // 행정동 클릭시 지도 확대
-                    kakao.maps.event.addListener(t, "click", function () {
-                        map.setLevel(8);  // 클릭 시 확대 레벨 설정
-                        map.setCenter(kkoMap.centroid(e)); // 클릭한 영역을 중심으로 설정
-                    });
-
-                    t.setMap(map);
-                },
-                centroid: function (o) {
-                    var e, t, a, n, s, p, r, i, l;
-                    for (e = 0, r = i = l = 0, t = (a = o.length) - 1; e < a; t = e++)
-                        (n = o[e]),
-                            (s = o[t]),
-                            (p = n.y * s.x - s.y * n.x),
-                            (i += (n.x + s.x) * p),
-                            (l += (n.y + s.y) * p),
-                            (r += 3 * p);
-                    return new kakao.maps.LatLng(i / r, l / r);
-                },
-            };
-
-        $(function () {
-            kkoMap.initKko({ mapId: "map" });
-        });
-    </script>
 </head>
-<body id="mainPage">
-
-<!-- 네비게이션 영역 -->
+<body>
 <div class="header">
-    <h1>상권분석 시스템</h1>
+    <h1>상권분석</h1>
 </div>
 
 <!-- 지도와 사이드바가 들어가는 컨텐츠 영역 -->
@@ -176,9 +107,8 @@
     <!-- 사이드바 -->
     <div id="sidebar">
         <div id="sidebar-content">
-            <h4>서울시 특정 구 이동</h4>
-            <label for="locationSelect">클릭해서 변경</label>
             <select id="locationSelect">
+                <option selected disabled>서울시 구 바로가기</option>
                 <option value="37.5172363,127.0473248">강남구</option>
                 <option value="37.5511,127.1465">강동구</option>
                 <option value="37.6397743,127.0259653">강북구</option>
@@ -204,54 +134,228 @@
                 <option value="37.573293,126.979672">종로구</option>
                 <option value="37.5636152,126.9979403">중구</option>
                 <option value="37.6063241,127.092728">중랑구</option>
+                <!-- 다른 지역 옵션들 추가 -->
             </select>
-
-            <!-- 기능 추가 섹션 -->
-            <h4>어떤 기능을 넣을까요?</h4>
-            <label for="functionSelectLunch">점심 메뉴 추천</label>
-            <select id="functionSelectLunch">
-                <option value="1">한식</option>
-                <option value="2">중식</option>
-                <option value="3">일식</option>
-                <option value="4">아시안</option>
-                <option value="5">양식</option>
-                <option value="6">기타</option>
-            </select>
-            <label for="functionSelectDinner">저녁 메뉴 추천</label>
-            <select id="functionSelectDinner">
-                <option value="1">한식</option>
-                <option value="2">중식</option>
-                <option value="3">일식</option>
-                <option value="4">아시안</option>
-                <option value="5">양식</option>
-                <option value="6">기타</option>
-            </select>
-
-            <div class="function-option">
-                <h4>메인프로젝트에 넣으면 좋겠죠?</h4>
-                <label for="functionSelectLoan">대출</label>
-                <select id="functionSelectLoan">
-                    <option value="1">1금융권</option>
-                    <option value="2">2금융권</option>
-                    <option value="3">3금융권</option>
-                </select>
-            </div>
+            <button id="toggleEupMyeonDongBoundaries">읍면동 경계 표시/숨기기</button>
+            <div id="eupMyeonDongSelectedArea" style="display: none;"></div> <!-- 읍면동 선택된 지역 표시 -->
+            <button id="toggleSiGunGuBoundaries">시군구 경계 표시/숨기기</button>
+            <div id="siGunGuSelectedArea" style="display: none;"></div> <!-- 시군구 선택된 지역 표시 -->
         </div>
     </div>
-
-    <!-- 지도 영역 -->
     <div id="mapContainer">
         <div id="map"></div>
     </div>
 </div>
 
 <script>
-    // 드롭다운 박스에서 선택한 값에 따라 지도 중심 및 확대 수준 변경
-    $("#locationSelect").on("change", function () {
-        var coords = $(this).val().split(',');
-        var latLng = new kakao.maps.LatLng(coords[0], coords[1]);
-        map.setCenter(latLng);
-        map.setLevel(6); // 구 선택 시 더 확대된 지도 레벨 설정
+    var map, customOverlay, polygons = [];
+    var isEupMyeonDongLoaded = false;
+    var isSiGunGuLoaded = false;
+    var geoJsonData = null;
+
+    function initKakaoMap() {
+        console.log("Initializing Kakao Map");
+        var container = document.getElementById('map');
+        var options = {
+            center: new kakao.maps.LatLng(37.5665, 126.9780),
+            level: 9,
+        };
+        map = new kakao.maps.Map(container, options);
+        customOverlay = new kakao.maps.CustomOverlay({});
+
+        $("#locationSelect").on("change", function () {
+            if (map) {
+                var coords = $(this).val().split(',');
+                var latLng = new kakao.maps.LatLng(coords[0], coords[1]);
+                map.setCenter(latLng);
+                map.setLevel(6);
+            }
+        });
+
+        loadGeoJsonData();
+    }
+
+    function loadGeoJsonData() {
+        console.log("Loading GeoJSON data");
+        $.ajax({
+            url: "/resources/data/HangJeongDong_ver20230701.geojson",
+            dataType: "json",
+            success: function(data) {
+                console.log("GeoJSON data loaded successfully");
+                geoJsonData = data;
+                initializeButtons();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error("Error loading GeoJSON data:", textStatus, errorThrown);
+            }
+        });
+    }
+
+    function initializeButtons() {
+        console.log("Initializing buttons");
+
+        // 읍면동 버튼
+        $("#toggleEupMyeonDongBoundaries").on("click", function () {
+            console.log("Toggle EupMyeonDong button clicked");
+            if (isEupMyeonDongLoaded) {
+                kkoMap.removePolygons();
+                isEupMyeonDongLoaded = false;
+                $("#eupMyeonDongSelectedArea").hide(); // 읍면동 선택 영역 숨김
+            } else {
+                if (geoJsonData) {
+                    kkoMap.loadGeoJson(geoJsonData, "읍면동");
+                    map.relayout();  // 지도 리프레시
+                    isEupMyeonDongLoaded = true;
+                    $("#eupMyeonDongSelectedArea").show().text("선택된 읍면동: 없음"); // 선택된 읍면동 영역 표시
+                } else {
+                    console.error("GeoJSON data not loaded");
+                }
+            }
+        });
+
+        // 시군구 버튼
+        $("#toggleSiGunGuBoundaries").on("click", function () {
+            console.log("Toggle SiGunGu button clicked");
+            if (isSiGunGuLoaded) {
+                kkoMap.removePolygons();
+                isSiGunGuLoaded = false;
+                $("#siGunGuSelectedArea").hide(); // 시군구 선택 영역 숨김
+            } else {
+                if (geoJsonData) {
+                    kkoMap.loadGeoJson(geoJsonData, "시군구");
+                    map.relayout();  // 지도 리프레시
+                    isSiGunGuLoaded = true;
+                    $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음"); // 선택된 시군구 영역 표시
+                } else {
+                    console.error("GeoJSON data not loaded");
+                }
+            }
+        });
+    }
+
+    var kkoMap = {
+        loadGeoJson: function (geoJsonData, type) {
+            console.log("Loading GeoJSON data for", type);
+
+            let filteredData;
+            let fillColor;
+            let strokeColor;
+            if (type === "읍면동") {
+                filteredData = geoJsonData.features.filter(function (feature) {
+                    return feature.properties.adm_cd && (feature.properties.adm_cd.length === 7 || feature.properties.adm_cd.length === 8);
+                });
+                fillColor = "rgba(30, 144, 255, 0.1)";  // 읍면동 경계 색상 (투명 파란색)
+                strokeColor = "#104486";  // 읍면동 테두리 색상
+            } else if (type === "시군구") {
+                filteredData = geoJsonData.features.filter(function (feature) {
+                    return feature.properties.sgg && feature.properties.sgg.length === 5;
+                });
+                fillColor = "rgba(30, 144, 255, 0.1)";  // 시군구 경계 색상 (투명 파란색)
+                strokeColor = "#163599";  // 시군구 테두리 색상 (주황색)
+            }
+
+            if (type === "읍면동") {
+                filteredData.forEach(function (feature) {
+                    kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, "읍면동");
+                });
+            } else if (type === "시군구") {
+                let groupedData = {};
+                filteredData.forEach(function (feature) {
+                    let sgg = feature.properties.sgg;
+                    if (!groupedData[sgg]) {
+                        groupedData[sgg] = {
+                            name: feature.properties.sggnm,
+                            path: []
+                        };
+                    }
+                    feature.geometry.coordinates.forEach(function (coords) {
+                        groupedData[sgg].path.push(coords[0].map(function (coord) {
+                            return new kakao.maps.LatLng(coord[1], coord[0]);
+                        }));
+                    });
+                });
+
+                Object.keys(groupedData).forEach(function (sgg) {
+                    kkoMap.setPolygon(groupedData[sgg], fillColor, strokeColor, "시군구");
+                });
+            }
+
+            console.log("Finished loading GeoJSON data for", type);
+        },
+
+        getPolygonData: function (feature) {
+            var path = [];
+            feature.geometry.coordinates.forEach(function (coords) {
+                path.push(coords[0].map(function (coord) {
+                    return new kakao.maps.LatLng(coord[1], coord[0]);
+                }));
+            });
+            return {
+                name: feature.properties.adm_nm,
+                path: path
+            };
+        },
+
+        setPolygon: function (area, fillColor, strokeColor, type) {
+            console.log("Setting polygon for: " + area.name);
+
+            var polygon = new kakao.maps.Polygon({
+                path: area.path,
+                strokeWeight: 1.5,  // 테두리 두께 설정
+                strokeColor: strokeColor,
+                strokeOpacity: 0.8,
+                fillColor: fillColor,
+                fillOpacity: 0.1,  // 투명도 설정
+            });
+
+            kakao.maps.event.addListener(polygon, "mouseover", function () {
+                polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });  // 마우스 오버 색상
+                customOverlay.setPosition(kkoMap.centroid(area.path[0]));
+                customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
+                customOverlay.setMap(map);
+            });
+
+            kakao.maps.event.addListener(polygon, "mouseout", function () {
+                polygon.setOptions({ fillColor: fillColor });  // 마우스 아웃 시 원래 색상으로
+                customOverlay.setMap(null);
+            });
+
+            kakao.maps.event.addListener(polygon, "click", function () {
+                if (type === "읍면동") {
+                    $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);  // 읍면동 선택시
+                } else if (type === "시군구") {
+                    $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);  // 시군구 선택시
+                }
+                map.setLevel(8);
+                map.setCenter(kkoMap.centroid(area.path[0]));
+            });
+
+            polygon.setMap(map);
+            polygons.push(polygon);
+        },
+
+        centroid: function (path) {
+            let sumX = 0, sumY = 0, length = path.length;
+            path.forEach(function (coord) {
+                sumX += coord.getLng();
+                sumY += coord.getLat();
+            });
+            return new kakao.maps.LatLng(sumY / length, sumX / length);
+        },
+
+        removePolygons: function () {
+            console.log("Removing polygons");
+            polygons.forEach(function (polygon) {
+                polygon.setMap(null);
+            });
+            polygons = [];
+            console.log("Polygons removed successfully");
+        }
+    };
+
+    kakao.maps.load(function() {
+        console.log("Kakao Maps API loaded");
+        initKakaoMap();
     });
 </script>
 </body>
