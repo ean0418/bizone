@@ -2,12 +2,18 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
+        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
     <!-- This tag registers the DefaultAnnotationHandlerMapping and
          AnnotationMethodHandlerAdapter beans that are required for Spring MVC  -->
@@ -36,8 +42,8 @@
 
     <!-- DBMS 설정 (db서버 대기시간 최대 3초) -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="spssoem.jdbc.mysql.MySQLDriver"/>
-        <property name="url" value="192.168.0.77:3306"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.0.125:3306/bizone"/>
         <property name="username" value="test"/>
         <property name="password" value="a12345678!"/>
         <property name="maxWaitMillis" value="3000"/>
@@ -48,7 +54,8 @@
     <!-- MyBatis 설정 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="mapperLocations" value="resources/mapper/*.xml"/>
+        <property name="typeAliasesPackage" value="com.flex.miniProject" />
+        <property name="mapperLocations" value="classpath:mapper/memberMapper.xml"/>
     </bean>
 
     <!-- sqlSession 취득 (생성자에 인자 넣기) -->

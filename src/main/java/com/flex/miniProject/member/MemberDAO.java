@@ -1,63 +1,49 @@
 package com.flex.miniProject.member;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
 public class MemberDAO {
 
+    @Autowired
+    private SqlSession ss;
 
-    private final SqlSession ss;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-    public MemberDAO(SqlSession ss) {
-        this.ss = ss;
-    }
-
-    public void signup(bizone_member m, HttpServletRequest req) {
+    public void signupMember(HttpServletRequest req, Bizone_member m) {
         try {
-            m.setBm_id(req.getParameter("bm_id"));
-            m.setBm_pw(req.getParameter("bm_pw"));
-            m.setBm_name(req.getParameter("bm_name"));
-            m.setBm_name(req.getParameter("bm_nickname"));
-            m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
-            m.setBm_mail(req.getParameter("bm_mail"));
-
             String bm_addr1 = req.getParameter("bm_addr1");
             String bm_addr2 = req.getParameter("bm_addr2");
             String bm_addr3 = req.getParameter("bm_addr3");
-            String bm_address = bm_addr2 + "!" + bm_addr3 + "!" + bm_addr1;
+            String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
             m.setBm_address(bm_address);
 
-
-            if (ss.getMapper(MemberMapper.class).signupMember(m) == 1) {
-                req.setAttribute("r", "가입 성공");
-            }
+            ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("r", "가입 실패");
         }
 
     }
 
 
-    public Members memberIdCheck(bizone_member m) {
+    public Members memberIdCheck(Bizone_member m) {
         return new Members(ss.getMapper(MemberMapper.class).getMemberById(m));
     }
 
-    public void login(bizone_member m, HttpServletRequest req) {
+    public void login(Bizone_member m, HttpServletRequest req) {
         try {
-            List<bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
+            List<Bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
             if (members.size() != 0) {
-                bizone_member dbM = members.get(0);
+                Bizone_member dbM = members.get(0);
 
 
                 if (dbM.getBm_pw().equals(m.getBm_pw())) {
@@ -77,6 +63,18 @@ public class MemberDAO {
         }
     }
 
+    public static boolean loginCheck(HttpServletRequest req) {
+        Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
+        if (m != null) {
+            // 로그인 성공 + 상태 유지시
+            req.setAttribute("lp", "member/welcome.jsp");
+            return true;
+        }
+        // 로그인상태가 아니거나 + 로그인 실패시
+        req.setAttribute("lp", "member/login.jsp");
+        return false;
+    }
+
     public void logout(HttpServletRequest req) {
         try {
             req.getSession().setAttribute("loginMember", null);
@@ -89,7 +87,7 @@ public class MemberDAO {
 
     public void delete(HttpServletRequest req) {
         try {
-            bizone_member m = (bizone_member) req.getSession().getAttribute("loginMember");
+            Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
             if (ss.getMapper(MemberMapper.class).deleteMember(m) == 1) {
                 req.setAttribute("r", "탈퇴 성공");
                 req.getSession().setAttribute("loginMember", null);
@@ -106,8 +104,7 @@ public class MemberDAO {
 
     public void update(HttpServletRequest req) {
 
-        bizone_member m = (bizone_member) req.getSession().getAttribute("loginMember");
-
+        Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
 
 
         try {
@@ -116,7 +113,6 @@ public class MemberDAO {
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
             m.setBm_mail(req.getParameter("bm_mail"));
 
             String bm_addr1 = req.getParameter("bm_addr1");
@@ -139,4 +135,8 @@ public class MemberDAO {
 
         }
 
+
     }}
+
+
+

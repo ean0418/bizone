@@ -11,6 +11,23 @@
     <title>Title</title>
 </head>
 <body>
-  <h1>성공</h1>
+<table id="loginSuccessTbl">
+    <tr>
+
+        <td>${sessionScope.loginMember.bm_id }</td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">${sessionScope.loginMember.bm_name } 님</td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">어서오세요</td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2">
+            <button onclick="memberInfoGo();">정보</button>
+            <button onclick="logout();">로그아웃</button>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
