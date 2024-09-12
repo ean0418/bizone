@@ -1,7 +1,13 @@
 package com.flex.miniProject.member;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,10 +19,14 @@ public class MemberDAO {
     @Autowired
     private SqlSession ss;
 
-    public void signupMember(Bizone_member m) {
+    public void signupMember(HttpServletRequest req, Bizone_member m) {
         try {
-            System.out.println(m);
-            System.out.println(m.getBm_id());
+            String bm_addr1 = req.getParameter("bm_addr1");
+            String bm_addr2 = req.getParameter("bm_addr2");
+            String bm_addr3 = req.getParameter("bm_addr3");
+            String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
+            m.setBm_address(bm_address);
+
             ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,6 +63,18 @@ public class MemberDAO {
         }
     }
 
+    public static boolean loginCheck(HttpServletRequest req) {
+        Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
+        if (m != null) {
+            // 로그인 성공 + 상태 유지시
+            req.setAttribute("lp", "member/welcome.jsp");
+            return true;
+        }
+        // 로그인상태가 아니거나 + 로그인 실패시
+        req.setAttribute("lp", "member/login.jsp");
+        return false;
+    }
+
     public void logout(HttpServletRequest req) {
         try {
             req.getSession().setAttribute("loginMember", null);
@@ -85,14 +107,12 @@ public class MemberDAO {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
 
 
-
         try {
             m.setBm_id(req.getParameter("bm_id"));
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-//            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
             m.setBm_mail(req.getParameter("bm_mail"));
 
             String bm_addr1 = req.getParameter("bm_addr1");
@@ -115,4 +135,8 @@ public class MemberDAO {
 
         }
 
+
     }}
+
+
+

@@ -11,7 +11,7 @@
     <title>Title</title>
 </head>
 <body>
-<form action="member.login" method="post">
+<form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
     <table id="loginTbl">
         <tr>
             <td align="center">
