@@ -9,27 +9,36 @@
 <html>
 <head>
     <title>Title</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-dark" style="background-color: #101E4E;">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+        <a class="navbar-brand fs-3 ms-3" href="/">
+            Bizone
+        </a>
+        <!-- Right-aligned menu items, always visible -->
+        <div class="d-flex ms-auto align-items-center">
+            <!-- Login and Signup links -->
+            <a class="nav-link text-light ms-3" href="member/login">로그인</a>
+            <a class="nav-link text-light ms-3" href="signup">회원가입</a>
+            <!-- Toggle button for "지도" and "공지사항" items -->
+            <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavItems" aria-controls="mainNavItems" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <!-- Collapsible menu for "지도" and "공지사항" items -->
+        <div class="collapse navbar-collapse" id="mainNavItems">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/board">게시판</a>
+                    <a class="nav-link ms-4" href="main">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/member">멤버</a>
+                    <a class="nav-link ms-4" href="board">공지사항</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 </html>

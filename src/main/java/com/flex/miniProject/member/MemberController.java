@@ -13,10 +13,10 @@ public class MemberController {
     @Autowired
     private MemberDAO mDAO;
 
-    @RequestMapping(value = "/member", method= RequestMethod.GET)
+    @RequestMapping(value = "/signup", method= RequestMethod.GET)
     public String member(HttpServletRequest req) {
         req.setAttribute("contentPage", "../member/signup.jsp");
-        return "main/main";
+        return "main/index";
     }
 
     @RequestMapping(value = "/member.signup", method = RequestMethod.GET)
@@ -27,6 +27,6 @@ public class MemberController {
         System.out.println(m.getBm_id());
         mDAO.signupMember(m);
         req.setAttribute("contentPage", "../member/success.jsp");
-        return "main/main";
+        return "main/index";
     }
 }

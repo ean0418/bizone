@@ -9,6 +9,6 @@ public class MainController {
     @RequestMapping("/main")
     public String main(HttpServletRequest req) {
         req.setAttribute("contentPage", "mainpage.jsp");
-        return "main/main";
+        return "main/index";
     }
 }
