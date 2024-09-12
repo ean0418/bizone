@@ -5,11 +5,27 @@
   Time: 오전 10:40
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>회원 가입</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script language="javascript">
+        function goPopup() {
+            // 팝업 창 열기 (주소 검색 팝업 페이지로 연결)
+            var pop = window.open("/pop/jusoPopup.jsp", "pop", "width=570,height=420, scrollbars=yes, resizable=yes");
+        }
+
+        // 팝업 창에서 반환된 주소 정보를 메인 폼 필드에 채우는 함수
+        function jusoCallBack(zipNo, roadAddrPart1, addrDetail) {
+            document.getElementById('bm_addr1').value = zipNo;          // 우편번호
+            document.getElementById('bm_addr2').value = roadAddrPart1;   // 도로명 주소
+            document.getElementById('bm_addr3').value = addrDetail;     // 상세 주소
+            document.getElementById('bm_address').value = zipNo + ' ' + roadFullAddr + ' ' + addrDetail; // 전체 주소
+        }
+
+
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -70,7 +86,8 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="member.signup">
+    <form action="member.signup" METHOD="post" name="signupForm"
+          onsubmit="return signupCheck();">
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
@@ -104,9 +121,15 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input id="bm_addr1" name="bm_addr1" placeholder="Zip Code" readonly="readonly" class="i1">
-                    <input id="bm_addr2" name="bm_addr2" placeholder="Address" readonly="readonly" class="i1">
-                    <input name="bm_addr3" placeholder="Detail Address" autocomplete="off" class="i1">
+                    <!-- 주소 검색 버튼 -->
+                    <button type="button" onclick="goPopup()">주소 검색</button><br>
+
+                    <!-- 주소 입력 필드 -->
+
+                    <input type="text" id="bm_addr1" name="bm_addr1" placeholder="Zip Code" readonly="readonly" class="i1">
+                    <input type="text" id="bm_addr2" name="bm_addr2" placeholder="Address" readonly="readonly" class="i1">
+                    <input type="text" id="bm_addr3" name="bm_addr3" placeholder="Detail Address" autocomplete="off" class="i1">
+                    <input type="hidden" id="bm_address" name="bm_address">
                 </td>
             </tr>
             <tr>
