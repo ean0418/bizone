@@ -30,10 +30,10 @@
         <div class="collapse navbar-collapse" id="mainNavItems">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="main">지도</a>
+                    <a class="nav-link ms-4" href="main">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="board">공지사항</a>
+                    <a class="nav-link ms-4" href="board">공지사항</a>
                 </li>
             </ul>
         </div>

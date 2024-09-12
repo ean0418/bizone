@@ -32,17 +32,19 @@
         #sidebar {
             width: 35%;
             background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
+            margin: 20px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             font-family: Arial, sans-serif;
             z-index: 100;
-            height: 100%;
+            height: calc(100vh - 140px);
             position: absolute;
+            border-radius: 5px;
         }
 
-        div #sidebar {
-            border-radius: 5px;
+        #sidebar-content {
+            padding: 20px;
+            height: max-content;
         }
 
         select {
@@ -118,7 +120,7 @@
                         strokeColor: "#004c80",
                         strokeOpacity: 0.8,
                         fillColor: "#fff",
-                        fillOpacity: 0.7,
+                        fillOpacity: 0,
                     });
 
                     // 마우스 오버시 색상 변경 및 오버레이 표시
@@ -173,65 +175,67 @@
 <div class="content">
     <!-- 사이드바 -->
     <div id="sidebar">
-        <h4>서울시 특정 구 이동</h4>
-        <label for="locationSelect">클릭해서 변경</label>
-        <select id="locationSelect">
-            <option value="37.5172363,127.0473248">강남구</option>
-            <option value="37.5511,127.1465">강동구</option>
-            <option value="37.6397743,127.0259653">강북구</option>
-            <option value="37.5509787,126.8495384">강서구</option>
-            <option value="37.4784064,126.9516133">관악구</option>
-            <option value="37.5384841,127.0822934">광진구</option>
-            <option value="37.4954856,126.8877243">구로구</option>
-            <option value="37.4568502,126.8958117">금천구</option>
-            <option value="37.6541916,127.0567936">노원구</option>
-            <option value="37.6686912,127.0472104">도봉구</option>
-            <option value="37.5742915,127.0395685">동대문구</option>
-            <option value="37.5124095,126.9395078">동작구</option>
-            <option value="37.5663244,126.9014017">마포구</option>
-            <option value="37.5791433,126.9369178">서대문구</option>
-            <option value="37.4836042,127.0327595">서초구</option>
-            <option value="37.5632561,127.0364285">성동구</option>
-            <option value="37.5893624,127.0167415">성북구</option>
-            <option value="37.5145436,127.1059163">송파구</option>
-            <option value="37.5270616,126.8561536">양천구</option>
-            <option value="37.5263614,126.8966016">영등포구</option>
-            <option value="37.5322958,126.9904348">용산구</option>
-            <option value="37.6026956,126.9291993">은평구</option>
-            <option value="37.573293,126.979672">종로구</option>
-            <option value="37.5636152,126.9979403">중구</option>
-            <option value="37.6063241,127.092728">중랑구</option>
-        </select>
-
-        <!-- 기능 추가 섹션 -->
-        <h4>어떤 기능을 넣을까요?</h4>
-        <label for="functionSelectLunch">점심 메뉴 추천</label>
-        <select id="functionSelectLunch">
-            <option value="1">한식</option>
-            <option value="2">중식</option>
-            <option value="3">일식</option>
-            <option value="4">아시안</option>
-            <option value="5">양식</option>
-            <option value="6">기타</option>
-        </select>
-        <label for="functionSelectDinner">저녁 메뉴 추천</label>
-        <select id="functionSelectDinner">
-            <option value="1">한식</option>
-            <option value="2">중식</option>
-            <option value="3">일식</option>
-            <option value="4">아시안</option>
-            <option value="5">양식</option>
-            <option value="6">기타</option>
-        </select>
-
-        <div class="function-option">
-            <h4>메인프로젝트에 넣으면 좋겠죠?</h4>
-            <label for="functionSelectLoan">대출</label>
-            <select id="functionSelectLoan">
-                <option value="1">1금융권</option>
-                <option value="2">2금융권</option>
-                <option value="3">3금융권</option>
+        <div id="sidebar-content">
+            <h4>서울시 특정 구 이동</h4>
+            <label for="locationSelect">클릭해서 변경</label>
+            <select id="locationSelect">
+                <option value="37.5172363,127.0473248">강남구</option>
+                <option value="37.5511,127.1465">강동구</option>
+                <option value="37.6397743,127.0259653">강북구</option>
+                <option value="37.5509787,126.8495384">강서구</option>
+                <option value="37.4784064,126.9516133">관악구</option>
+                <option value="37.5384841,127.0822934">광진구</option>
+                <option value="37.4954856,126.8877243">구로구</option>
+                <option value="37.4568502,126.8958117">금천구</option>
+                <option value="37.6541916,127.0567936">노원구</option>
+                <option value="37.6686912,127.0472104">도봉구</option>
+                <option value="37.5742915,127.0395685">동대문구</option>
+                <option value="37.5124095,126.9395078">동작구</option>
+                <option value="37.5663244,126.9014017">마포구</option>
+                <option value="37.5791433,126.9369178">서대문구</option>
+                <option value="37.4836042,127.0327595">서초구</option>
+                <option value="37.5632561,127.0364285">성동구</option>
+                <option value="37.5893624,127.0167415">성북구</option>
+                <option value="37.5145436,127.1059163">송파구</option>
+                <option value="37.5270616,126.8561536">양천구</option>
+                <option value="37.5263614,126.8966016">영등포구</option>
+                <option value="37.5322958,126.9904348">용산구</option>
+                <option value="37.6026956,126.9291993">은평구</option>
+                <option value="37.573293,126.979672">종로구</option>
+                <option value="37.5636152,126.9979403">중구</option>
+                <option value="37.6063241,127.092728">중랑구</option>
             </select>
+
+            <!-- 기능 추가 섹션 -->
+            <h4>어떤 기능을 넣을까요?</h4>
+            <label for="functionSelectLunch">점심 메뉴 추천</label>
+            <select id="functionSelectLunch">
+                <option value="1">한식</option>
+                <option value="2">중식</option>
+                <option value="3">일식</option>
+                <option value="4">아시안</option>
+                <option value="5">양식</option>
+                <option value="6">기타</option>
+            </select>
+            <label for="functionSelectDinner">저녁 메뉴 추천</label>
+            <select id="functionSelectDinner">
+                <option value="1">한식</option>
+                <option value="2">중식</option>
+                <option value="3">일식</option>
+                <option value="4">아시안</option>
+                <option value="5">양식</option>
+                <option value="6">기타</option>
+            </select>
+
+            <div class="function-option">
+                <h4>메인프로젝트에 넣으면 좋겠죠?</h4>
+                <label for="functionSelectLoan">대출</label>
+                <select id="functionSelectLoan">
+                    <option value="1">1금융권</option>
+                    <option value="2">2금융권</option>
+                    <option value="3">3금융권</option>
+                </select>
+            </div>
         </div>
     </div>
 

@@ -18,22 +18,42 @@
 <div class="container-fluid">
     <!-- 헤더 섹션 -->
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 p-0">
             <jsp:include page="WEB-INF/views/header.jsp" />
         </div>
     </div>
 
     <!-- 메인 콘텐츠 섹션 -->
     <div class="row">
-        <div class="col-12">
+        <div class="col-12 p-0">
             <a href="main"><img src="resources/image/map.png" alt=""></a>
         </div>
     </div>
 
     <!-- 푸터 섹션 -->
     <div class="row">
-        <div class="col-12">
-            <jsp:include page="WEB-INF/views/footer.jsp" />
+        <div class="col-12 p-0">
+            <nav class="navbar navbar-expand fixed-bottom bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">
+                        Contact us
+                    </a>
+                    <div class="collapse navbar-collapse" id="navbarText">
+                        <ul class="navbar-nav me-auto lg-3">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="#">
+                                    Github
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    Notion
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
     </div>
 </div>

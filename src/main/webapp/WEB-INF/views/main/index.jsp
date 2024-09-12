@@ -20,21 +20,21 @@
 <div class="container-fluid">
   <!-- 헤더 섹션 -->
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 p-0">
       <jsp:include page="../header.jsp" />
     </div>
   </div>
 
   <!-- 메인 콘텐츠 섹션 -->
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 p-0">
       <jsp:include page="${contentPage}" />
     </div>
   </div>
 
   <!-- 푸터 섹션 -->
   <div class="row">
-    <div class="col-12">
+    <div class="col-12 p-0">
       <jsp:include page="../footer.jsp" />
     </div>
   </div>
