@@ -30,7 +30,7 @@
 
         /* 사이드바 스타일 */
         #sidebar {
-            width: 300px;
+            width: 35%;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
@@ -38,7 +38,11 @@
             font-family: Arial, sans-serif;
             z-index: 100;
             height: 100%;
-            position: relative;
+            position: absolute;
+        }
+
+        div #sidebar {
+            border-radius: 5px;
         }
 
         select {

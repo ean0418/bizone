@@ -11,6 +11,26 @@
     <title>Title</title>
 </head>
 <body>
-     <h2>여기는 사이트의 설명이 들어갈 Footer!</h2>
+<nav class="navbar navbar-expand bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            Contact us
+        </a>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav me-auto lg-3">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#">
+                        Github
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        Notion
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 </body>
 </html>
