@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flex.miniProject.board.BoardMapper">
+
+<!--    <select id="boardCount" parameterType="com.flex.miniProject.board.Bizone_board" resultType="com.flex.miniProject.board.Bizone_board">-->
+<!--            select count(bn_no) from bizone_board where bn_no = #{bn_no}-->
+<!--    </select>-->
+
+<!--    <select id="getBoardList" parameterType="com.flex.miniProject.board.Bizone_board" resultType="com.flex.miniProject.board.Bizone_board">-->
+<!--            select * from bizone_board where bn_no = #{bn_no}-->
+<!--    </select>-->
+
+<!--    <insert id="boardInsert" parameterType="com.flex.miniProject.member.Bizone_board">-->
+<!--        insert into bizone_board (bn_no, bn_bm_nickname, bn_title, bn_content, bn_date) values(#{bn_no}, #{bn_bm_nickname}, #{bn_title}, #{bn_content}, now())-->
+<!--    </insert>-->
+
+
+
+    <!-- 게시글 목록 조회 -->
+    <select id="getAllBoards" resultType="Bizone_board">
+        SELECT bn_no, bn_bm_nickname, bn_title, bn_content, bn_readcount, bn_date
+        FROM bizone_board
+        ORDER BY bn_no DESC
+    </select>
+
+    <!-- 게시글 조회 -->
+    <select id="getBoardByNo" parameterType="int" resultType="Bizone_board">
+        SELECT bn_no, bn_bm_nickname, bn_title, bn_content, bn_readcount, bn_date
+        FROM bizone_board
+        WHERE bn_no = #{bn_no}
+    </select>
+
+    <!-- 게시글 작성 -->
+    <insert id="insertBoard" parameterType="Bizone_board">
+        INSERT INTO bizone_board (bn_bm_nickname, bn_title, bn_content)
+        VALUES (#{bn_bm_nickname}, #{bn_title}, #{bn_content})
+    </insert>
+
+    <!-- 게시글 수정 -->
+    <update id="updateBoard" parameterType="Bizone_board">
+        UPDATE bizone_board
+        SET bn_title = #{bn_title},
+            bn_content = #{bn_content}
+        WHERE bn_no = #{bn_no}
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM bizone_board WHERE bn_no = #{bn_no}
+    </delete>
+
+</mapper>
