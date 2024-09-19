@@ -10,9 +10,6 @@
 <head>
     <title>Title</title>
 </head>
-<style>
-
-</style>
 <body>
 <nav class="navbar navbar-expand bg-body-tertiary">
     <div class="container-fluid">

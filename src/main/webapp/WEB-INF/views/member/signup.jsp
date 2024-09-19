@@ -10,7 +10,6 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>회원가입</title>
     <script language="javascript">
         function goPopup() {
             // 팝업 창 열기 (주소 검색 팝업 페이지로 연결)
@@ -22,176 +21,66 @@
             document.getElementById('bm_addr1').value = zipNo;          // 우편번호
             document.getElementById('bm_addr2').value = roadAddrPart1;   // 도로명 주소
             document.getElementById('bm_addr3').value = addrDetail;     // 상세 주소
-            document.getElementById('bm_address').value = zipNo + ' ' + roadAddrPart1 + ' ' + addrDetail; // 전체 주소
+            document.getElementById('bm_address').value = zipNo + ' ' + roadFullAddr + ' ' + addrDetail; // 전체 주소
         }
 
 
     </script>
     <style>
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .step-indicator span {
-            display: inline-block;
-            width: 35px;
-            height: 35px;
-            line-height: 35px;
-            border-radius: 50%;
-            background-color: #444;
-            color: white;
-            font-weight: bold;
-            margin: 0 10px;
-        }
-
-        .step-indicator .active {
-            background-color: #2ecc71;
-        }
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: white;
-            color: #d3d7da;
-            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding-top: 120px; /* 상단 네비게이션 바의 높이만큼 공간 확보 */
-            box-sizing: border-box;
             height: 100vh;
-            overflow: hidden;
-
+            margin: 0;
         }
 
-        /* 회원가입 폼을 감싸는 컨테이너 */
         #signupContainer {
-            width: 100%;
-            max-width: 450px; /* 폼의 최대 너비 설정 */
-            max-height: 80vh; /* 폼의 최대 높이를 화면의 80%로 설정 */
-            overflow-y: auto; /* 세로 스크롤을 허용 */
-            margin: 20px;
-            background-color: #2b2e33;
-            border-radius: 15px;
+            background-color: #fff;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
         }
 
-        /* 회원가입 폼에 호버 시 애니메이션 */
-        #signupContainer:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-        }
-
-        /* 제목 스타일 */
-        h1 {
-            text-align: center;
-            color: #ffffff;
-            font-size: 24px; /* 제목 크기 축소 */
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        /* 테이블 스타일 */
         #signupTbl {
             width: 100%;
             border-collapse: collapse;
         }
 
         #signupTbl td {
-            padding: 8px 0; /* 행 간격을 조금 더 줄임 */
+            padding: 10px;
         }
 
-        /* 폼의 레이블 스타일 */
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #ffffff;
-            font-size: 14px; /* 폰트 크기 축소 */
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* 입력 필드 스타일 */
-        input.i1 {
+        #signupTbl input {
             width: 100%;
-            padding: 12px; /* 입력 필드의 패딩을 줄여줌 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             margin-top: 5px;
-            border: 1px solid #555;
-            border-radius: 8px;
-            background-color: rgba(46, 51, 56, 0.8);
-            color: #d3d7da;
-            box-sizing: border-box;
-            font-size: 13px; /* 입력 필드의 폰트 크기를 줄여줌 */
-            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
-        input.i1:focus {
-            border-color: #5dade2;
-            background-color: rgba(46, 51, 56, 1);
-            box-shadow: 0 0 8px rgba(93, 173, 226, 0.7);
-            outline: none;
-        }
-
-        /* 메시지 스타일 */
-        #msg {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #e74c3c;
-        }
-
-        /* 버튼 스타일 */
-        button {
+        #signupTbl button {
             width: 100%;
-            padding: 12px; /* 버튼의 패딩을 줄여줌 */
-            background-color: #2ecc71;
+            padding: 10px;
+            background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 16px; /* 버튼 폰트 크기 축소 */
+            border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 16px;
         }
 
-        button:hover {
-            background-color: #27ae60;
-            transform: scale(1.02);
+        #signupTbl button:hover {
+            background-color: #45a049;
         }
 
-        button[type="button"] {
-            background-color: #3498db;
-        }
-
-        button[type="button"]:hover {
-            background-color: #2980b9;
-        }
-
-        /* 주소 검색 버튼 */
-        button[type="button"] {
-            margin-bottom: 15px;
-        }
-
-        button[type="submit"] {
-            margin-top: 20px;
-        }
-
-        input[type="text"], input[type="password"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-        }
-
-        /* HTML과 body 기본 설정 */
-        html, body {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* 상단 네비게이션 바와 겹치지 않도록 */
-            overflow: hidden; /* 전체 페이지에서 스크롤을 막음 */
+        #msg {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -202,10 +91,7 @@
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
-                    <label >회원가입</label>
-                    <div class="step-indicator">
-                        <span>1</span> → <span  class="active">2</span> → <span>3</span>
-                    </div>
+                    <label for="bm_id">ID</label>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
                     <div id="msg"></div>
@@ -264,7 +150,7 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button class="submit-btn" type="submit">Sign Up</button>
+                    <button type="submit">Sign Up</button>
                 </td>
             </tr>
         </table>
