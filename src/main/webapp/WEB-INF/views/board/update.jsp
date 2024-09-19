@@ -11,12 +11,48 @@
 <%@ include file="../board/style.jsp"%>
 <html>
 <head>
-    <title>Update Page</title>
+  <title>Update Page</title>
+  <style>
+    .container {
+      margin-top: 50px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .form-group label {
+      font-weight: bold;
+    }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    .btn {
+      padding: 8px 15px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    .btn-container {
+      text-align: right;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h2 style="text-align: center">게시글 수정하기</h2>
-
   <div class="container">
+    <h2 style="text-align: center">게시글 수정하기</h2>
+
     <form action="${contextPath}/board/update" method="post">
       <input type="hidden" name="bn_no" value="${board.bn_no}">
       <div class="form-group">
@@ -31,7 +67,10 @@
         <label for="bn_content">내용</label>
         <textarea class="form-control" id="bn_content" name="bn_content" rows="3" required>${board.bn_content}</textarea>
       </div>
-      <input type="submit" class="btn btn-default" value="수정하기" style="margin-top: 50px;">
+
+      <div class="btn-container">
+        <input type="submit" class="btn btn-default" value="수정하기" style="margin-top: 50px;">
+      </div>
     </form>
   </div>
 </body>

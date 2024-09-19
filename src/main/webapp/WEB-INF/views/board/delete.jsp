@@ -12,11 +12,52 @@
 <html>
 <head>
     <title>Delete Page</title>
+    <title>Delete Page</title>
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 10px;
+            margin-right: 5px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h2 style="text-align: center">게시글 삭제</h2>
-
     <div class="container">
+        <h2 style="text-align: center">게시글 삭제</h2>
+
         <p>정말로 이 게시글을 삭제하시겠습니까?</p>
 
         <!-- 게시글 정보 표시 -->
@@ -34,11 +75,13 @@
         </div>
 
         <!-- 삭제 확인 폼 -->
-        <form action="${contextPath}/board/delete" method="post">
-            <input type="hidden" name="bn_no" value="${board.bn_no}">
-            <input type="submit" class="btn btn-danger" value="삭제">
-            <input type="button" class="btn btn-default" value="취소" onclick="location.href='${contextPath}/board/list'">
-        </form>
+        <div class="btn-container">
+            <form action="${contextPath}/board/delete" method="post">
+                <input type="hidden" name="bn_no" value="${board.bn_no}">
+                <input type="submit" class="btn btn-danger" value="삭제">
+                <input type="button" class="btn btn-default" value="취소" onclick="location.href='${contextPath}/board/list'">
+            </form>
+        </div>
     </div>
 </body>
 </html>
