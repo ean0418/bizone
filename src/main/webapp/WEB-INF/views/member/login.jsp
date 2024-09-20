@@ -37,9 +37,6 @@
         color: #d3d7da;
         margin: 0;
         display: flex;
-        justify-content: center; /* 가로 중앙 정렬 */
-        align-items: center; /* 세로 중앙 정렬 */
-        height: 100vh; /* 전체 화면 높이 */
     }
 
     /* 로그인 테이블 스타일 */
@@ -48,6 +45,7 @@
         max-width: 400px; /* 폼의 최대 너비 설정 */
         background-color: #2b2e33;
         padding: 40px;
+        margin: 20vh auto auto;
         border-radius: 15px;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
         text-align: center;
@@ -91,8 +89,9 @@
 
     /* 버튼 스타일 */
     button {
-        width: 100%;
-        padding: 15px;
+        width: 90%;
+        margin: 15px 0;
+        padding: 15px 0;
         background-color: #2ecc71;
         color: white;
         border: none;
@@ -106,12 +105,22 @@
         background-color: #27ae60;
         transform: scale(1.02);
     }
+
+    form {
+        margin: auto 0;
+    }
+
+    .loginApi {
+        max-width: 400px;
+        text-align: center;
+        margin: 30px auto;
+    }
 </style>
 <body>
 <form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
     <table id="loginTbl">
         <tr>
-            <td align="center">
+            <td align="center" style="padding-top: 10px;">
                 LOGIN
             </td>
         </tr>
@@ -132,8 +141,9 @@
             </td>
         </tr>
     </table>
-
-    <a href="javascript:kakaoLogin();"><img src="../resources/image/kakao_login.png"></a>
+    <div class="loginApi">
+        <a href="javascript:kakaoLogin();"><img class="loginApiImage" src="../../../resources/image/kakao_login.png" alt=""></a>
+    </div>
 </form>
 </body>
 </html>

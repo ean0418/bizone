@@ -16,7 +16,7 @@
 <body>
 <nav class="navbar navbar-expand bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand ms-3" href="/">
             Contact us
         </a>
         <div class="collapse navbar-collapse" id="navbarText">
