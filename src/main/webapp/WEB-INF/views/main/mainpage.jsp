@@ -128,13 +128,12 @@
             margin-bottom: 20px;
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #FF2C97;
             border-radius: 5px;
-            background-color: #f0f0f0;
+            background-color: #FFB0DD80;
             font-size: 16px;
             cursor: pointer;
         }
-
     </style>
 </head>
 <body>
