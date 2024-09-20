@@ -11,6 +11,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .content {
