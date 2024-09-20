@@ -115,11 +115,11 @@
     <!-- 메인 콘텐츠 섹션 -->
     <div class="row">
         <div class="col-md-6 p-0">
-            <a href="main"><img src="resources/image/2.jpg" alt="" ></a>
+            <img src="resources/image/2.jpg" alt="" >
         </div>
         <div class="col-md-6 p-0 d-flex flex-column align-items-center justify-content-center">
             <div class="description">
-                <p><span class="highlight">상권분석</span>을<br> 위한 사이트</p>
+              <p>창업을 원하는 <br>모든 이들을 위한<br><span class="highlight">상권분석</span> 사이트</p>
                 <a href="main"><button type="button" class="btn btn-outline-primary w-50 p-3" style="color: #101E4E; border-color: #101E4E;">분석하기</button></a>
             </div>
         </div>

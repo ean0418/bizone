@@ -1,149 +1,146 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: sdedu
-  Date: 24. 9. 11.
-  Time: 오전 10:40
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+
+<!DOCTYPE html>
+<html lang="ko">
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizone 로그인</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f4f5f7;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 400px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #101E4E;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #101E4E;
+            box-shadow: 0 0 5px rgba(0, 122, 204, 0.5);
+        }
+
+        .btn-primary {
+            background-color: #101E4E;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn-primary:hover {
+            background-color: #2e3b70;
+        }
+
+        .loginbtn {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .or-seperator {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 16px;
+            color: #888;
+        }
+
+        .kakaobtn {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .kakaobtn button {
+            background-color: #FEE500;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 8px;
+
+            color: #3c1e1e; /* 카카오 글씨 색상 */
+        }
+
+        .kakaobtn img {
+            height: 25px;
+            vertical-align: middle;
+        }
+
+        .text-center a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .text-center a:hover {
+            color: #101E4E;
+        }
+    </style>
 </head>
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-<script>
-    window.Kakao.init("412e7727ffd0b8900060854044814879");
-
-    function kakaoLogin() {
-        window.Kakao.Auth.login({
-            scope: 'profile_nickname, profile_image',
-            success: function (authObj) {
-                console.log(authObj);
-                Window.Kakao.API.request({
-                    url:'/v2/user/me',
-                    success: res => {
-                        const kakao_account = res.kakao_account;
-                    }
-                })
-            }
-        });
-    }
-
-</script>
-<style>
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background-color: white;
-        color: #d3d7da;
-        margin: 0;
-        display: flex;
-    }
-
-    /* 로그인 테이블 스타일 */
-    #loginTbl {
-        width: 100%;
-        max-width: 400px; /* 폼의 최대 너비 설정 */
-        background-color: #2b2e33;
-        padding: 40px;
-        margin: 20vh auto auto;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-        text-align: center;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #loginTbl:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
-    }
-
-    /* 로그인 제목 */
-    #loginTbl td:first-child {
-        font-size: 28px;
-        font-weight: bold;
-        color: white;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
-    }
-
-    /* 입력 필드 스타일 */
-    input.i1 {
-        width: 90%;
-        padding: 15px;
-        margin: 15px 0;
-        border: 1px solid #555;
-        border-radius: 8px;
-        background-color: rgba(46, 51, 56, 0.8);
-        color: #d3d7da;
-        box-sizing: border-box;
-        font-size: 16px;
-        transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    input.i1:focus {
-        border-color: #5dade2;
-        background-color: rgba(46, 51, 56, 1);
-        box-shadow: 0 0 8px rgba(93, 173, 226, 0.7);
-        outline: none;
-    }
-
-    /* 버튼 스타일 */
-    button {
-        width: 90%;
-        margin: 15px 0;
-        padding: 15px 0;
-        background-color: #2ecc71;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        font-size: 18px;
-        cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-    }
-
-    button:hover {
-        background-color: #27ae60;
-        transform: scale(1.02);
-    }
-
-    form {
-        margin: auto 0;
-    }
-
-    .loginApi {
-        max-width: 400px;
-        text-align: center;
-        margin: 30px auto;
-    }
-</style>
 <body>
-<form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
-    <table id="loginTbl">
-        <tr>
-            <td align="center" style="padding-top: 10px;">
-                LOGIN
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <input name="bm_id" placeholder="ID" autocomplete="off" maxlength="10"
-                       autofocus="autofocus" class="i1">
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <input name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password" class="i1">
-            </td>
-        </tr>
-        <tr>
-            <td align="center">
-                <button>로그인</button>
-            </td>
-        </tr>
-    </table>
-    <div class="loginApi">
-        <a href="javascript:kakaoLogin();"><img class="loginApiImage" src="../../../resources/image/kakao_login.png" alt=""></a>
-    </div>
-</form>
+
+<div class="login-container">
+    <form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
+        <input type="hidden" name="login_ok" value="1"/>
+
+        <h2>로그인</h2>
+
+        <div class="form-group">
+            <label class="id">아이디</label>
+            <input type="text" class="form-control" name="bm_id" autofocus="autofocus" autocomplete="off" placeholder="ID 입력..." required="required">
+        </div>
+
+        <div class="form-group mt-3">
+            <label class="bm_pw">비밀번호</label>
+            <input type="password" class="form-control" name="bm_pw" autocomplete="off" placeholder="Password 입력..." required="required">
+        </div>
+
+        <div class="form-group loginbtn">
+            <button type="submit" id="login_submit" class="btn btn-primary w-100">로그인</button>
+        </div>
+
+        <div class="or-seperator"><b>or</b></div>
+
+        <div class="form-group kakaobtn">
+            <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakao.login&response_type=code'">
+                <img src="../resources/image/kakao_login.png" alt="카카오 로그인">
+            </button>
+        </div>
+    </form>
+
+    <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="/pwFindForm.do">비밀번호 찾기</a></div>
+    <div class="text-center mt-2">아직 회원이 아니십니까? <a href="/signupForm.do">회원가입</a></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
