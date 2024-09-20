@@ -38,9 +38,9 @@ public class BoardDAO {
     }
 
     // 게시글 조회
-    public void getBoardById(int bn_no, HttpServletRequest req) {
+    public void getBoardById(int bb_no, HttpServletRequest req) {
         try {
-            Bizone_board board = ss.getMapper(BoardMapper.class).getBoardByNo(bn_no);
+            Bizone_board board = ss.getMapper(BoardMapper.class).getBoardByNo(bb_no);
             req.setAttribute("board", board);
         } catch (Exception e) {
             e.printStackTrace();
@@ -60,9 +60,9 @@ public class BoardDAO {
     }
 
     // 게시글 삭제
-    public void deleteBoard(int bn_no, HttpServletRequest req) {
+    public void deleteBoard(int bb_no, HttpServletRequest req) {
         try {
-            ss.getMapper(BoardMapper.class).deleteBoard(bn_no);
+            ss.getMapper(BoardMapper.class).deleteBoard(bb_no);
             req.setAttribute("r", "게시글 삭제 성공");
         } catch (Exception e) {
             e.printStackTrace();

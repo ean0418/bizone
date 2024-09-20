@@ -56,16 +56,16 @@
     <form action="${contextPath}/board/insert" name="insertForm" method="post" style="gap: 1rem" onsubmit="">
       <div class="form-group">
         <label for="title">제목</label>
-        <input type="text" class="form-control" id="title" name="bn_title"
+        <input type="text" class="form-control" id="title" name="bb_title"
                placeholder="제목을 입력하세요." required>
       </div>
       <div class="form-group">
         <label for="writer">작성자</label>
-        <input type="text" class="form-control" id="writer" name="bn_bm_nickname" value="${sessionScope.loginMember.bm_nickname}" readonly>
+        <input type="text" class="form-control" id="writer" name="bb_bm_nickname" value="${sessionScope.loginMember.bm_nickname}" readonly>
       </div>
       <div class="form-group">
         <label for="content">내용</label>
-        <textarea class="form-control" id="content" name="bn_content" rows="3"
+        <textarea class="form-control" id="content" name="bb_content" rows="3"
                   style="resize: none;" required></textarea>
       </div>
 

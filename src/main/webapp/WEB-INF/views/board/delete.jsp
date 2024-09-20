@@ -62,22 +62,22 @@
 
         <!-- 게시글 정보 표시 -->
         <div class="form-group">
-            <label for="bn_title">제목</label>
-            <input type="text" class="form-control" id="bn_title" name="bn_title" value="${board.bn_title}" readonly>
+            <label for="bb_title">제목</label>
+            <input type="text" class="form-control" id="bb_title" name="bb_title" value="${board.bb_title}" readonly>
         </div>
         <div class="form-group">
-            <label for="bn_bm_nickname">작성자</label>
-            <input type="text" class="form-control" id="bn_bm_nickname" name="bn_bm_nickname" value="${board.bn_bm_nickname}" readonly>
+            <label for="bb_bm_nickname">작성자</label>
+            <input type="text" class="form-control" id="bb_bm_nickname" name="bb_bm_nickname" value="${board.bb_bm_nickname}" readonly>
         </div>
         <div class="form-group">
-            <label for="bn_content">내용</label>
-            <textarea class="form-control" id="bn_content" name="bn_content" rows="3" readonly>${board.bn_content}</textarea>
+            <label for="bb_content">내용</label>
+            <textarea class="form-control" id="bb_content" name="bb_content" rows="3" readonly>${board.bb_content}</textarea>
         </div>
 
         <!-- 삭제 확인 폼 -->
         <div class="btn-container">
             <form action="${contextPath}/board/delete" method="post">
-                <input type="hidden" name="bn_no" value="${board.bn_no}">
+                <input type="hidden" name="bb_no" value="${board.bb_no}">
                 <input type="submit" class="btn btn-danger" value="삭제">
                 <input type="button" class="btn btn-default" value="취소" onclick="location.href='${contextPath}/board/list'">
             </form>

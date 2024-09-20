@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @Controller
 @RequestMapping
@@ -44,16 +42,16 @@ public class BoardController {
 
     // 게시글 상세 보기
     @RequestMapping(value = "/board/detail", method = RequestMethod.GET)
-    public String boardDetail(@RequestParam("bn_no") int bn_no, HttpServletRequest req) {
-        boardDAO.getBoardById(bn_no, req);
+    public String boardDetail(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
+        boardDAO.getBoardById(bb_no, req);
         req.setAttribute("contentPage", "../board/detail.jsp");
         return "main/index";
     }
 
     // 게시글 수정 페이지 이동
     @RequestMapping(value = "/board/update.go", method = RequestMethod.GET)
-    public String goUpdate(@RequestParam("bn_no") int bn_no, HttpServletRequest req) {
-        boardDAO.getBoardById(bn_no, req);
+    public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
+        boardDAO.getBoardById(bb_no, req);
         req.setAttribute("contentPage", "../board/update.jsp");
         return "main/index";
     }
@@ -67,8 +65,8 @@ public class BoardController {
 
     // 게시글 삭제 처리
     @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
-    public String deleteBoard(@RequestParam("bn_no") int bn_no, HttpServletRequest req) {
-        boardDAO.deleteBoard(bn_no, req);
+    public String deleteBoard(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
+        boardDAO.deleteBoard(bb_no, req);
         return "redirect:/board/list";
     }
 }

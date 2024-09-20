@@ -91,12 +91,12 @@
         </thead>
         <tbody>
         <c:forEach var="board" items="${boardList}">
-            <tr class="${board.bn_no == 123 ? 'selected' : ''}">
-                <td>${board.bn_no}</td>
-                <td><a href="${contextPath}/board/detail?bn_no=${board.bn_no}">${board.bn_title}</a></td>
-                <td>${board.bn_bm_nickname}</td>
-                <td>${board.bn_readcount}</td>
-                <td><fmt:formatDate value="${board.bn_date}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <tr class="${board.bb_no == 123 ? 'selected' : ''}">
+                <td>${board.bb_no}</td>
+                <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>
+                <td>${board.bb_bm_nickname}</td>
+                <td>${board.bb_readcount}</td>
+                <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
             </tr>
         </c:forEach>
         </tbody>
