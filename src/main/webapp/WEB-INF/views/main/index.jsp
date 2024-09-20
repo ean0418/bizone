@@ -27,7 +27,7 @@
 
   <!-- 메인 콘텐츠 섹션 -->
   <div class="row">
-    <div class="col-12 p-0">
+    <div class="col-12 p-0" style="background-color: transparent">
       <jsp:include page="${contentPage}" />
     </div>
   </div>
