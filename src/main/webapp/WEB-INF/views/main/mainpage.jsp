@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=695af2d9d27326c791e215b580236791&libraries=services,clusterer"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
     <style>
         body {
             margin: 0;
@@ -12,13 +13,11 @@
             flex-direction: column;
         }
 
-        /* 지도와 사이드바 컨테이너 */
         .content {
             display: flex;
             height: calc(100vh - 100px);
         }
 
-        /* 지도 컨테이너 스타일 */
         #mapContainer {
             flex-grow: 1;
             height: 100%;
@@ -29,7 +28,6 @@
             height: 100%;
         }
 
-        /* 사이드바 스타일 */
         #sidebar {
             width: 35%;
             background-color: rgba(255, 255, 255, 0.8);
@@ -95,6 +93,24 @@
             cursor: pointer;
         }
 
+        #sample5_address {
+            width: calc(100% - 110px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #search_button {
+            width: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f0f0f0;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -102,9 +118,7 @@
     <h1>상권분석</h1>
 </div>
 
-<!-- 지도와 사이드바가 들어가는 컨텐츠 영역 -->
 <div class="content">
-    <!-- 사이드바 -->
     <div id="sidebar">
         <div id="sidebar-content">
             <select id="locationSelect">
@@ -134,12 +148,15 @@
                 <option value="37.573293,126.979672">종로구</option>
                 <option value="37.5636152,126.9979403">중구</option>
                 <option value="37.6063241,127.092728">중랑구</option>
-                <!-- 다른 지역 옵션들 추가 -->
             </select>
             <button id="toggleEupMyeonDongBoundaries">읍면동 경계 표시/숨기기</button>
-            <div id="eupMyeonDongSelectedArea" style="display: none;"></div> <!-- 읍면동 선택된 지역 표시 -->
+            <div id="eupMyeonDongSelectedArea" style="display: none;"></div>
+
             <button id="toggleSiGunGuBoundaries">시군구 경계 표시/숨기기</button>
-            <div id="siGunGuSelectedArea" style="display: none;"></div> <!-- 시군구 선택된 지역 표시 -->
+            <div id="siGunGuSelectedArea" style="display: none;"></div>
+
+            <input type="text" id="sample5_address" placeholder="주소">
+            <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
         </div>
     </div>
     <div id="mapContainer">
@@ -152,6 +169,8 @@
     var isEupMyeonDongLoaded = false;
     var isSiGunGuLoaded = false;
     var geoJsonData = null;
+    var marker = null;
+    var infowindow = null;
 
     function initKakaoMap() {
         console.log("Initializing Kakao Map");
@@ -163,6 +182,7 @@
         map = new kakao.maps.Map(container, options);
         customOverlay = new kakao.maps.CustomOverlay({});
 
+        // 서울시 구 선택 시 해당 구로 지도 이동
         $("#locationSelect").on("change", function () {
             if (map) {
                 var coords = $(this).val().split(',');
@@ -194,38 +214,34 @@
     function initializeButtons() {
         console.log("Initializing buttons");
 
-        // 읍면동 버튼
         $("#toggleEupMyeonDongBoundaries").on("click", function () {
-            console.log("Toggle EupMyeonDong button clicked");
             if (isEupMyeonDongLoaded) {
                 kkoMap.removePolygons();
                 isEupMyeonDongLoaded = false;
-                $("#eupMyeonDongSelectedArea").hide(); // 읍면동 선택 영역 숨김
+                $("#eupMyeonDongSelectedArea").hide();
             } else {
                 if (geoJsonData) {
                     kkoMap.loadGeoJson(geoJsonData, "읍면동");
-                    map.relayout();  // 지도 리프레시
+                    map.relayout();
                     isEupMyeonDongLoaded = true;
-                    $("#eupMyeonDongSelectedArea").show().text("선택된 읍면동: 없음"); // 선택된 읍면동 영역 표시
+                    $("#eupMyeonDongSelectedArea").show().text("선택된 읍면동: 없음");
                 } else {
                     console.error("GeoJSON data not loaded");
                 }
             }
         });
 
-        // 시군구 버튼
         $("#toggleSiGunGuBoundaries").on("click", function () {
-            console.log("Toggle SiGunGu button clicked");
             if (isSiGunGuLoaded) {
                 kkoMap.removePolygons();
                 isSiGunGuLoaded = false;
-                $("#siGunGuSelectedArea").hide(); // 시군구 선택 영역 숨김
+                $("#siGunGuSelectedArea").hide();
             } else {
                 if (geoJsonData) {
                     kkoMap.loadGeoJson(geoJsonData, "시군구");
-                    map.relayout();  // 지도 리프레시
+                    map.relayout();
                     isSiGunGuLoaded = true;
-                    $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음"); // 선택된 시군구 영역 표시
+                    $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음");
                 } else {
                     console.error("GeoJSON data not loaded");
                 }
@@ -244,14 +260,14 @@
                 filteredData = geoJsonData.features.filter(function (feature) {
                     return feature.properties.adm_cd && (feature.properties.adm_cd.length === 7 || feature.properties.adm_cd.length === 8);
                 });
-                fillColor = "rgba(30, 144, 255, 0.1)";  // 읍면동 경계 색상 (투명 파란색)
-                strokeColor = "#104486";  // 읍면동 테두리 색상
+                fillColor = "rgba(30, 144, 255, 0.1)";
+                strokeColor = "#104486";
             } else if (type === "시군구") {
                 filteredData = geoJsonData.features.filter(function (feature) {
                     return feature.properties.sgg && feature.properties.sgg.length === 5;
                 });
-                fillColor = "rgba(30, 144, 255, 0.1)";  // 시군구 경계 색상 (투명 파란색)
-                strokeColor = "#163599";  // 시군구 테두리 색상 (주황색)
+                fillColor = "rgba(30, 144, 255, 0.1)";
+                strokeColor = "#163599";
             }
 
             if (type === "읍면동") {
@@ -301,30 +317,30 @@
 
             var polygon = new kakao.maps.Polygon({
                 path: area.path,
-                strokeWeight: 1.5,  // 테두리 두께 설정
+                strokeWeight: 1.5,
                 strokeColor: strokeColor,
                 strokeOpacity: 0.8,
                 fillColor: fillColor,
-                fillOpacity: 0.1,  // 투명도 설정
+                fillOpacity: 0.1,
             });
 
             kakao.maps.event.addListener(polygon, "mouseover", function () {
-                polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });  // 마우스 오버 색상
+                polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
                 customOverlay.setPosition(kkoMap.centroid(area.path[0]));
                 customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
                 customOverlay.setMap(map);
             });
 
             kakao.maps.event.addListener(polygon, "mouseout", function () {
-                polygon.setOptions({ fillColor: fillColor });  // 마우스 아웃 시 원래 색상으로
+                polygon.setOptions({ fillColor: fillColor });
                 customOverlay.setMap(null);
             });
 
             kakao.maps.event.addListener(polygon, "click", function () {
                 if (type === "읍면동") {
-                    $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);  // 읍면동 선택시
+                    $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);
                 } else if (type === "시군구") {
-                    $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);  // 시군구 선택시
+                    $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);
                 }
                 map.setLevel(8);
                 map.setCenter(kkoMap.centroid(area.path[0]));
@@ -352,6 +368,62 @@
             console.log("Polygons removed successfully");
         }
     };
+
+    function sample5_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                var addr = data.address; // 최종 주소 변수
+
+                // 주소 정보를 해당 필드에 넣는다.
+                document.getElementById("sample5_address").value = addr;
+
+                // 주소로 좌표를 검색
+                var geocoder = new kakao.maps.services.Geocoder();
+                geocoder.addressSearch(addr, function(results, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        var result = results[0]; // 첫번째 결과값을 활용
+
+                        // 해당 주소에 대한 좌표를 받아서
+                        var coords = new kakao.maps.LatLng(result.y, result.x);
+
+                        // 지도를 보여준다.
+                        document.getElementById('mapContainer').style.display = "block";
+                        map.relayout();
+
+                        // 지도 중심을 변경한다.
+                        map.setCenter(coords);
+                        map.setLevel(3);  // 지도 확대
+
+                        // 검색할 때 마커가 이미 존재하면 지우고 새로 생성
+                        if (marker) {
+                            marker.setMap(null);  // 기존 마커를 제거
+                        }
+                        if (infowindow) {
+                            infowindow.close();  // 기존 인포윈도우 제거
+                        }
+
+                        // 마커를 결과값으로 받은 위치로 옮긴다.
+                        marker = new kakao.maps.Marker({
+                            position: coords,
+                            map: map
+                        });
+
+                        // 인포윈도우에 표시될 내용
+                        var iwContent = '<div style="padding:5px;">' + addr + '<br><a href="https://map.kakao.com/link/map/' + addr + ',' + result.y + ',' + result.x + '" target="_blank"><img src="/resources/image/kakaomap.png" alt="카카오맵" style="width:44px; height:18px; margin-top:5px;"></a></div>';
+
+                        // 인포윈도우를 생성
+                        infowindow = new kakao.maps.InfoWindow({
+                            content: iwContent,  // 인포윈도우에 들어갈 내용
+                            removable: true      // 인포윈도우 닫기 버튼을 추가
+                        });
+
+                        // 마커 위에 인포윈도우를 표시
+                        infowindow.open(map, marker);
+                    }
+                });
+            }
+        }).open();
+    }
 
     kakao.maps.load(function() {
         console.log("Kakao Maps API loaded");
