@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class MemberController {
@@ -103,4 +105,5 @@ public class MemberController {
         req.setAttribute("contentPage", "../member/info.jsp");
         return "main/index";
     }
+
 }

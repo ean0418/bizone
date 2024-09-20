@@ -139,7 +139,7 @@
         }
 
         /* 버튼 스타일 */
-        button.submit-btn, button.address-btn {
+        button.submit-btn, button.address-btn, button#email-btn {
             width: 100%;
             padding: 12px; /* 버튼의 패딩을 줄여줌 */
             background-color: #2ecc71;
@@ -151,7 +151,7 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        button.submit-btn:hover {
+        button.submit-btn:hover button#email-btn {
             background-color: #27ae60;
             transform: scale(1.02);
         }
@@ -244,7 +244,18 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input name="bm_mail" placeholder="Email" autocomplete="off" maxlength="20" class="i1">
+                    <input name="bm_mail" id="bm_mail" placeholder="Email" autocomplete="off" maxlength="50" class="i1">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="email-btn" type="button">이메일 인증</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input id="checkMailAuth" placeholder="인증번호 입력" disabled="disabled" class="i1"><br>
+                    <div id="warnMailAuth"></div>
                 </td>
             </tr>
             <tr>
@@ -255,5 +266,51 @@
         </table>
     </form>
 </div>
+<script language="JavaScript">
+    console.log('js연결 성공')
+    let code = 0;
+    document.getElementById("email-btn").addEventListener("click", () => {
+        console.log('이벤트리스너 들어옴')
+        const xhr = new XMLHttpRequest();
+        let email = document.querySelector("#bm_mail").value;
+        console.log(email)
+        const reqJson = new Object();
+        reqJson.email = email;
+        let checkInput = document.querySelector("#checkMailAuth")
+        console.log("http://localhost/email.send?email=" + email)
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var result = xhr.response;
+                    code = result.code;
+                    checkInput.disabled = false;
+                    alert('성공!!');
+                } else {
+                    alert('request에 뭔가 문제가 있어요.');
+                }
+            }
+        };
+        xhr.open("POST", '/email.send', true);
+        xhr.responseType = "json";
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(reqJson));
+    })
+
+    document.getElementById("checkMailAuth").addEventListener('change', () => {
+        const inputCode = document.querySelector("#checkMailAuth").value;
+        const resultMsg = document.getElementById("warnMailAuth");
+        console.log(inputCode);
+        console.log(code);
+        if (inputCode === code + "") {
+            resultMsg.textContent = '인증 완료';
+            resultMsg.setAttribute("style", "color: green;");
+            document.getElementById("bm_mail").setAttribute("readonly", true);
+        } else {
+            resultMsg.textContent = '인증번호가 불일치합니다. 인증번호를 다시 한 번 확인해주세요!';
+            resultMsg.setAttribute("style", "color: red;");
+        }
+    })
+</script>
 </body>
 </html>
