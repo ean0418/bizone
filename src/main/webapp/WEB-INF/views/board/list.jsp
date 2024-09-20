@@ -40,19 +40,19 @@
         }
         /* 열 크기 조정 */
         table th:nth-child(1), table td:nth-child(1) {
-            width: 10%;  /* 번호 열 크기 줄이기 */
+            width: 10%;
         }
         table th:nth-child(2), table td:nth-child(2) {
-            width: 40%; /* 제목 열 크기 늘리기 */
+            width: 45%;
         }
         table th:nth-child(3), table td:nth-child(3) {
-            width: 15%; /* 작성자 열 크기 줄이기 */
+            width: 15%;
         }
         table th:nth-child(4), table td:nth-child(4) {
-            width: 15%; /* 조회수 열 크기 줄이기 */
+            width: 20%;
         }
         table th:nth-child(5), table td:nth-child(5) {
-            width: 20%; /* 작성일 열 크기 늘리기 */
+            width: 10%;
         }
         .btn {
             margin-top: 5px; /* 글쓰기 버튼과 글쓰기 목록 간격 줄이기 */
@@ -85,20 +85,39 @@
                 <th>번호</th>
                 <th>제목</th>
                 <th>작성자</th>
-                <th>조회수</th>
                 <th>작성일</th>
+                <th>조회수</th>
             </tr>
         </thead>
         <tbody>
-        <c:forEach var="board" items="${boardList}">
-            <tr class="${board.bb_no == 123 ? 'selected' : ''}">
-                <td>${board.bb_no}</td>
-                <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>
-                <td>${board.bb_bm_nickname}</td>
-                <td>${board.bb_readcount}</td>
-                <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
-            </tr>
-        </c:forEach>
+<%--        <c:forEach var="board" items="${boardList}">--%>
+<%--            <tr class="${board.bb_no == 123 ? 'selected' : ''}">--%>
+<%--                <td>${board.bb_no}</td>--%>
+<%--                <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>--%>
+<%--                <td>${board.bb_bm_nickname}</td>--%>
+<%--                <td>${board.bb_readCount}</td>--%>
+<%--                <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>--%>
+<%--            </tr>--%>
+<%--        </c:forEach>--%>
+
+            <c:choose>
+                <c:when test="${not empty boardList}">
+                    <c:forEach var="board" items="${boardList}">
+                        <tr>
+                            <td>${board.bb_postNum}</td>
+                            <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>
+                            <td>${board.bb_bm_nickname}</td>
+                            <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
+                            <td>${board.bb_readCount}</td>
+                        </tr>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <tr>
+                        <td colspan="5">게시글이 없습니다.</td>
+                    </tr>
+                </c:otherwise>
+            </c:choose>
         </tbody>
         </table>
     </div>

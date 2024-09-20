@@ -36,7 +36,7 @@
                     <a class="nav-link ms-4" href="main">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="board">공지사항</a>
+                    <a class="nav-link ms-4" href="board/list">공지사항</a>
                 </li>
             </ul>
         </div>

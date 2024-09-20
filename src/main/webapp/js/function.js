@@ -11,7 +11,7 @@ function boardDelete(b_no) {
         location.href = "BoardDeleteController?b_no=" + b_no;
     }
 }
-
+q
 function boardUpdate(b_no) {
     // alert(b_no);
     b_text = prompt("변경 내용");

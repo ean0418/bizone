@@ -4,22 +4,24 @@ import java.sql.Timestamp;
 
 public class Bizone_board {
     private int bb_no;
+    private int bb_postNum;
     private String bb_bm_nickname;
     private String bb_title;
     private String bb_content;
-    private int bb_readcount;
     private Timestamp bb_date;
+    private int bb_readCount;
 
     public Bizone_board() {
     }
 
-    public Bizone_board(int bb_no, String bb_bm_nickname, String bb_title, String bb_content, int bb_readcount, Timestamp bb_date) {
+    public Bizone_board(int bb_no, int bb_postNum, String bb_bm_nickname, String bb_title, String bb_content, Timestamp bb_date, int bb_readCount) {
         this.bb_no = bb_no;
+        this.bb_postNum = bb_postNum;
         this.bb_bm_nickname = bb_bm_nickname;
         this.bb_title = bb_title;
         this.bb_content = bb_content;
-        this.bb_readcount = bb_readcount;
         this.bb_date = bb_date;
+        this.bb_readCount = bb_readCount;
     }
 
     public int getBb_no() {
@@ -28,6 +30,14 @@ public class Bizone_board {
 
     public void setBb_no(int bb_no) {
         this.bb_no = bb_no;
+    }
+
+    public int getBb_postNum() {
+        return bb_postNum;
+    }
+
+    public void setBb_postNum(int bb_postNum) {
+        this.bb_postNum = bb_postNum;
     }
 
     public String getBb_bm_nickname() {
@@ -54,20 +64,20 @@ public class Bizone_board {
         this.bb_content = bb_content;
     }
 
-    public int getBb_readcount() {
-        return bb_readcount;
-    }
-
-    public void setBb_readcount(int bb_readcount) {
-        this.bb_readcount = bb_readcount;
-    }
-
     public Timestamp getBb_date() {
         return bb_date;
     }
 
     public void setBb_date(Timestamp bb_date) {
         this.bb_date = bb_date;
+    }
+
+    public int getBb_readCount() {
+        return bb_readCount;
+    }
+
+    public void setBb_readCount(int bb_readCount) {
+        this.bb_readCount = bb_readCount;
     }
 }
 

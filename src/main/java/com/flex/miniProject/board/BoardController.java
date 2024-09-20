@@ -18,10 +18,11 @@ public class BoardController {
     @Autowired
     private BoardDAO boardDAO;
 
-    // 게시글 목록 확인
+
     @RequestMapping(value = "/board/list", method = RequestMethod.GET)
     public String boardList(HttpServletRequest req, Model model) {
-        boardDAO.getAllBoards(req);
+        boardDAO.getAllBoards(req); // 게시글 목록을 요청
+        model.addAttribute("boardList", req.getAttribute("boardList")); // boardList를 JSP로 전달
         model.addAttribute("contentPage", "../board/list.jsp");
         return "main/index";
     }
@@ -36,14 +37,25 @@ public class BoardController {
     // 게시글 작성 처리
     @RequestMapping(value = "/board/insert", method = RequestMethod.POST)
     public String insertBoard(Bizone_board board, HttpServletRequest req) {
-        boardDAO.insertBoard(board, req);
-        return "redirect:/board/list";
+        try {
+            boardDAO.insertBoard(board, req);
+            boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
+            return "redirect:/board/list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("errorMsg", "게시글 작성 중 오류가 발생했습니다.");
+            return "main/index";
+        }
     }
 
-    // 게시글 상세 보기
+    // 게시글 상세 보기 (조회 수 증가 포함)
     @RequestMapping(value = "/board/detail", method = RequestMethod.GET)
     public String boardDetail(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
-        boardDAO.getBoardById(bb_no, req);
+        // 조회수 증가
+        boardDAO.increaseReadCount(bb_no, req);
+
+        // 게시글 상세 정보 가져오기
+        boardDAO.getBoardByNo(bb_no, req);
         req.setAttribute("contentPage", "../board/detail.jsp");
         return "main/index";
     }
@@ -51,7 +63,7 @@ public class BoardController {
     // 게시글 수정 페이지 이동
     @RequestMapping(value = "/board/update.go", method = RequestMethod.GET)
     public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
-        boardDAO.getBoardById(bb_no, req);
+        boardDAO.getBoardByNo(bb_no, req);
         req.setAttribute("contentPage", "../board/update.jsp");
         return "main/index";
     }
@@ -66,7 +78,15 @@ public class BoardController {
     // 게시글 삭제 처리
     @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
     public String deleteBoard(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
-        boardDAO.deleteBoard(bb_no, req);
-        return "redirect:/board/list";
+        try {
+            boardDAO.deleteBoard(bb_no, req);
+            boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
+            return "redirect:/board/list";
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("errorMsg", "게시글 삭제 중 오류가 발생했습니다.");
+            return "main/index";
+        }
     }
+
 }
