@@ -16,8 +16,9 @@ public class MemberController {
     private MemberDAO mDAO;
 
     @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
-    public String showStep1() {
-        return "member/joinStep1"; // agreement step
+    public String showStep1(HttpServletRequest req) {
+        req.setAttribute("contentPage", "../member/joinStep1.jsp");
+        return "main/index"; // agreement step
     }
     @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
     public String kakao_login() {

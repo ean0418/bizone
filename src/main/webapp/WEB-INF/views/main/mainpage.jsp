@@ -10,12 +10,14 @@
             margin: 0;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         /* 지도와 사이드바 컨테이너 */
         .content {
             display: flex;
             height: calc(100vh - 100px);
+            position: relative;
         }
 
         /* 지도 컨테이너 스타일 */
@@ -32,6 +34,7 @@
         /* 사이드바 스타일 */
         #sidebar {
             width: 35%;
+            max-width: 400px;
             background-color: rgba(255, 255, 255, 0.8);
             margin: 20px;
             box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);

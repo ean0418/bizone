@@ -30,8 +30,8 @@
     <style>
         .step-indicator {
             display: flex;
-            justify-content: center;
             margin-bottom: 20px;
+            justify-content: center;
         }
 
         .step-indicator span {
@@ -46,8 +46,9 @@
             margin: 0 10px;
         }
 
-        .step-indicator .active {
+        .step-indicator .active, .inactive {
             background-color: #2ecc71;
+            text-align: center;
         }
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -55,22 +56,15 @@
             color: #d3d7da;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-top: 120px; /* 상단 네비게이션 바의 높이만큼 공간 확보 */
-            box-sizing: border-box;
-            height: 100vh;
-            overflow: hidden;
-
+            overflow-y: auto;
+            min-height: 100vh;
         }
 
         /* 회원가입 폼을 감싸는 컨테이너 */
         #signupContainer {
             width: 100%;
             max-width: 450px; /* 폼의 최대 너비 설정 */
-            max-height: 80vh; /* 폼의 최대 높이를 화면의 80%로 설정 */
-            overflow-y: auto; /* 세로 스크롤을 허용 */
-            margin: 20px;
+            margin: 20px auto;
             background-color: #2b2e33;
             border-radius: 15px;
             padding: 30px;
@@ -145,7 +139,7 @@
         }
 
         /* 버튼 스타일 */
-        button {
+        button.submit-btn, button.address-btn {
             width: 100%;
             padding: 12px; /* 버튼의 패딩을 줄여줌 */
             background-color: #2ecc71;
@@ -157,25 +151,25 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        button:hover {
+        button.submit-btn:hover {
             background-color: #27ae60;
             transform: scale(1.02);
         }
 
-        button[type="button"] {
+        button.address-btn[type="button"] {
             background-color: #3498db;
         }
 
-        button[type="button"]:hover {
+        button.address-btn[type="button"]:hover {
             background-color: #2980b9;
         }
 
         /* 주소 검색 버튼 */
-        button[type="button"] {
+        button.address-btn[type="button"] {
             margin-bottom: 15px;
         }
 
-        button[type="submit"] {
+        button.submit-btn[type="submit"] {
             margin-top: 20px;
         }
 
@@ -183,15 +177,6 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-        }
-
-        /* HTML과 body 기본 설정 */
-        html, body {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* 상단 네비게이션 바와 겹치지 않도록 */
-            overflow: hidden; /* 전체 페이지에서 스크롤을 막음 */
         }
     </style>
 </head>
@@ -202,9 +187,9 @@
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
-                    <label >회원가입</label>
+                    <label style="text-align: center; font-size: 16pt;">회원가입</label>
                     <div class="step-indicator">
-                        <span>1</span> → <span  class="active">2</span> → <span>3</span>
+                        <span class="inactive">1</span> → <span  class="active">2</span> → <span class="inactive">3</span>
                     </div>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
@@ -236,7 +221,7 @@
             <tr>
                 <td colspan="2">
                     <!-- 주소 검색 버튼 -->
-                    <button type="button" onclick="goPopup()">주소 검색</button><br>
+                    <button class="address-btn" type="button" onclick="goPopup()">주소 검색</button><br>
 
                     <!-- 주소 입력 필드 -->
 

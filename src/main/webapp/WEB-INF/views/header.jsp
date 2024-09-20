@@ -22,10 +22,10 @@
         <!-- Right-aligned menu items, always visible -->
         <div class="d-flex ms-auto align-items-center">
             <!-- Login and Signup links -->
-            <a class="nav-link text-light ms-3" href="member.login.go">로그인</a>
-            <a class="nav-link text-light ms-3" href="member.step1">회원가입</a>
+            <a class="nav-link text-light ms-3" href="member.login.go" style="white-space: nowrap;">로그인</a>
+            <a class="nav-link text-light ms-3" href="member.step1" style="white-space: nowrap;">회원가입</a>
             <!-- Toggle button for "지도" and "공지사항" items -->
-            <button class="navbar-toggler ms-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavItems" aria-controls="mainNavItems" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler ms-3 my-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavItems" aria-controls="mainNavItems" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
         </div>
