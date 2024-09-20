@@ -30,8 +30,8 @@
     <style>
         .step-indicator {
             display: flex;
-            justify-content: center;
             margin-bottom: 20px;
+            justify-content: center;
         }
 
         .step-indicator span {
@@ -46,8 +46,9 @@
             margin: 0 10px;
         }
 
-        .step-indicator .active {
+        .step-indicator .active, .inactive {
             background-color: #2ecc71;
+            text-align: center;
         }
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -55,22 +56,15 @@
             color: #d3d7da;
             margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-top: 120px; /* 상단 네비게이션 바의 높이만큼 공간 확보 */
-            box-sizing: border-box;
-            height: 100vh;
-            overflow: hidden;
-
+            overflow-y: auto;
+            min-height: 100vh;
         }
 
         /* 회원가입 폼을 감싸는 컨테이너 */
         #signupContainer {
             width: 100%;
             max-width: 450px; /* 폼의 최대 너비 설정 */
-            max-height: 80vh; /* 폼의 최대 높이를 화면의 80%로 설정 */
-            overflow-y: auto; /* 세로 스크롤을 허용 */
-            margin: 20px;
+            margin: 20px auto;
             background-color: #2b2e33;
             border-radius: 15px;
             padding: 30px;
@@ -145,7 +139,7 @@
         }
 
         /* 버튼 스타일 */
-        button {
+        button.submit-btn, button.address-btn, button#email-btn {
             width: 100%;
             padding: 12px; /* 버튼의 패딩을 줄여줌 */
             background-color: #2ecc71;
@@ -157,25 +151,25 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        button:hover {
+        button.submit-btn:hover button#email-btn {
             background-color: #27ae60;
             transform: scale(1.02);
         }
 
-        button[type="button"] {
+        button.address-btn[type="button"] {
             background-color: #3498db;
         }
 
-        button[type="button"]:hover {
+        button.address-btn[type="button"]:hover {
             background-color: #2980b9;
         }
 
         /* 주소 검색 버튼 */
-        button[type="button"] {
+        button.address-btn[type="button"] {
             margin-bottom: 15px;
         }
 
-        button[type="submit"] {
+        button.submit-btn[type="submit"] {
             margin-top: 20px;
         }
 
@@ -183,15 +177,6 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-        }
-
-        /* HTML과 body 기본 설정 */
-        html, body {
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* 상단 네비게이션 바와 겹치지 않도록 */
-            overflow: hidden; /* 전체 페이지에서 스크롤을 막음 */
         }
     </style>
 </head>
@@ -202,9 +187,9 @@
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
-                    <label >회원가입</label>
+                    <label style="text-align: center; font-size: 16pt;">회원가입</label>
                     <div class="step-indicator">
-                        <span>1</span> → <span  class="active">2</span> → <span>3</span>
+                        <span class="inactive">1</span> → <span  class="active">2</span> → <span class="inactive">3</span>
                     </div>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
@@ -236,7 +221,7 @@
             <tr>
                 <td colspan="2">
                     <!-- 주소 검색 버튼 -->
-                    <button type="button" onclick="goPopup()">주소 검색</button><br>
+                    <button class="address-btn" type="button" onclick="goPopup()">주소 검색</button><br>
 
                     <!-- 주소 입력 필드 -->
 
@@ -259,7 +244,18 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <input name="bm_mail" placeholder="Email" autocomplete="off" maxlength="20" class="i1">
+                    <input name="bm_mail" id="bm_mail" placeholder="Email" autocomplete="off" maxlength="50" class="i1">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="email-btn" type="button">이메일 인증</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <input id="checkMailAuth" placeholder="인증번호 입력" disabled="disabled" class="i1"><br>
+                    <div id="warnMailAuth"></div>
                 </td>
             </tr>
             <tr>
@@ -270,5 +266,51 @@
         </table>
     </form>
 </div>
+<script language="JavaScript">
+    console.log('js연결 성공')
+    let code = 0;
+    document.getElementById("email-btn").addEventListener("click", () => {
+        console.log('이벤트리스너 들어옴')
+        const xhr = new XMLHttpRequest();
+        let email = document.querySelector("#bm_mail").value;
+        console.log(email)
+        const reqJson = new Object();
+        reqJson.email = email;
+        let checkInput = document.querySelector("#checkMailAuth")
+        console.log("http://localhost/email.send?email=" + email)
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    var result = xhr.response;
+                    code = result.code;
+                    checkInput.disabled = false;
+                    alert('성공!!');
+                } else {
+                    alert('request에 뭔가 문제가 있어요.');
+                }
+            }
+        };
+        xhr.open("POST", '/email.send', true);
+        xhr.responseType = "json";
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify(reqJson));
+    })
+
+    document.getElementById("checkMailAuth").addEventListener('change', () => {
+        const inputCode = document.querySelector("#checkMailAuth").value;
+        const resultMsg = document.getElementById("warnMailAuth");
+        console.log(inputCode);
+        console.log(code);
+        if (inputCode === code + "") {
+            resultMsg.textContent = '인증 완료';
+            resultMsg.setAttribute("style", "color: green;");
+            document.getElementById("bm_mail").setAttribute("readonly", true);
+        } else {
+            resultMsg.textContent = '인증번호가 불일치합니다. 인증번호를 다시 한 번 확인해주세요!';
+            resultMsg.setAttribute("style", "color: red;");
+        }
+    })
+</script>
 </body>
 </html>
