@@ -113,7 +113,6 @@ public class MemberController {
         req.setAttribute("contentPage", "../member/info.jsp");
         return "main/index";
     }
-
     @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
                                            HttpSession session, Model model) throws Exception {
