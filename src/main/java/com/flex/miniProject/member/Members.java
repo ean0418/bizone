@@ -6,7 +6,6 @@ public class Members {
     private List<Bizone_member> member;
 
     public Members() {
-
     }
 
     public Members(List<Bizone_member> member) {
