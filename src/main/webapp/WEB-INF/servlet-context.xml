@@ -46,9 +46,9 @@
     <!-- DBMS 설정 (db서버 대기시간 최대 3초) -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://192.168.0.77:3306/bizone"/>
-        <property name="username" value="test"/>
-        <property name="password" value="a12345678!"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/ean"/>
+        <property name="username" value="root"/>
+        <property name="password" value="0418"/>
         <property name="maxWaitMillis" value="3000"/>
         <property name="poolPreparedStatements" value="true"/>
         <property name="maxOpenPreparedStatements" value="50"/>
@@ -58,7 +58,7 @@
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="typeAliasesPackage" value="com.flex.miniProject" />
-        <property name="mapperLocations" value="classpath:mapper/memberMapper.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 
     <!-- sqlSession 취득 (생성자에 인자 넣기) -->

@@ -1,8 +1,24 @@
 package com.flex.miniProject.member;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -13,10 +29,44 @@ public class MemberDAO {
     @Autowired
     private SqlSession ss;
 
-    public void signupMember(Bizone_member m) {
+    private String getAccessToken(String code) throws JsonProcessingException {
+// HTTP Header 생성
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+
+// HTTP Body 생성
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "authorization_code");
+        body.add("client_id", "카카오developer에서 받은 restApiKey");
+        body.add("redirect_uri", "http://서버IP/user/kakao/callback");
+        body.add("code", code);
+
+// HTTP 요청 보내기
+        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
+        RestTemplate rt = new RestTemplate();
+        ResponseEntity<String> response = rt.exchange(
+                "https://kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+// HTTP 응답 (JSON) -> 액세스 토큰 파싱
+        String responseBody = response.getBody();
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode jsonNode = objectMapper.readTree(responseBody);
+        return jsonNode.get("access_token").asText();
+    }
+
+
+    public void signupMember(HttpServletRequest req, Bizone_member m) {
         try {
-            System.out.println(m);
-            System.out.println(m.getBm_id());
+            String bm_addr1 = req.getParameter("bm_addr1");
+            String bm_addr2 = req.getParameter("bm_addr2");
+            String bm_addr3 = req.getParameter("bm_addr3");
+            String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
+            m.setBm_address(bm_address);
+
             ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,6 +103,18 @@ public class MemberDAO {
         }
     }
 
+    public static boolean loginCheck(HttpServletRequest req) {
+        Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
+        if (m != null) {
+            // 로그인 성공 + 상태 유지시
+            req.setAttribute("lp", "member/welcome.jsp");
+            return true;
+        }
+        // 로그인상태가 아니거나 + 로그인 실패시
+        req.setAttribute("lp", "member/login.jsp");
+        return false;
+    }
+
     public void logout(HttpServletRequest req) {
         try {
             req.getSession().setAttribute("loginMember", null);
@@ -85,14 +147,12 @@ public class MemberDAO {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
 
 
-
         try {
             m.setBm_id(req.getParameter("bm_id"));
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
-//            m.setBm_birthday(sdf.parse(req.getParameter("bm_birthday")));
             m.setBm_mail(req.getParameter("bm_mail"));
 
             String bm_addr1 = req.getParameter("bm_addr1");
@@ -115,4 +175,8 @@ public class MemberDAO {
 
         }
 
+
     }}
+
+
+

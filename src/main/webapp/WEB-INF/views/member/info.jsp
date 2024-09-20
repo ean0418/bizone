@@ -1,4 +1,4 @@
-<%--
+git <%--
   Created by IntelliJ IDEA.
   User: sdedu
   Date: 24. 9. 11.
@@ -12,7 +12,8 @@
 </head>
 <body>
 <table id="signupTbl">
-    <form action="member.update" method="post" enctype="multipart/form-data">
+    <form action="member.update" name="updateForm" method="post"
+          enctype="multipart/form-data" onsubmit="return updateCheck();">
         <tr>
             <td align="center" colspan="2">
                 <input value="${sessionScope.loginMember.bm_id }" name="bm_id" placeholder="ID" autofocus="autofocus"
