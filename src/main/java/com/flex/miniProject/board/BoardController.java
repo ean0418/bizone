@@ -23,15 +23,15 @@ public class BoardController {
     public String boardList(HttpServletRequest req, Model model) {
         boardDAO.getAllBoards(req); // 게시글 목록을 요청
         model.addAttribute("boardList", req.getAttribute("boardList")); // boardList를 JSP로 전달
-        model.addAttribute("contentPage", "../board/list.jsp");
-        return "main/index";
+        model.addAttribute("contentPage", "board/list.jsp");
+        return "index";
     }
 
     // 게시글 작성 페이지 이동
     @RequestMapping(value = "/board/insert.go", method = RequestMethod.GET)
     public String goInsert(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../board/insert.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "board/insert.jsp");
+        return "index";
     }
 
     // 게시글 작성 처리
@@ -44,7 +44,7 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMsg", "게시글 작성 중 오류가 발생했습니다.");
-            return "main/index";
+            return "index";
         }
     }
 
@@ -56,16 +56,16 @@ public class BoardController {
 
         // 게시글 상세 정보 가져오기
         boardDAO.getBoardByNo(bb_no, req);
-        req.setAttribute("contentPage", "../board/detail.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "board/detail.jsp");
+        return "index";
     }
 
     // 게시글 수정 페이지 이동
     @RequestMapping(value = "/board/update.go", method = RequestMethod.GET)
     public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
         boardDAO.getBoardByNo(bb_no, req);
-        req.setAttribute("contentPage", "../board/update.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "board/update.jsp");
+        return "index";
     }
 
     // 게시글 수정 처리
@@ -85,7 +85,7 @@ public class BoardController {
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMsg", "게시글 삭제 중 오류가 발생했습니다.");
-            return "main/index";
+            return "index";
         }
     }
 

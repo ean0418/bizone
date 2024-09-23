@@ -182,7 +182,7 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="member.signup" METHOD="post" name="signupForm"
+    <form action="${contextPath}/member.signup" METHOD="post" name="signupForm"
           onsubmit="return signupCheck();">
         <table id="signupTbl">
             <tr>

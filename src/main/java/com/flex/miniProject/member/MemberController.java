@@ -29,8 +29,8 @@ public class MemberController {
 
     @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
     public String showStep1(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/joinStep1.jsp");
-        return "main/index"; // agreement step
+        req.setAttribute("contentPage", "member/joinStep1.jsp");
+        return "index"; // agreement step
     }
 
 
@@ -42,8 +42,8 @@ public class MemberController {
 
     @RequestMapping(value = "/signup", method= RequestMethod.POST)
     public String member(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/signup.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/signup.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.signup", method = RequestMethod.POST)
@@ -51,20 +51,20 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.signupMember(req, m);
-        req.setAttribute("contentPage", "../member/joinStep3.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/joinStep3.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.login.go", method = RequestMethod.GET)
     public String goMemberLogin(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/login.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/login.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.signup.go", method = RequestMethod.GET)
     public String goSignup(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/signup.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/signup.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.id.check", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
@@ -77,14 +77,14 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.login(m, req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)
     public String goMemberInfo(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/info.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/info.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.logout", method = RequestMethod.GET)
@@ -92,8 +92,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.logout(req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.delete", method = RequestMethod.GET)
@@ -101,8 +101,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.delete(req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.update", method = RequestMethod.POST)
@@ -110,8 +110,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.update(req);
-        req.setAttribute("contentPage", "../member/info.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/info.jsp");
+        return "index";
     }
     @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
