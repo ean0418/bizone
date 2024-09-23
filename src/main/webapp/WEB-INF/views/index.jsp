@@ -46,7 +46,7 @@
   <!-- 헤더 섹션 -->
   <div class="row">
     <div class="col-12 p-0">
-      <jsp:include page="../header.jsp" />
+      <jsp:include page="header.jsp" />
     </div>
   </div>
 
@@ -61,7 +61,7 @@
 <!-- 푸터 섹션 -->
 <footer class="row">
   <div class="col-12 p-0">
-    <jsp:include page="../footer.jsp" />
+    <jsp:include page="footer.jsp" />
   </div>
 </footer>
 

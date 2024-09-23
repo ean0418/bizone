@@ -12,7 +12,7 @@ git <%--
 </head>
 <body>
 <table id="signupTbl">
-    <form action="member.update" name="updateForm" method="post"
+    <form action="${contextPath}/member.update" name="updateForm" method="post"
           enctype="multipart/form-data" onsubmit="return updateCheck();">
         <tr>
             <td align="center" colspan="2">
