@@ -274,10 +274,9 @@
         const xhr = new XMLHttpRequest();
         let email = document.querySelector("#bm_mail").value;
         console.log(email)
-        const reqJson = new Object();
-        reqJson.email = email;
+        const reqJson = {};
+        reqJson.email = email
         let checkInput = document.querySelector("#checkMailAuth")
-        console.log("http://localhost/email.send?email=" + email)
 
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {

@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 
@@ -34,7 +35,7 @@ public class MemberDAO {
     @Autowired
     private SqlSession ss;
 
-    private String getAccessToken(String code) throws JsonProcessingException {
+    private String getAccessToken(String code) throws IOException {
 // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
