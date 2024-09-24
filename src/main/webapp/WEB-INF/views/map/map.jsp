@@ -120,7 +120,6 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             font-size: 14px;
-            pointer-events: none;
         }
 
         button {
@@ -448,6 +447,23 @@
         });
     }
 
+    // 성능 향상에 도움이 되는지는 ..
+    // var clusterer = new kakao.maps.MarkerClusterer({
+    //     map: map,
+    //     averageCenter: true,
+    //     minLevel: 10
+    // });
+    //
+    // function addClusteredPolygons(data) {
+    //     var markers = data.features.map(function (feature) {
+    //         var coords = feature.geometry.coordinates;
+    //         return new kakao.maps.Marker({
+    //             position: new kakao.maps.LatLng(coords[1], coords[0])
+    //         });
+    //     });
+    //     clusterer.addMarkers(markers);
+    // }
+
     var kkoMap = {
         loadGeoJson: function (geoJsonData, type) {
             console.log("Loading GeoJSON data for", type);
@@ -495,17 +511,37 @@
                 fillOpacity: 0.3,  // 투명도 조정
             });
 
+            let isMouseOver = false;
+
             kakao.maps.event.addListener(polygon, "mouseover", function () {
-                // mousemove
-                polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
-                customOverlay.setPosition(kkoMap.centroid(area.path[0]));
-                customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
-                customOverlay.setMap(map);
+                if (!isMouseOver) {
+                    isMouseOver = true;
+                    polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
+                    customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
+                    customOverlay.setMap(map);
+                }
+            });
+
+            kakao.maps.event.addListener(polygon, "mousemove", function (mouseEvent) {
+                if (isMouseOver) {
+                    // 마우스 커서의 우측하단(5시 방향)으로 위치 조정
+                    const offsetX = 35; // x축 오프셋
+                    const offsetY = 35; // y축 오프셋
+                    const projection = map.getProjection();
+                    const point = projection.pointFromCoords(mouseEvent.latLng);
+                    point.x += offsetX;
+                    point.y += offsetY;
+                    const newPosition = projection.coordsFromPoint(point);
+                    customOverlay.setPosition(newPosition);
+                }
             });
 
             kakao.maps.event.addListener(polygon, "mouseout", function () {
-                polygon.setOptions({ fillColor: fillColor });
-                customOverlay.setMap(null);
+                if (isMouseOver) {
+                    isMouseOver = false;
+                    polygon.setOptions({ fillColor: fillColor });
+                    customOverlay.setMap(null);
+                }
             });
 
             kakao.maps.event.addListener(polygon, "click", function () {
