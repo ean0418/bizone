@@ -392,16 +392,16 @@
                     }
                 } else if (level >= 7 && level <= 8) {
                     if (!isSiGunGuLoaded) {  // 시군구 경계가 안 켜져 있을 때만 불러오기
-                        removePolygons();  // 기존 읍면동 경계 제거
+                        removePolygons();  // 기존 나머지 경계 제거
                         loadSiGunGuData();  // 시군구 경계 불러오기
                         isSiGunGuLoaded = true;
                         isEupMyeonDongLoaded = false;
                         isSiDoLoaded = false;
                     }
                 } else if (level >= 9 && level <= 10) {
-                    if (!isSiDoLoaded) {  // 시군구 경계가 안 켜져 있을 때만 불러오기
-                        removePolygons();  // 기존 읍면동 경계 제거
-                        loadSiDoData();  // 시군구 경계 불러오기
+                    if (!isSiDoLoaded) {  // 시도 경계가 안 켜져 있을 때만 불러오기
+                        removePolygons();  // 기존 나머지 경계 제거
+                        loadSiDoData();  // 시도 경계 불러오기
                         isSiDoLoaded = true;
                         isEupMyeonDongLoaded = false;
                         isSiGunGuLoaded = false;
@@ -482,6 +482,9 @@
             } else if (type === "시군구") {
                 fillColor = "rgba(30, 144, 255, 0.1)";
                 strokeColor = "#163599";
+            } else if (type === "시도") {
+                fillColor = "rgba(30, 144, 255, 0.1)"
+                strokeColor = "#101e4e";
             }
 
             geoJsonData.features.forEach(function (feature) {
@@ -553,6 +556,8 @@
                     $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);
                 } else if (type === "시군구") {
                     $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);
+                } else if (type === "시도") {
+                    $("#siDoSelectedArea").text("선택된 시도: " + area.name);
                 }
                 // 클릭 후 이전 확대 레벨을 유지하면서 중심 이동
                 map.setCenter(kkoMap.centroid(area.path[0]));
