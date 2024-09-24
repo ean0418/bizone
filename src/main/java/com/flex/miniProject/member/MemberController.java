@@ -34,13 +34,13 @@ public class MemberController {
     }
 
 
-    @RequestMapping(value ="/step1",  method = RequestMethod.POST)
+    @RequestMapping(value = "/step1", method = RequestMethod.POST)
     public String handleStep1() {
         return "redirect:/member/signup"; // signup로 리다이렉트
     }
 
 
-    @RequestMapping(value = "/signup", method= RequestMethod.POST)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String member(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/signup.jsp");
         return "index";
@@ -76,9 +76,17 @@ public class MemberController {
     public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
+
+        // 로그인 처리
         mDAO.login(m, req);
-        req.setAttribute("contentPage", "map/map.jsp");
-        return "index";
+
+        // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
+        if (mDAO.loginCheck(req)) {
+            return "member/success";  // 로그인 성공 시 메인 페이지로 이동
+        } else {
+            req.setAttribute("contentPage", "map/map.jsp");
+            return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
+        }
     }
 
     @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)

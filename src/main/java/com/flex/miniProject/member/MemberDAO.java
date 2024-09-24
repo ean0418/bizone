@@ -87,25 +87,32 @@ public class MemberDAO {
 
     public void login(Bizone_member m, HttpServletRequest req) {
         try {
+            // 데이터베이스에서 ID로 회원 조회
             List<Bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
             if (members.size() != 0) {
                 Bizone_member dbM = members.get(0);
 
-
+                // 비밀번호 일치 여부 확인
                 if (dbM.getBm_pw().equals(m.getBm_pw())) {
                     req.setAttribute("r", "로그인 성공");
                     req.getSession().setAttribute("loginMember", dbM);
-                    req.getSession().setMaxInactiveInterval(600);
-
+                    req.getSession().setMaxInactiveInterval(600); // 세션 유지 시간 설정
+                    // 로그인 성공 시 success.jsp로 이동
+                    req.setAttribute("contentPage", "../member/success.jsp");
                 } else {
-                    req.setAttribute("r", "로그인 실패(PW 오류");
+                    // 비밀번호 오류 시
+                    req.setAttribute("r", "로그인 실패(PW 오류)");
+                    req.setAttribute("contentPage", "../member/login.jsp");
                 }
             } else {
+                // ID가 없는 경우
                 req.setAttribute("r", "로그인 실패(ID 없음)");
+                req.setAttribute("contentPage", "../member/login.jsp");
             }
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("r", "로그인 실패(DB서버)");
+            req.setAttribute("contentPage", "../member/login.jsp");
         }
     }
 
@@ -113,11 +120,11 @@ public class MemberDAO {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
         if (m != null) {
             // 로그인 성공 + 상태 유지시
-            req.setAttribute("lp", "member/welcome.jsp");
+            req.setAttribute("lp", "../member/success.jsp");
             return true;
         }
         // 로그인상태가 아니거나 + 로그인 실패시
-        req.setAttribute("lp", "member/login.jsp");
+        req.setAttribute("lp", "../member/login.jsp");
         return false;
     }
 
@@ -186,6 +193,7 @@ public class MemberDAO {
 
 
 }
+
 
 
 
