@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Service
@@ -15,10 +16,11 @@ public class BoardDAO {
     @Autowired
     private SqlSession ss;
 
-    public void getAllBoards(HttpServletRequest req) {
+    public void getAllBoards(HttpServletRequest req, HttpServletResponse res) {
         try {
             List<Bizone_board> boardList = ss.getMapper(BoardMapper.class).getAllBoards();
-
+            req.setCharacterEncoding("utf-8");
+            res.setCharacterEncoding("utf-8");
             // 로그 추가
             if (boardList == null || boardList.isEmpty()) {
                 System.out.println("게시글이 없습니다.");

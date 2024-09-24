@@ -22,6 +22,7 @@
         <!-- Right-aligned menu items, always visible -->
         <div class="d-flex ms-auto align-items-center">
             <!-- Login and Signup links -->
+            <h3>${r} ${errorMsg}</h3>
             <a class="nav-link text-light ms-3" href="${contextPath}/member.login.go" style="white-space: nowrap;">로그인</a>
             <a class="nav-link text-light ms-3" href="${contextPath}/member.step1" style="white-space: nowrap;">회원가입</a>
             <!-- Toggle button for "지도" and "공지사항" items -->

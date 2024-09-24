@@ -17,7 +17,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     /* Body를 Flexbox 컨테이너로 설정하여 세로 정렬 */
