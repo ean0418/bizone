@@ -34,13 +34,13 @@ public class MemberController {
     }
 
 
-    @RequestMapping(value ="/step1",  method = RequestMethod.POST)
+    @RequestMapping(value = "/step1", method = RequestMethod.POST)
     public String handleStep1() {
         return "redirect:/member/signup"; // signup로 리다이렉트
     }
 
 
-    @RequestMapping(value = "/signup", method= RequestMethod.POST)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String member(HttpServletRequest req) {
         req.setAttribute("contentPage", "../member/signup.jsp");
         return "main/index";
@@ -72,13 +72,21 @@ public class MemberController {
         return mDAO.memberIdCheck(m);
     }
 
+
     @RequestMapping(value = "/member.login", method = RequestMethod.POST)
     public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
+
+        // 로그인 처리
         mDAO.login(m, req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+
+        // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
+        if (mDAO.loginCheck(req)) {
+            return "member/success";  // 로그인 성공 시 메인 페이지로 이동
+        } else {
+            return "main/index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
+        }
     }
 
     @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)
@@ -113,44 +121,4 @@ public class MemberController {
         req.setAttribute("contentPage", "../member/info.jsp");
         return "main/index";
     }
-    @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
-    public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
-                                           HttpSession session, Model model) throws Exception {
-
-        // URL Path 및 파라미터 처리
-        UrlPathHelper urlPathHelper = new UrlPathHelper();
-        String originalURL = urlPathHelper.getOriginatingRequestUri(request);
-        Map<String, String[]> paramMap = request.getParameterMap();
-        Iterator<String> keyData = paramMap.keySet().iterator();
-
-        // CommonData 대신 HashMap 사용
-        Map<String, String> dto = new HashMap<>();
-        while (keyData.hasNext()) {
-            String key = keyData.next();
-            String[] value = paramMap.get(key);
-            dto.put(key, value[0]);
-        }
-
-        // Access Token 요청
-        String url = "https://kauth.kakao.com/oauth/token";
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-        LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", "412e7727ffd0b8900060854044814879");
-        String redirect_url = "http://localhost/kakao.login";
-        map.add("redirect_uri", redirect_url);
-        map.add("grant_type", "JGu5TGA6vgs4o_623UC0EKUkFgzabCH8WBHPwEm-l0_1fOKcLa3m5wAAAAQKKcleAAABkg3I7-QFVMIyByjmyg");
-        map.add("code", dto.get("code")); // 인가 코드 추가
-
-        HttpEntity<LinkedMultiValueMap<String, String>> request2 = new HttpEntity<>(map, headers);
-        Map<String, Object> response2 = restTemplate.postForObject(url, request2, Map.class);
-
-        // Access Token 출력
-        model.addAttribute("access_token", response2.get("access_token"));
-
-        return "/kakao.login";
-    }
-
 }

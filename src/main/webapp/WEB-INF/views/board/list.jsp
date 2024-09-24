@@ -69,6 +69,56 @@
         .btn:hover {
             background-color: #0056b3;
         }
+        /*.pagination {*/
+        /*    display: flex;*/
+        /*    justify-content: center;*/
+        /*    margin-top: 20px;*/
+        /*}*/
+        /*.pagination a {*/
+        /*    margin: 0 5px;*/
+        /*    padding: 8px 16px;*/
+        /*    text-decoration: none;*/
+        /*    background-color: #007bff;*/
+        /*    color: white;*/
+        /*    border-radius: 5px;*/
+        /*}*/
+        /*.pagination a.active {*/
+        /*    background-color: #0056b3;*/
+        /*}*/
+        /*.pagination a:hover {*/
+        /*    background-color: #0056b3;*/
+        /*}*/
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .page-item {
+            list-style-type: none;
+            padding: 0 10px;
+        }
+        .page-item a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .page-item.disabled a {
+            color: grey;
+        }
+        .page-item.active a {
+            font-weight: bold;
+            color: black;
+        }
+        .search-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-box input[type="text"] {
+            padding: 5px;
+            width: 200px;
+        }
+        .search-box button {
+            padding: 5px 10px;
+        }
     </style>
 </head>
 <body>
@@ -120,6 +170,48 @@
             </c:choose>
         </tbody>
         </table>
+
+        <!-- 페이징 처리 -->
+<%--        <div class="pagination">--%>
+<%--            <c:if test="${page > 1}">--%>
+<%--                <a href="${contextPath}/board/list?page=${page - 1}">&laquo;</a>--%>
+<%--            </c:if>--%>
+<%--            <c:forEach var="i" begin="${page > 3 ? page - 2 : 1}" end="${page + 2 <= totalPages ? page + 2 : totalPages}">--%>
+<%--                <a href="${contextPath}/board/list?page=${i}" class="${i == page ? 'active' : ''}">${i}</a>--%>
+<%--            </c:forEach>--%>
+<%--            <c:if test="${page < totalPages}">--%>
+<%--                <a href="${contextPath}/board/list?page=${page + 1}">&raquo;</a>--%>
+<%--            </c:if>--%>
+<%--        </div>--%>
+
+        <!-- 페이징 처리 -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <c:if test="${page > 1}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}">Previous</a>
+                    </li>
+                </c:if>
+
+                <c:forEach var="i" begin="${page - 2 lt 1 ? 1 : page - 2}" end="${page + 2 gt totalPages ? totalPages : page + 2}">
+                    <li class="page-item ${page == i ? 'active' : ''}">
+                        <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
+                    </li>
+                </c:forEach>
+
+                <c:if test="${page < totalPages}">
+                    <li class="page-item">
+                        <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">Next</a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
+
+        <!-- 작성자명으로 게시글 조회 -->
+        <form action="${contextPath}/board/list" method="get">
+            <input type="text" name="bb_nickname" placeholder="작성자명 입력" value="${bb_nickname}">
+            <button type="submit">검색</button>
+        </form>
     </div>
 </body>
 </html>

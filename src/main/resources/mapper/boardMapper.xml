@@ -16,6 +16,22 @@
         WHERE bb_no = #{bb_no}
     </select>
 
+    <!-- 게시글 목록 조회 (페이징 및 작성자명 필터 포함) -->
+    <select id="getBoardsWithPaging" parameterType="Map" resultType="com.flex.miniProject.board.Bizone_board">
+        SELECT *
+        FROM bizone_board
+        WHERE bb_bm_nickname LIKE CONCAT('%', #{bb_nickname}, '%')
+        ORDER BY bb_postNum DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 게시글 수 조회 -->
+    <select id="getBoardCount" resultType="int">
+        SELECT COUNT(*)
+        FROM bizone_board
+        WHERE bb_bm_nickname LIKE CONCAT('%', #{bb_nickname}, '%')
+    </select>
+
     <!-- 게시글 조회 시 조회수 증가 -->
     <update id="increaseReadCount" parameterType="int">
         UPDATE bizone_board
