@@ -29,10 +29,10 @@
         width: 100%;
         max-width: 600px;
         margin: 20px auto;
-        background-color: #353a40;
+        background-color: white;
         border-radius: 10px;
         padding: 30px;
-        box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 10px 20px #101E4E;
     }
 
     h1 {
@@ -44,9 +44,9 @@
 
     .agreement-box {
         padding: 20px;
-        border: 1px solid #444;
+        border: 1px solid white;
         border-radius: 8px;
-        background-color: #2e3338;
+        background-color: white;
     }
 
     .checkbox-wrapper {
@@ -56,12 +56,12 @@
     .checkbox-label {
         font-size: 18px;
         font-weight: 700;
-        color: #ffffff;
+        color: #101E4E;
     }
 
     .checkbox-wrapper p {
         margin-top: 5px;
-        color: #a8b2bb;
+        color: #101E4E;
         font-size: 14px;
     }
 
@@ -82,7 +82,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 15px;
-        border-bottom: 1px solid #444;
+        border-bottom: 1px solid #101E4E;
         position: relative;
     }
 
@@ -95,7 +95,7 @@
         font-size: 14px;
         color: #b0b8bf;
         padding: 10px;
-        background-color: #3c4147;
+        background-color: #101E4E;
         border-radius: 5px;
         margin-top: 10px;
         line-height: 1.6;
@@ -122,11 +122,13 @@
         background-color: #3498db;
         color: #fff;
     }
-
+    h1 {
+        color:#101E4E
+    }
     .submit-btn {
         width: 100%;
         padding: 15px;
-        background-color: #2ecc71;
+        background-color: #101E4E;
         color: white;
         border: none;
         border-radius: 5px;
@@ -148,7 +150,7 @@
         width: 35px; /* 원의 너비 */
         height: 35px; /* 원의 높이 */
         border-radius: 50%; /* 원형으로 만듦 */
-        background-color: #444; /* 기본 원 배경색 */
+        background-color: #101E4E; /* 기본 원 배경색 */
         color: white;
         font-weight: bold;
         margin: 0 10px;
@@ -156,10 +158,10 @@
     }
 
     .step-indicator .active {
-        background-color: #2ecc71;
+        background-color: #101E4E;
     }
     .submit-btn:hover {
-        background-color: #27ae60;
+        background-color: #101E4E;
     }
 
     /* 추가 스타일 */

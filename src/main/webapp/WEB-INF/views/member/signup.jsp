@@ -27,6 +27,7 @@
 
 
     </script>
+
     <style>
         .step-indicator {
             display: flex;
@@ -40,14 +41,14 @@
             height: 35px;
             line-height: 35px;
             border-radius: 50%;
-            background-color: #444;
+            background-color: #101E4E;
             color: white;
             font-weight: bold;
             margin: 0 10px;
         }
 
         .step-indicator .active, .inactive {
-            background-color: #2ecc71;
+            background-color: #101E4E;
             text-align: center;
         }
         body {
@@ -65,12 +66,12 @@
             width: 100%;
             max-width: 450px; /* 폼의 최대 너비 설정 */
             margin: 20px auto;
-            background-color: #2b2e33;
+            background-color: white;
             border-radius: 15px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px #101E4E;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #101E4E;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
@@ -115,9 +116,9 @@
             width: 100%;
             padding: 12px; /* 입력 필드의 패딩을 줄여줌 */
             margin-top: 5px;
-            border: 1px solid #555;
+            border: 1px solid #101E4E;
             border-radius: 8px;
-            background-color: rgba(46, 51, 56, 0.8);
+            background-color: white;
             color: #d3d7da;
             box-sizing: border-box;
             font-size: 13px; /* 입력 필드의 폰트 크기를 줄여줌 */
@@ -126,7 +127,7 @@
 
         input.i1:focus {
             border-color: #5dade2;
-            background-color: rgba(46, 51, 56, 1);
+            background-color: #101E4E;
             box-shadow: 0 0 8px rgba(93, 173, 226, 0.7);
             outline: none;
         }
@@ -139,10 +140,10 @@
         }
 
         /* 버튼 스타일 */
-        button.submit-btn, button.address-btn, button#email-btn {
+        button.submit-btn, button.address-btn, button#email-btn, input.address-btn {
             width: 100%;
             padding: 12px; /* 버튼의 패딩을 줄여줌 */
-            background-color: #2ecc71;
+            background-color: #101E4E;
             color: white;
             border: none;
             border-radius: 8px;
@@ -150,9 +151,11 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-
+        label {
+            color:#101E4E;
+        }
         button.submit-btn:hover button#email-btn {
-            background-color: #27ae60;
+            background-color: #101E4E;
             transform: scale(1.02);
         }
 
@@ -163,7 +166,34 @@
         button.address-btn[type="button"]:hover {
             background-color: #2980b9;
         }
+        input.address-btn[type="button"] {
+            background-color: #3498db;
+        }
+        input.address-btn[type="button"]:hover {
+            background-color: #2980b9;
+        }
+        input#bm_id {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            margin-bottom: 10px; /* Add space below the ID input */
+            border: 1px solid #101E4E;
+            border-radius: 8px;
+            background-color: white;
+            color:  #101E4E;
+            box-sizing: border-box;
+            font-size: 13px;
+            transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+        }
 
+        input.address-btn[type="button"] {
+            margin-top: 5px;
+            background-color: #3498db;
+        }
+
+        input.address-btn[type="button"]:hover {
+            background-color: #2980b9;
+        }
         /* 주소 검색 버튼 */
         button.address-btn[type="button"] {
             margin-bottom: 15px;
@@ -182,20 +212,23 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="${contextPath}/member.signup" METHOD="post" name="signupForm"
-          onsubmit="return signupCheck();">
+    <form action="${contextPath}/member.signup" METHOD="post" name="signupForm" onsubmit="return signupCheck();">
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
                     <label style="text-align: center; font-size: 16pt;">회원가입</label>
                     <div class="step-indicator">
-                        <span class="inactive">1</span> → <span  class="active">2</span> → <span class="inactive">3</span>
+                        <span class="inactive">1</span> → <span class="active">2</span> → <span class="inactive">3</span>
                     </div>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
+                    <!-- ID 중복 체크 버튼 -->
+                    <input type="button" id="confirmId" name="confirmId" class="address-btn" value="ID중복체크">
+                    <!-- 중복 체크 결과 메시지 -->
                     <div id="msg"></div>
                 </td>
             </tr>
+
             <tr>
                 <td colspan="2">
                     <input name="bm_pw" placeholder="PASSWORD" autocomplete="off"
@@ -234,6 +267,7 @@
             <tr>
                 <td colspan="2">
                     <input name="bm_phoneNum" placeholder="Phone Number" autocomplete="off" maxlength="20" class="i1">
+                    <input type="hidden" id="bm_phoneNum"><br>
                 </td>
             </tr>
             <tr>
@@ -266,6 +300,41 @@
         </table>
     </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#confirmId').click(function () {
+            var bm_id = $('#bm_id').val(); // 입력된 ID 가져오기
+
+            if (bm_id === "") {
+                alert("ID를 입력해주세요."); // ID 입력 유무 체크
+                return;
+            }
+
+            $.ajax({
+                url: "${contextPath}/member.id.check", // 서버의 ID 중복 체크 URL
+                type: "GET",
+                data: {bm_id: bm_id}, // 입력된 ID를 서버로 전달
+                dataType: "json", // 서버 응답을 JSON 형태로 받음
+                success: function(result) {
+                    console.log("Result from server:", result);
+                    console.log(result.member[0]); // 서버에서 반환된 값 확인
+                    if (result.member[0] !== undefined) {
+                        alert("이미 사용중인 ID입니다.");
+                    } else {
+                        alert("사용 가능한 ID입니다.");
+                    }
+                },
+                error: function () {
+                    alert("서버 요청에 실패했습니다."); // 서버 요청 실패 시
+                }
+            });
+        });
+    });
+</script>
+
+
+
 <script language="JavaScript">
     console.log('js연결 성공')
     let code = 0;

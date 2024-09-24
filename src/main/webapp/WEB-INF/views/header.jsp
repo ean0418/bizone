@@ -12,12 +12,22 @@
     <title>Title</title>
 </head>
 <style>
+    .logo-image {
+        height: 35px; /* Adjust height as needed */
+        margin-right: 10px; /* Space between logo and text */
+        background-color: #101E4E;
+    }
 
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+    }
 </style>
 <body>
 <nav class="navbar navbar-dark" style="background-color: #101E4E;">
     <div class="container-fluid">
         <a class="navbar-brand fs-3 ms-3" href="/">
+            <img src="${contextPath}/resources/image/icon.png" alt="Bizone Icon" class="logo-image me-2" style="height: 30px;">
             Bizone <h3 style="display: inline">${r} ${errorMsg}</h3>
         </a>
         <!-- Right-aligned menu items, always visible -->

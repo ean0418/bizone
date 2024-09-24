@@ -35,6 +35,12 @@ public class MemberDAO {
     @Autowired
     private SqlSession ss;
 
+    public boolean checkIfIdExists(String bm_id) {
+        Integer count = ss.selectOne("MemberMapper.checkIfIdExists", bm_id);
+        System.out.println("ID Count: " + count);  // 로그 출력
+        return count != null && count > 0;
+    }
+
     private String getAccessToken(String code) throws IOException {
 // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -84,6 +90,8 @@ public class MemberDAO {
     public Members memberIdCheck(Bizone_member m) {
         return new Members(ss.getMapper(MemberMapper.class).getMemberById(m));
     }
+
+
 
     public void login(Bizone_member m, HttpServletRequest req) {
         try {

@@ -13,4 +13,7 @@
     <update id="updateMember" parameterType="com.flex.miniProject.member.Bizone_member">
         update bizone_member set bm_pw = #{bm_pw}, bm_name = #{bm_name},bm_nickname = #{bm_nickname}, bm_address = #{bm_address}, bm_phoneNum = #{bm_phoneNum}, bm_mail = #{bm_mail} where bm_id = #{bm_id}
     </update>
+    <select id="checkIfIdExists" resultType="Integer" parameterType="String">
+        select COUNT(*) from bizone_member where bm_id = #{bm_id}
+    </select>
 </mapper>

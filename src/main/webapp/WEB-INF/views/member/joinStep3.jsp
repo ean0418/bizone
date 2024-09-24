@@ -14,7 +14,7 @@
     body {
       font-family: 'Noto Sans KR', sans-serif;
       background-color: white;
-      color: #d3d7da;
+      color: #101E4E;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -25,7 +25,8 @@
 
     /* 컨테이너 스타일 */
     .container {
-      background-color: #2b2e33;
+
+      background-color: white;
       padding: 40px;
       border-radius: 15px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -33,8 +34,11 @@
       width: 100%;
       max-width: 500px;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
 
+    }
+  form {
+    margin-bottom: 50px;
+  }
     .container:hover {
       transform: translateY(-5px);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
@@ -44,7 +48,7 @@
     h1 {
       font-size: 28px;
       margin-bottom: 20px;
-      color: #ffffff;
+      color: #101E4E;
       background: linear-gradient(135deg, #3498db, #8e44ad);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -66,7 +70,7 @@
       width: 35px; /* 원의 너비 */
       height: 35px; /* 원의 높이 */
       border-radius: 50%; /* 원형으로 만듦 */
-      background-color: #444; /* 기본 원 배경색 */
+      background-color: #101E4E; /* 기본 원 배경색 */
       color: white;
       font-weight: bold;
       margin: 0 10px;
@@ -74,7 +78,7 @@
     }
 
     .step-indicator .active {
-      background-color: #2ecc71; /* 활성화된 스텝의 배경색 */
+      background-color: #101E4E; /* 활성화된 스텝의 배경색 */
     }
     /* 설명 문구 */
     p {
@@ -94,7 +98,9 @@
       font-size: 18px;
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
-
+  p {
+    color: #101E4E;
+  }
     .btn:hover {
       background-color: #2980b9;
       transform: scale(1.05);
