@@ -1,4 +1,4 @@
-package com.flex.miniProject.member;
+package com.flex.bizone.member;
 
 import java.util.List;
 

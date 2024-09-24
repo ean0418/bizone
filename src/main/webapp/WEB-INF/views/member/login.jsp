@@ -138,9 +138,9 @@
 
     </form>
 
-
-    <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="/pwFindForm.do">비밀번호 찾기</a></div>
-    <div class="text-center mt-2">아직 회원이 아니십니까? <a href="/signupForm.do">회원가입</a></div>
+    <div class="text-center mt-4">아이디를 까먹으셨습니까? <a href="${contextPath}/idFindForm.go">아이디 찾기</a></div>
+    <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="${contextPath}/pwFindForm.go">비밀번호 찾기</a></div>
+    <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/signupForm.go">회원가입</a></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

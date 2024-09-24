@@ -1,4 +1,4 @@
-package com.flex.miniProject.board;
+package com.flex.bizone.board;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;

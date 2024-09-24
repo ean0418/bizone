@@ -1,33 +1,21 @@
-package com.flex.miniProject.member;
-import com.fasterxml.jackson.core.JsonProcessingException;
+package com.flex.bizone.member;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 
 @Service
 public class MemberDAO {
@@ -98,21 +86,21 @@ public class MemberDAO {
                     req.getSession().setAttribute("loginMember", dbM);
                     req.getSession().setMaxInactiveInterval(600); // 세션 유지 시간 설정
                     // 로그인 성공 시 success.jsp로 이동
-                    req.setAttribute("contentPage", "../member/success.jsp");
+                    req.setAttribute("contentPage", "member/success.jsp");
                 } else {
                     // 비밀번호 오류 시
                     req.setAttribute("r", "로그인 실패(PW 오류)");
-                    req.setAttribute("contentPage", "../member/login.jsp");
+                    req.setAttribute("contentPage", "member/login.jsp");
                 }
             } else {
                 // ID가 없는 경우
                 req.setAttribute("r", "로그인 실패(ID 없음)");
-                req.setAttribute("contentPage", "../member/login.jsp");
+                req.setAttribute("contentPage", "member/login.jsp");
             }
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("r", "로그인 실패(DB서버)");
-            req.setAttribute("contentPage", "../member/login.jsp");
+            req.setAttribute("contentPage", "member/login.jsp");
         }
     }
 

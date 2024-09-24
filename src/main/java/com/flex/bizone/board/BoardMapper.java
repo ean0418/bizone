@@ -1,4 +1,4 @@
-package com.flex.miniProject.board;
+package com.flex.bizone.board;
 
 import org.apache.ibatis.annotations.Mapper;
 

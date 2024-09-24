@@ -1,4 +1,4 @@
-package com.flex.miniProject.member;
+package com.flex.bizone.member;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,5 +26,14 @@ public class EmailController {
         Map<String, Object> returnMap = new HashMap<>();
         returnMap.put("code", eServices.joinEmail((String) inputMap.get("email")));
         return returnMap;
+    }
+
+    @RequestMapping(value = "/idFind.send", method = RequestMethod.POST)
+    public Map<String, Object> sendIdFind(HttpServletRequest req, HttpServletResponse res, @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
+        req.setCharacterEncoding("utf-8");
+        res.setCharacterEncoding("utf-8");
+        Bizone_member bm = new Bizone_member();
+        bm.setBm_mail((String) inputMap.get("email"));
+        return eServices.idFind(bm);
     }
 }

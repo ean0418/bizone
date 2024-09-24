@@ -27,7 +27,7 @@
     <!-- Process annotations on registered beans like @Autowired... -->
     <context:annotation-config/>
     <!-- 컴포넌트 스캔 -->
-    <context:component-scan base-package="com.flex.miniProject" />
+    <context:component-scan base-package="com.flex.bizone" />
 
     <!-- 추가함-세훈 -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
@@ -60,7 +60,7 @@
     <!-- MyBatis 설정 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="typeAliasesPackage" value="com.flex.miniProject" />
+        <property name="typeAliasesPackage" value="com.flex.bizone" />
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 

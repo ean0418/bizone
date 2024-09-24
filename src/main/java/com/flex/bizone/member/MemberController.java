@@ -1,8 +1,5 @@
-package com.flex.miniProject.member;
+package com.flex.bizone.member;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -81,7 +78,7 @@ public class MemberController {
 
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
         if (mDAO.loginCheck(req)) {
-            return "member/success";  // 로그인 성공 시 메인 페이지로 이동
+            return "index";  // 로그인 성공 시 메인 페이지로 이동
         } else {
             req.setAttribute("contentPage", "map/map.jsp");
             return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
@@ -120,6 +117,7 @@ public class MemberController {
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }
+
     @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
                                            HttpSession session, Model model) throws Exception {
@@ -159,5 +157,14 @@ public class MemberController {
 
         return "/kakao.login";
     }
+
+    @RequestMapping(value = "/idFindForm.go", method = RequestMethod.GET)
+    public String idFind(HttpServletRequest req) {
+        req.setAttribute("contentPage", "member/idFind.jsp");
+        return "index";
+    }
+
+
+
 
 }
