@@ -3,6 +3,8 @@ package com.flex.miniProject.board;
 import com.flex.miniProject.member.Bizone_member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,7 +95,6 @@ public class BoardController {
         Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
         String userNickname = loginUser.getBm_nickname();
         Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
-        System.out.println(board.getBb_content());
 
         if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
             rdAttr.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
@@ -141,4 +142,5 @@ public class BoardController {
             return "index";
         }
     }
+
 }

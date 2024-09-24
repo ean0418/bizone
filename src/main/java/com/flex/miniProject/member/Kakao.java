@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import java.io.BufferedReader;
-
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -27,23 +26,6 @@ import java.net.URL;
 
 @Service
 public class Kakao {
-
-//    @Autowired
-//    private KakaoMapper kakaoMapper;
-//    private SqlSession ss;
-//    public void insertKakao(HttpServletRequest req, KakaoUser k) {
-//        try {
-//            ss.getMapper(KakaoMapper.class).insertKakao(k);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-
-    //    public void saveKakaoUser(KakaoUser kakaoUser) {
-//        kakaoMapper.insertKakao(kakaoUser);
-//    }
     // Rest api
     private static final String RestApiKey = "412e7727ffd0b8900060854044814879";
     private static final String Redirect_URL = "http://localhost/kakaologin";
@@ -77,9 +59,9 @@ public class Kakao {
             urlconn.connect();
 
             // UTF-8로 데이터 읽기
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlconn.getInputStream(), StandardCharsets.UTF_8));
+            BufferedReader in = new BufferedReader(new InputStreamReader(urlconn.getInputStream(), "UTF-8"));
             StringBuilder sb = new StringBuilder();
-            String result;
+            String result = null;
 
             while ((result = in.readLine()) != null) {
                 sb.append(result).append("\n");
@@ -95,7 +77,7 @@ public class Kakao {
     }
 
     public static Map<String, String> JsonStringMap(String data) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<String, String>();
         ObjectMapper mapper = new ObjectMapper();
 
         try {
