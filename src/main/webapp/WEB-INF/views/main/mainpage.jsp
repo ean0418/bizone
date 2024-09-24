@@ -503,11 +503,11 @@
                 strokeColor: strokeColor,
                 strokeOpacity: 0.8,
                 fillColor: fillColor,
-                fillOpacity: 0.1,
+                fillOpacity: 0.3,  // 투명도 조정
             });
 
-            // 마우스 오버 이벤트 처리
             kakao.maps.event.addListener(polygon, "mouseover", function () {
+                // mousemove
                 polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
                 customOverlay.setPosition(kkoMap.centroid(area.path[0]));
                 customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
