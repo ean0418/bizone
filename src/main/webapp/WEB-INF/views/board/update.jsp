@@ -51,7 +51,7 @@
 </head>
 <body>
   <div class="container">
-    <h2 style="text-align: center">게시글 수정하기</h2>
+    <h2 style="text-align: center">게시글 수정</h2>
 
     <form action="${contextPath}/board/update" method="post">
       <input type="hidden" name="bb_no" value="${board.bb_no}">
@@ -69,7 +69,7 @@
       </div>
 
       <div class="btn-container">
-        <input type="submit" class="btn btn-default" value="수정하기" style="margin-top: 50px;">
+        <input type="submit" class="btn btn-default" value="수정" style="margin-top: 50px;">
       </div>
     </form>
   </div>

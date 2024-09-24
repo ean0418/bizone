@@ -69,26 +69,6 @@
         .btn:hover {
             background-color: #0056b3;
         }
-        /*.pagination {*/
-        /*    display: flex;*/
-        /*    justify-content: center;*/
-        /*    margin-top: 20px;*/
-        /*}*/
-        /*.page-item {*/
-        /*    list-style-type: none;*/
-        /*    padding: 0 10px;*/
-        /*}*/
-        /*.page-item a {*/
-        /*    text-decoration: none;*/
-        /*    color: #007bff;*/
-        /*}*/
-        /*.page-item.disabled a {*/
-        /*    color: grey;*/
-        /*}*/
-        /*.page-item.active a {*/
-        /*    font-weight: bold;*/
-        /*    color: black;*/
-        /*}*/
 
         .pagination-container {
             display: flex;
@@ -101,7 +81,7 @@
             margin: 0 5px; /* 간격 유지 */
         }
 
-        .page-item a {
+        .page-item a:hover {
             text-decoration: none;
             padding: 8px 12px;
             color: #007bff;
@@ -123,15 +103,6 @@
             align-items: center;
         }
 
-
-        /*.pagination-container {*/
-        /*    display: inline-flex;*/
-        /*    justify-content: center;*/
-        /*    align-items: center;*/
-        /*    gap: 5px; !* 숫자와 Previous, Next 간의 간격 *!*/
-        /*}*/
-
-
         .search-box {
             display: flex;
             justify-content: center;
@@ -141,10 +112,21 @@
             padding: 5px;
             width: 200px;
         }
-        .search-box button {
+        .search-box button:hover {
             padding: 5px 10px;
         }
     </style>
+    <script>
+        // 성공 메시지가 있을 경우 alert로 표시
+        <c:if test="${not empty successMsg}">
+            alert("${successMsg}");
+        </c:if>
+
+        // 에러 메시지가 있을 경우 alert로 표시
+        <c:if test="${not empty errorMsg}">
+            alert("${errorMsg}");
+        </c:if>
+    </script>
 </head>
 <body>
     <div class="container">

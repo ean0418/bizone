@@ -64,15 +64,15 @@ public class BoardController {
         try {
             if (req.getSession().getAttribute("loginMember") == null) {
                 rdAttr.addFlashAttribute("errorMsg", "로그인 후 이용 가능합니다.");
-                // req.setAttribute("errorMsg", "로그인 후 이용 가능합니다.");
                 return "redirect:/board/list";
             }
             boardDAO.insertBoard(board, req);
             boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
+            rdAttr.addFlashAttribute("successMsg", "게시글이 작성되었습니다.");
             return "redirect:/board/list";
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("errorMsg", "게시글 작성 중 오류가 발생했습니다.");
+            rdAttr.addFlashAttribute("errorMsg", "게시글 작성 중 오류가 발생했습니다.");
             return "index";
         }
     }
@@ -113,7 +113,24 @@ public class BoardController {
             return "redirect:/board/list";
         }
         boardDAO.updateBoard(board, req);
+        rdAttr.addFlashAttribute("successMsg", "게시글이 수정되었습니다.");
         return "redirect:/board/list";
+    }
+
+    // 게시글 삭제 페이지 이동
+    @RequestMapping(value = "/board/delete.go", method = RequestMethod.GET)
+    public String goDelete(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
+        Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
+        String userNickname = loginUser.getBm_nickname();
+        Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
+
+        if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
+            rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
+            return "redirect:/board/list";
+        }
+        req.setAttribute("board", board);
+        req.setAttribute("contentPage", "board/delete.jsp");
+        return "index";
     }
 
     // 게시글 삭제 처리
@@ -122,25 +139,25 @@ public class BoardController {
         try {
 //            String loginUser = (String) req.getSession().getAttribute("loginMember");
             Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
+            String userNickname = loginUser.getBm_nickname();
             Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
 //            if (board == null || loginUser == null || !board.getBb_bm_nickname().equals(loginUser)) {
 //                rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
 //                return "redirect:/board/list";
 //            }
-            if (board == null || !board.getBb_bm_nickname().equals(loginUser.getBm_nickname())) {
+            if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
                 rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
                 return "redirect:/board/list";
             }
             boardDAO.deleteBoard(bb_no, req);
             boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
+            rdAttr.addFlashAttribute("successMsg", "게시글이 삭제되었습니다.");
             return "redirect:/board/list";
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("contentPage", "../board/list.jsp");
-            req.setAttribute("errorMsg", "게시글 삭제 중 오류가 발생했습니다.");
-            return "index";
+            rdAttr.addFlashAttribute("errorMsg", "게시글 삭제 중 오류가 발생했습니다.");
+            return "redirect:/board/list";
         }
     }
-
 }

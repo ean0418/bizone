@@ -61,7 +61,7 @@
 </head>
 <body>
     <div class="container">
-        <h2 style="text-align: center">게시글 상세 보기</h2>
+        <h2 style="text-align: center">게시글 상세조회</h2>
 
         <div class="form-group">
             <label for="bb_title">제목</label>
@@ -82,7 +82,7 @@
             <!-- 작성자와 로그인한 사용자가 일치할 때만 수정/삭제 버튼 표시 -->
             <c:if test="${sessionScope.loginMember.bm_nickname == board.bb_bm_nickname}">
                 <a href="${contextPath}/board/update.go?bb_no=${board.bb_no}" class="btn btn-primary">수정</a>
-                <form action="${contextPath}/board/delete" method="post" style="display:inline;">
+                <form action="${contextPath}/board/delete.go" method="get" style="display:inline;">
                     <input type="hidden" name="bb_no" value="${board.bb_no}">
                     <input type="submit" class="btn btn-danger" value="삭제">
                 </form>

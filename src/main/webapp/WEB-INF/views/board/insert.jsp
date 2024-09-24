@@ -51,7 +51,7 @@
 </head>
 <body>
   <div class="container">
-    <h2 style="text-align: center">게시글 작성하기</h2>
+    <h2 style="text-align: center">게시글 작성</h2>
 
     <form action="${contextPath}/board/insert" name="insertForm" method="post" style="gap: 1rem" onsubmit="">
       <div class="form-group">
