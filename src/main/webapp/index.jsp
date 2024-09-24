@@ -11,6 +11,9 @@
     <title>Main Layout</title>
     <!-- Bootstrap CSS 추가 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script type="text/javascript" src="../resources/js/memberCheck.js"></script>
+    <script type="text/javascript" src="../resources/js/validChecker.js"></script>
+    <script type="text/javascript" src="../resources/js/function.js"></script>
     <style>
         @font-face {
             font-family: 'a5'; /* 사용자가 정의할 폰트 이름 */

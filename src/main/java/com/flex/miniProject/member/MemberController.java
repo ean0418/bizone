@@ -72,13 +72,21 @@ public class MemberController {
         return mDAO.memberIdCheck(m);
     }
 
+
     @RequestMapping(value = "/member.login", method = RequestMethod.POST)
     public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
+
+        // 로그인 처리
         mDAO.login(m, req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+
+        // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
+        if (mDAO.loginCheck(req)) {
+            return "main/index";  // 로그인 성공 시 메인 페이지로 이동
+        } else {
+            return "main/index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
+        }
     }
 
     @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)
