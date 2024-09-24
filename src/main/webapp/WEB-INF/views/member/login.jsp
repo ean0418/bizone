@@ -25,11 +25,13 @@
         }
 
         .login-container {
-            width: 400px;
+            width: 450px;
             padding: 40px;
             background-color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         h2 {
@@ -86,7 +88,6 @@
             padding: 10px;
             width: 100%;
             border-radius: 8px;
-
             color: #3c1e1e; /* 카카오 글씨 색상 */
         }
 
@@ -137,7 +138,6 @@
         </div>
 
     </form>
-
 
     <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="/pwFindForm.do">비밀번호 찾기</a></div>
     <div class="text-center mt-2">아직 회원이 아니십니까? <a href="/signupForm.do">회원가입</a></div>

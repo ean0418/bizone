@@ -26,11 +26,11 @@
     /* 로그인 성공 메인 컨테이너 */
     .login-success-container {
         background-color: #fff;
-        padding: 40px;
-        border-radius: 10px;
+        padding: 50px;
+        border-radius: 20px;
         box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
         text-align: center;
-        width: 400px;
+        width: 700px;
     }
 
     /* 환영 메시지 */
@@ -89,7 +89,14 @@
     .logout-btn:hover {
         background-color: #c0392b;
     }
+    .main-btn {
+        background-color: moccasin;
+        color: white;
+    }
 
+    .main-btn:hover {
+        background-color: blanchedalmond;
+    }
     /* 상권 분석 버튼 */
     .analyze-btn {
         background-color: #3498db;
@@ -111,6 +118,7 @@
     <div class="menu-buttons">
         <button onclick="memberInfoGo();" class="info-btn">정보</button>
         <button onclick="logout();" class="logout-btn">로그아웃</button>
+        <button onclick="main();" class="main-btn">메인페이지로</button>
         <button onclick="analyze();" class="analyze-btn">상권 분석</button>
     </div>
 </div>
@@ -121,7 +129,10 @@
 
 <script>
     function analyze() {
-        location.href = '/business-analysis';  // 상권 분석 페이지로 이동하는 링크
+        location.href = '/main';  // 상권 분석 페이지로 이동하는 링크
+    }
+    function main() {
+        location.href = '/';  // 상권 분석 페이지로 이동하는 링크
     }
 </script>
 </body>

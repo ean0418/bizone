@@ -16,3 +16,6 @@ function memberInfoGo() {
 function signUpgo() {
     location.href = "/member.step1"; // 회원가입 페이지로 이동
 }
+function analyze() {
+    location.href = "/main";
+}
