@@ -1,0 +1,6 @@
+webapp/resources/data/EupMyeonDong.geojson filter=lfs diff=lfs merge=lfs -text
+webapp/resources/data/SiGunGuDataFinal.geojson filter=lfs diff=lfs merge=lfs -text
+C:/Users/tpgns/IdeaProjects/FLEX-Project/src/main/webapp/resources/data/EupMyeonDong.geojson filter=lfs diff=lfs merge=lfs -text
+C:/Users/tpgns/IdeaProjects/FLEX-Project/src/main/webapp/resources/data/SiGunGuDataFinal.geojson filter=lfs diff=lfs merge=lfs -text
+src/main/webapp/resources/data/EupMyeonDong.geojson filter=lfs diff=lfs merge=lfs -text
+src/main/webapp/resources/data/SiGunGuDataFinal.geojson filter=lfs diff=lfs merge=lfs -text
