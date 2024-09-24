@@ -273,6 +273,22 @@
         console.log('이벤트리스너 들어옴')
         const xhr = new XMLHttpRequest();
         let email = document.querySelector("#bm_mail").value;
+        if (email === "" || email === null) {
+            alert("이메일을 입력한 후 눌러주세요")
+            return;
+        }
+
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        function validateEmail(m) {
+            return emailRegex.test(m);
+        }
+
+        if (validateEmail(email) === false) {
+            alert("이메일을 형식에 맞추어 입력해주세요")
+            return;
+        }
+
         console.log(email)
         const reqJson = {};
         reqJson.email = email
@@ -284,9 +300,9 @@
                     var result = xhr.response;
                     code = result.code;
                     checkInput.disabled = false;
-                    alert('성공!!');
+                    alert('이메일을 전송했습니다');
                 } else {
-                    alert('request에 뭔가 문제가 있어요.');
+                    alert('요청 방식에 뭔가 문제가 있어요.');
                 }
             }
         };
