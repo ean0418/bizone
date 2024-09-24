@@ -120,6 +120,7 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             font-size: 14px;
+            pointer-events: none;
         }
 
         button {
@@ -494,58 +495,18 @@
                 fillOpacity: 0.3,  // 투명도 조정
             });
 
-            function moveBoxOut(element) {
-                element.style.transform = "translateX(-1000px)";
-            }
-
-
-            customOverlay = new kakao.maps.CustomOverlay({
-                map: null,  // 처음에는 지도에 표시하지 않음
-                zIndex: 10,
-            });
-
-            // 마우스 오버 이벤트 처리
             kakao.maps.event.addListener(polygon, "mouseover", function () {
-                if (!overlayVisible) {
-                    // 폴리곤 색상 변경
-                    polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
-
-                    // 오버레이 내용 설정
-                    customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
-                    customOverlay.setPosition(kkoMap.centroid(area.path[0]));
-
-                    // 오버레이 표시
-                    customOverlay.setMap(map);
-                    overlayVisible = true;
-                }
+                // mousemove
+                polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
+                customOverlay.setPosition(kkoMap.centroid(area.path[0]));
+                customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
+                customOverlay.setMap(map);
             });
 
-// 마우스 아웃 이벤트 처리
             kakao.maps.event.addListener(polygon, "mouseout", function () {
-                if (overlayVisible) {
-                    // 폴리곤 색상 원래대로 변경
-                    polygon.setOptions({ fillColor: fillColor });
-
-                    // 오버레이 숨기기 (null로 설정하지 않고 숨기기만)
-                    customOverlay.setMap(null);
-                    overlayVisible = false;
-                }
+                polygon.setOptions({ fillColor: fillColor });
+                customOverlay.setMap(null);
             });
-
-
-            // kakao.maps.event.addListener(polygon, "mouseover", function () {
-            //     // mousemove
-            //     polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
-            //     customOverlay.setPosition(kkoMap.centroid(area.path[0]));
-            //     customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
-            //     //  style='pointer-events: none'
-            //     customOverlay.setMap(map);
-            // });
-            //
-            // kakao.maps.event.addListener(polygon, "mouseout", function () {
-            //     polygon.setOptions({ fillColor: fillColor });
-            //     customOverlay.setMap(null);
-            // });
 
             kakao.maps.event.addListener(polygon, "click", function () {
                 if (type === "읍면동") {
