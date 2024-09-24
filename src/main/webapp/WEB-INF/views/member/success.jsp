@@ -10,10 +10,12 @@
 <head>
     <title>Title</title>
 </head>
+<script type="text/javascript" src="../resources/js/memberCheck.js"></script>
+<script type="text/javascript" src="../resources/js/validChecker.js"></script>
+<script type="text/javascript" src="../resources/js/function.js"></script>
 <body>
 <table id="loginSuccessTbl">
     <tr>
-
         <td>${sessionScope.loginMember.bm_id }</td>
     </tr>
     <tr>
@@ -28,6 +30,12 @@
             <button onclick="logout();">로그아웃</button>
         </td>
     </tr>
+
+
+
 </table>
+
+
+
 </body>
 </html>
