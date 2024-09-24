@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping
@@ -20,8 +21,8 @@ public class BoardController {
 
 
     @RequestMapping(value = "/board/list", method = RequestMethod.GET)
-    public String boardList(HttpServletRequest req, Model model) {
-        boardDAO.getAllBoards(req); // 게시글 목록을 요청
+    public String boardList(HttpServletRequest req, HttpServletResponse res, Model model) {
+        boardDAO.getAllBoards(req, res); // 게시글 목록을 요청
         model.addAttribute("boardList", req.getAttribute("boardList")); // boardList를 JSP로 전달
         model.addAttribute("contentPage", "board/list.jsp");
         return "index";
