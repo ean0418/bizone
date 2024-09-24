@@ -169,7 +169,7 @@
     }
 </style>
 <body>
-<form action = "signup" method="post">
+<form action = "${contextPath}/signup" method="post">
     <div class="container">
         <h1>회원가입</h1>
         <div class="step-indicator">

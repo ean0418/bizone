@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bizone 로그인</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 
     <style>
         body {
@@ -108,7 +109,7 @@
 <body>
 
 <div class="login-container">
-    <form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
+    <form action="${contextPath}/member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
         <input type="hidden" name="login_ok" value="1"/>
 
         <h2>로그인</h2>
@@ -130,11 +131,13 @@
         <div class="or-seperator"><b>or</b></div>
 
         <div class="form-group kakaobtn">
-            <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakao.login&response_type=code'">
-                <img src="../resources/image/kakao_login.png" alt="카카오 로그인">
-            </button>
+            <a class="p-2" href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakaologin&response_type=code'>
+                <img src="../resources/image/kakao_login.png" style="height:60px">
+            </a>
         </div>
+
     </form>
+
 
     <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="/pwFindForm.do">비밀번호 찾기</a></div>
     <div class="text-center mt-2">아직 회원이 아니십니까? <a href="/signupForm.do">회원가입</a></div>
