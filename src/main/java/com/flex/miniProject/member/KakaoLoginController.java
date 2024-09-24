@@ -21,7 +21,7 @@ public class KakaoLoginController {
     @RequestMapping(value = "kakaologin", method = RequestMethod.GET)
     public String kakaoLogin
             (
-                    @RequestParam("code") String code
+             @RequestParam("code") String code
             ) throws Exception {
         System.out.println("code : " + code);
 
@@ -29,6 +29,7 @@ public class KakaoLoginController {
         System.out.println("data : " + data);
 
         Map<String, String> map = kakao.JsonStringMap(data);
+        System.out.println("map : "+map);
 
         if (map.isEmpty()) {
             System.out.println("Map is empty or failed to parse.");
@@ -50,5 +51,6 @@ public class KakaoLoginController {
             System.out.println("thumbnailURL :" + (String) getAllListMap.get("thumbnailURL"));
         }
         return "kakaologin";
+    }
 
-}}
+}

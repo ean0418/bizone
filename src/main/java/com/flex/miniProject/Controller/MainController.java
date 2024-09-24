@@ -23,4 +23,5 @@ public class MainController {
         req.setAttribute("contentPage", "board/list.jsp");
         return "index";
     }
+
 }
