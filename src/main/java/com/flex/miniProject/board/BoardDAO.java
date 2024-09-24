@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Repository
@@ -15,9 +17,21 @@ public class BoardDAO {
     @Autowired
     private SqlSession ss;
 
-    public void getAllBoards(HttpServletRequest req) {
+    public void getAllBoards(int page, String bb_nickname, HttpServletRequest req) {
         try {
-            List<Bizone_board> boardList = ss.getMapper(BoardMapper.class).getAllBoards();
+            int limit = 10;
+            int offset = (page -1) * limit;
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("offset", offset);
+            params.put("limit", limit);
+            params.put("bb_nickname", bb_nickname);
+            List<Bizone_board> boardList = ss.getMapper(BoardMapper.class).getBoardsWithPaging(params);
+//            List<Bizone_board> boardList = ss.getMapper(BoardMapper.class)
+//                    .getBoardsWithPaging(offset, limit, bb_nickname);
+
+            int totalCount = ss.getMapper(BoardMapper.class).getBoardCount(bb_nickname);
+            int totalPages = (int) Math.ceil((double) totalCount / limit);
 
             // 로그 추가
             if (boardList == null || boardList.isEmpty()) {
@@ -27,6 +41,8 @@ public class BoardDAO {
             }
 
             req.setAttribute("boardList", boardList);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("page", page);
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("r", "게시글 목록을 불러오는 데 실패했습니다.");
@@ -55,13 +71,16 @@ public class BoardDAO {
     }
 
     // 게시글 조회
-    public void getBoardByNo(int bb_no, HttpServletRequest req) {
+    public Bizone_board getBoardByNo(int bb_no, HttpServletRequest req) {
         try {
             Bizone_board board = ss.getMapper(BoardMapper.class).getBoardByNo(bb_no);
             req.setAttribute("board", board);
+            req.setAttribute("r", "게시글 조회 성공");
+            return board;
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("r", "게시글을 불러오는 데 실패했습니다.");
+            return null;
         }
     }
 

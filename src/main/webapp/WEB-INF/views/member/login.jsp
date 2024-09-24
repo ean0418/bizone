@@ -109,7 +109,7 @@
 <body>
 
 <div class="login-container">
-    <form action="member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
+    <form action="${contextPath}/member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
         <input type="hidden" name="login_ok" value="1"/>
 
         <h2>로그인</h2>

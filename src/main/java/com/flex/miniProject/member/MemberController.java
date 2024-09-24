@@ -29,21 +29,21 @@ public class MemberController {
 
     @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
     public String showStep1(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/joinStep1.jsp");
-        return "main/index"; // agreement step
+        req.setAttribute("contentPage", "member/joinStep1.jsp");
+        return "index"; // agreement step
     }
 
 
-    @RequestMapping(value ="/step1",  method = RequestMethod.POST)
+    @RequestMapping(value = "/step1", method = RequestMethod.POST)
     public String handleStep1() {
         return "redirect:/member/signup"; // signup로 리다이렉트
     }
 
 
-    @RequestMapping(value = "/signup", method= RequestMethod.POST)
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String member(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/signup.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/signup.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.signup", method = RequestMethod.POST)
@@ -51,27 +51,26 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.signupMember(req, m);
-        req.setAttribute("contentPage", "../member/joinStep3.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/joinStep3.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.login.go", method = RequestMethod.GET)
     public String goMemberLogin(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/login.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/login.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.signup.go", method = RequestMethod.GET)
     public String goSignup(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/signup.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/signup.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.id.check", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public @ResponseBody Members memberIdCheck(Bizone_member m) {
         return mDAO.memberIdCheck(m);
     }
-
 
     @RequestMapping(value = "/member.login", method = RequestMethod.POST)
     public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
@@ -83,16 +82,17 @@ public class MemberController {
 
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
         if (mDAO.loginCheck(req)) {
-            return "main/index";  // 로그인 성공 시 메인 페이지로 이동
+            return "member/success";  // 로그인 성공 시 메인 페이지로 이동
         } else {
-            return "main/index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
+            req.setAttribute("contentPage", "map/map.jsp");
+            return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
         }
     }
 
     @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)
     public String goMemberInfo(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../member/info.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/info.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.logout", method = RequestMethod.GET)
@@ -100,8 +100,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.logout(req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.delete", method = RequestMethod.GET)
@@ -109,8 +109,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.delete(req);
-        req.setAttribute("contentPage", "../main/mainpage.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
 
     @RequestMapping(value = "/member.update", method = RequestMethod.POST)
@@ -118,8 +118,8 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.update(req);
-        req.setAttribute("contentPage", "../member/info.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "member/info.jsp");
+        return "index";
     }
     @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,

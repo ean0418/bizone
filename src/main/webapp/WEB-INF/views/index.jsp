@@ -10,9 +10,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Main Layout</title>
   <!-- Bootstrap CSS 추가 -->
-  <script type="text/javascript" src="../resources/js/memberCheck.js"></script>
-  <script type="text/javascript" src="../resources/js/validChecker.js"></script>
-  <script type="text/javascript" src="../resources/js/function.js"></script>
+  <script type="text/javascript" src="../../resources/js/memberCheck.js"></script>
+  <script type="text/javascript" src="../../resources/js/validChecker.js"></script>
+  <script type="text/javascript" src="../../resources/js/function.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
     /* HTML과 BODY에 100% 높이를 설정 */
@@ -20,7 +20,7 @@
       height: 100%;
       margin: 0;
       padding: 0;
-      overflow: hidden;
+      overflow-x: hidden;
     }
 
     /* Body를 Flexbox 컨테이너로 설정하여 세로 정렬 */
@@ -49,7 +49,7 @@
   <!-- 헤더 섹션 -->
   <div class="row">
     <div class="col-12 p-0">
-      <jsp:include page="../header.jsp" />
+      <jsp:include page="header.jsp" />
     </div>
   </div>
 
@@ -64,7 +64,7 @@
 <!-- 푸터 섹션 -->
 <footer class="row">
   <div class="col-12 p-0">
-    <jsp:include page="../footer.jsp" />
+    <jsp:include page="footer.jsp" />
   </div>
 </footer>
 

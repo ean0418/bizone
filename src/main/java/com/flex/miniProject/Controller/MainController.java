@@ -7,19 +7,20 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class MainController {
+
     @RequestMapping("/main")
-    public String main(HttpServletRequest req) {
-        req.setAttribute("contentPage", "mainpage.jsp");
-        return "main/index";
+    public String map(HttpServletRequest req) {
+        req.setAttribute("contentPage", "map/map.jsp");
+        return "index";
     }
     @RequestMapping(value = "/main.go", method = RequestMethod.GET)
     public String main2(HttpServletRequest req) {
-        return main(req);
+        return map(req);
     }
 
     @RequestMapping("/board")
     public String board(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../board/list.jsp");
-        return "main/index";
+        req.setAttribute("contentPage", "board/list.jsp");
+        return "index";
     }
 }
