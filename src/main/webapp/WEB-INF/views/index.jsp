@@ -10,9 +10,10 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Main Layout</title>
   <!-- Bootstrap CSS 추가 -->
-  <script type="text/javascript" src="../resources/js/memberCheck.js"></script>
-  <script type="text/javascript" src="../resources/js/validChecker.js"></script>
-  <script type="text/javascript" src="../resources/js/function.js"></script>
+  <link rel="stylesheet" href="../../css/index.css">
+  <script type="text/javascript" src="../../resources/js/memberCheck.js"></script>
+  <script type="text/javascript" src="../../resources/js/validChecker.js"></script>
+  <script type="text/javascript" src="../../resources/js/function.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <style>
     /* HTML과 BODY에 100% 높이를 설정 */
