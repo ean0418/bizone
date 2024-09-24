@@ -3,7 +3,6 @@
 <head>
     <title>상권분석</title>
     <meta charset="UTF-8">
-
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=695af2d9d27326c791e215b580236791&libraries=services,clusterer"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -18,7 +17,6 @@
         .content {
             display: flex;
             height: calc(100vh);
-            /*추가함*/
             position: relative;
         }
 
@@ -44,7 +42,6 @@
             height: calc(100vh - 240px);
             border-radius: 5px;
             top: 100px;
-            /*추가함*/
             position: absolute;
         }
 
@@ -84,21 +81,21 @@
         div#sidebar-content > div {
             display: flex;
             align-items: center;
-            gap: 10px; /* 검색란과 버튼 사이에 일정 간격을 줌 */
-            width: 100%; /* 부모 요소에 맞춰 검색창과 버튼 모두 조정됨 */
+            gap: 10px;
+            width: 100%;
         }
 
         input[type="text"] {
-            flex: 1; /* 검색란이 남은 가로 공간을 차지하도록 설정 */
+            flex: 1;
             box-sizing: border-box;
-            width: 100%; /* 100% 너비로 부모 요소에 맞춰서 조정됨 */
+            width: 100%;
         }
 
         input[type="button"] {
-            flex: 0 1 auto; /* 버튼도 유동적으로 줄어들 수 있도록 설정 */
+            flex: 0 1 auto;
             box-sizing: border-box;
-            width: auto; /* 고정된 너비를 피하기 위해 auto로 설정 */
-            min-width: 10px; /* 최소 크기를 설정하여 너무 작아지지 않도록 함 */
+            width: auto;
+            min-width: 10px;
         }
 
         .header {
@@ -109,7 +106,6 @@
             justify-content: space-between;
             padding: 0 20px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            /*추가함*/
             position: sticky;
         }
 
@@ -124,6 +120,7 @@
             border-radius: 4px;
             border: 1px solid #ccc;
             font-size: 14px;
+            pointer-events: none;
         }
 
         button {
@@ -139,7 +136,6 @@
     </style>
 </head>
 <body>
-
 
 <div class="content">
     <div class="header" style="position:absolute;">
@@ -215,9 +211,9 @@
     var map, customOverlay, polygons = [];
     var isEupMyeonDongLoaded = false;
     var isSiGunGuLoaded = false;
-    var geoJsonData = null;
     var marker = null;
     var infowindow = null;
+    var overlayVisible = false;
 
     var industryData = {
         "농업, 임업 및 어업": {
@@ -411,39 +407,37 @@
     function initializeButtons() {
         console.log("Initializing buttons");
 
-        // 읍면동 버튼
+        $("#toggleSiGunGuBoundaries").on("click", function () {
+            if (isSiGunGuLoaded) {
+                kkoMap.removePolygons();
+                isSiGunGuLoaded = false;
+                $("#siGunGuSelectedArea").hide();
+            } else {
+                // 읍면동 경계가 활성화되어 있으면 숨기기
+                if (isEupMyeonDongLoaded) {
+                    kkoMap.removePolygons();
+                    isEupMyeonDongLoaded = false;
+                    $("#eupMyeonDongSelectedArea").hide();
+                }
+                // 시군구 경계 로드
+                loadSiGunGuData();
+                map.relayout();
+                isSiGunGuLoaded = true;
+                $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음");
+            }
+        });
+
         $("#toggleEupMyeonDongBoundaries").on("click", function () {
             if (isEupMyeonDongLoaded) {
                 kkoMap.removePolygons();
                 isEupMyeonDongLoaded = false;
                 $("#eupMyeonDongSelectedArea").hide();
             } else {
-                if (geoJsonData) {
-                    kkoMap.loadGeoJson(geoJsonData, "읍면동");
-                    map.relayout();  // 지도 리프레시
-                    isEupMyeonDongLoaded = true;
-                    $("#eupMyeonDongSelectedArea").show().text("선택된 읍면동: 없음"); // 선택된 읍면동 영역 표시
-                } else {
-                    console.error("GeoJSON data not loaded");
-                }
-            }
-        });
-
-        // 시군구 버튼
-        $("#toggleSiGunGuBoundaries").on("click", function () {
-            console.log("Toggle SiGunGu button clicked");
-            if (isSiGunGuLoaded) {
-                kkoMap.removePolygons();
-                isSiGunGuLoaded = false;
-                $("#siGunGuSelectedArea").hide(); // 시군구 선택 영역 숨김
-            } else {
-                if (geoJsonData) {
-                    kkoMap.loadGeoJson(geoJsonData, "시군구");
-                    map.relayout();  // 지도 리프레시
-                    isSiGunGuLoaded = true;
-                    $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음"); // 선택된 시군구 영역 표시
-                } else {
-                    console.error("GeoJSON data not loaded");
+                // 시군구 경계가 활성화되어 있으면 숨기기
+                if (isSiGunGuLoaded) {
+                    kkoMap.removePolygons();
+                    isSiGunGuLoaded = false;
+                    $("#siGunGuSelectedArea").hide();
                 }
                 // 읍면동 경계 로드
                 loadEupMyeonDongData();
@@ -461,15 +455,9 @@
             let fillColor;
             let strokeColor;
             if (type === "읍면동") {
-                filteredData = geoJsonData.features.filter(function (feature) {
-                    return feature.properties.adm_cd && (feature.properties.adm_cd.length === 7 || feature.properties.adm_cd.length === 8);
-                });
                 fillColor = "rgba(30, 144, 255, 0.1)";
                 strokeColor = "#104486";
             } else if (type === "시군구") {
-                filteredData = geoJsonData.features.filter(function (feature) {
-                    return feature.properties.sgg && feature.properties.sgg.length === 5;
-                });
                 fillColor = "rgba(30, 144, 255, 0.1)";
                 strokeColor = "#163599";
             }
@@ -500,7 +488,7 @@
 
             var polygon = new kakao.maps.Polygon({
                 path: area.path,
-                strokeWeight: 1.5,
+                strokeWeight: 2,  // 경계선 굵기
                 strokeColor: strokeColor,
                 strokeOpacity: 0.8,
                 fillColor: fillColor,
@@ -515,26 +503,10 @@
                 customOverlay.setMap(map);
             });
 
-// 마우스 아웃 이벤트 처리
             kakao.maps.event.addListener(polygon, "mouseout", function () {
                 polygon.setOptions({ fillColor: fillColor });
                 customOverlay.setMap(null);
             });
-
-
-            // kakao.maps.event.addListener(polygon, "mouseover", function () {
-            //     // mousemove
-            //     polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
-            //     customOverlay.setPosition(kkoMap.centroid(area.path[0]));
-            //     customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
-            //     //  style='pointer-events: none'
-            //     customOverlay.setMap(map);
-            // });
-            //
-            // kakao.maps.event.addListener(polygon, "mouseout", function () {
-            //     polygon.setOptions({ fillColor: fillColor });
-            //     customOverlay.setMap(null);
-            // });
 
             kakao.maps.event.addListener(polygon, "click", function () {
                 if (type === "읍면동") {
@@ -572,52 +544,40 @@
     function sample5_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {
-                var addr = data.address; // 최종 주소 변수
+                var addr = data.address;
 
-                // 주소 정보를 해당 필드에 넣는다.
                 document.getElementById("sample5_address").value = addr;
 
-                // 주소로 좌표를 검색
                 var geocoder = new kakao.maps.services.Geocoder();
                 geocoder.addressSearch(addr, function(results, status) {
                     if (status === kakao.maps.services.Status.OK) {
-                        var result = results[0]; // 첫번째 결과값을 활용
-
-                        // 해당 주소에 대한 좌표를 받아서
+                        var result = results[0];
                         var coords = new kakao.maps.LatLng(result.y, result.x);
 
-                        // 지도를 보여준다.
                         document.getElementById('mapContainer').style.display = "block";
                         map.relayout();
-
-                        // 지도 중심을 변경한다.
                         map.setCenter(coords);
-                        map.setLevel(3);  // 지도 확대
+                        map.setLevel(3);
 
-                        // 검색할 때 마커가 이미 존재하면 지우고 새로 생성
                         if (marker) {
-                            marker.setMap(null);  // 기존 마커를 제거
+                            marker.setMap(null);
                         }
                         if (infowindow) {
-                            infowindow.close();  // 기존 인포윈도우 제거
+                            infowindow.close();
                         }
 
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
                         marker = new kakao.maps.Marker({
                             position: coords,
                             map: map
                         });
 
-                        // 인포윈도우에 표시될 내용
                         var iwContent = '<div style="padding:5px;">' + addr + '<br><a href="https://map.kakao.com/link/map/' + addr + ',' + result.y + ',' + result.x + '" target="_blank"><img src="/resources/image/kakaomap.png" alt="카카오맵" style="width:44px; height:18px; margin-top:5px;"></a></div>';
 
-                        // 인포윈도우를 생성
                         infowindow = new kakao.maps.InfoWindow({
-                            content: iwContent,  // 인포윈도우에 들어갈 내용
-                            removable: true      // 인포윈도우 닫기 버튼을 추가
+                            content: iwContent,
+                            removable: true
                         });
 
-                        // 마커 위에 인포윈도우를 표시
                         infowindow.open(map, marker);
                     }
                 });
