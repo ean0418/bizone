@@ -24,9 +24,4 @@ public class MainController {
         return "index";
     }
 
-    @RequestMapping("/board")
-    public String board(HttpServletRequest req) {
-        req.setAttribute("contentPage", "../board/list.jsp");
-        return "main/index";
-    }
 }
