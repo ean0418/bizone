@@ -74,42 +74,59 @@
         /*    justify-content: center;*/
         /*    margin-top: 20px;*/
         /*}*/
-        /*.pagination a {*/
-        /*    margin: 0 5px;*/
-        /*    padding: 8px 16px;*/
+        /*.page-item {*/
+        /*    list-style-type: none;*/
+        /*    padding: 0 10px;*/
+        /*}*/
+        /*.page-item a {*/
         /*    text-decoration: none;*/
-        /*    background-color: #007bff;*/
-        /*    color: white;*/
-        /*    border-radius: 5px;*/
+        /*    color: #007bff;*/
         /*}*/
-        /*.pagination a.active {*/
-        /*    background-color: #0056b3;*/
+        /*.page-item.disabled a {*/
+        /*    color: grey;*/
         /*}*/
-        /*.pagination a:hover {*/
-        /*    background-color: #0056b3;*/
+        /*.page-item.active a {*/
+        /*    font-weight: bold;*/
+        /*    color: black;*/
         /*}*/
+
         .pagination {
             display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-        .page-item {
+            justify-content: center; /* 페이지 번호를 가운데 정렬 */
+            align-items: center; /* 수직 정렬 */
             list-style-type: none;
-            padding: 0 10px;
+            padding: 0;
         }
+
+        .page-item {
+            margin: 0 5px;
+        }
+
         .page-item a {
             text-decoration: none;
+            padding: 8px 12px;
             color: #007bff;
         }
+
         .page-item.disabled a {
             color: grey;
+            pointer-events: none;
         }
+
         .page-item.active a {
             font-weight: bold;
             color: black;
         }
+
+        .page-item {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .search-box {
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin-bottom: 20px;
         }
         .search-box input[type="text"] {
@@ -140,16 +157,6 @@
             </tr>
         </thead>
         <tbody>
-<%--        <c:forEach var="board" items="${boardList}">--%>
-<%--            <tr class="${board.bb_no == 123 ? 'selected' : ''}">--%>
-<%--                <td>${board.bb_no}</td>--%>
-<%--                <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>--%>
-<%--                <td>${board.bb_bm_nickname}</td>--%>
-<%--                <td>${board.bb_readCount}</td>--%>
-<%--                <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>--%>
-<%--            </tr>--%>
-<%--        </c:forEach>--%>
-
             <c:choose>
                 <c:when test="${not empty boardList}">
                     <c:forEach var="board" items="${boardList}">
@@ -172,43 +179,88 @@
         </table>
 
         <!-- 페이징 처리 -->
-<%--        <div class="pagination">--%>
-<%--            <c:if test="${page > 1}">--%>
-<%--                <a href="${contextPath}/board/list?page=${page - 1}">&laquo;</a>--%>
-<%--            </c:if>--%>
-<%--            <c:forEach var="i" begin="${page > 3 ? page - 2 : 1}" end="${page + 2 <= totalPages ? page + 2 : totalPages}">--%>
-<%--                <a href="${contextPath}/board/list?page=${i}" class="${i == page ? 'active' : ''}">${i}</a>--%>
-<%--            </c:forEach>--%>
-<%--            <c:if test="${page < totalPages}">--%>
-<%--                <a href="${contextPath}/board/list?page=${page + 1}">&raquo;</a>--%>
-<%--            </c:if>--%>
-<%--        </div>--%>
+<%--        <nav aria-label="Page navigation">--%>
+<%--            <ul class="pagination">--%>
+<%--                <!-- Previous 버튼 자리 고정 -->--%>
+<%--                <li class="page-item ${page == 1 ? 'disabled' : ''}">--%>
+<%--                    <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}">Previous</a>--%>
+<%--                </li>--%>
 
-        <!-- 페이징 처리 -->
+<%--                <!-- 시작 페이지 번호 -->--%>
+<%--                <c:choose>--%>
+<%--                    <c:when test="${page <= 3}">--%>
+<%--                        <!-- 1, 2, 3 페이지인 경우 -->--%>
+<%--                        <c:forEach var="i" begin="1" end="5">--%>
+<%--                            <li class="page-item ${page == i ? 'active' : ''} ${i > totalPages ? 'disabled' : ''}">--%>
+<%--                                <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>--%>
+<%--                            </li>--%>
+<%--                        </c:forEach>--%>
+<%--                    </c:when>--%>
+<%--                    <c:otherwise>--%>
+<%--                        <!-- 현재 페이지가 4 이상일 때 -->--%>
+<%--                        <c:forEach var="i" begin="${page - 2}" end="${page + 2}">--%>
+<%--                            <li class="page-item ${page == i ? 'active' : ''} ${i > totalPages ? 'disabled' : ''}">--%>
+<%--                                <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>--%>
+<%--                            </li>--%>
+<%--                        </c:forEach>--%>
+<%--                    </c:otherwise>--%>
+<%--                </c:choose>--%>
+
+<%--                <!-- Next 버튼 자리 고정 -->--%>
+<%--                <li class="page-item ${page == totalPages ? 'disabled' : ''}">--%>
+<%--                    <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">Next</a>--%>
+<%--                </li>--%>
+<%--            </ul>--%>
+<%--        </nav>--%>
         <nav aria-label="Page navigation">
             <ul class="pagination">
-                <c:if test="${page > 1}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}">Previous</a>
-                    </li>
-                </c:if>
+                <!-- Previous 버튼 자리 고정 -->
+                <li class="page-item ${page == 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}">Previous</a>
+                </li>
 
-                <c:forEach var="i" begin="${page - 2 lt 1 ? 1 : page - 2}" end="${page + 2 gt totalPages ? totalPages : page + 2}">
-                    <li class="page-item ${page == i ? 'active' : ''}">
-                        <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
-                    </li>
-                </c:forEach>
+                <!-- 페이지 번호 표시 (1 ~ 5) -->
+                <div style="display: inline-flex; justify-content: center; flex-grow: 1;">
+                    <c:choose>
+                        <c:when test="${totalPages <= 5}">
+                            <!-- 총 페이지가 5 이하일 경우 모든 페이지 번호 표시 -->
+                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                <li class="page-item ${page == i ? 'active' : ''}">
+                                    <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
+                                </li>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <!-- 현재 페이지가 1~3 사이일 경우 -->
+                            <c:if test="${page <= 3}">
+                                <c:forEach var="i" begin="1" end="5">
+                                    <li class="page-item ${page == i ? 'active' : ''}">
+                                        <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                            <!-- 현재 페이지가 4 이상일 경우 -->
+                            <c:if test="${page > 3}">
+                                <c:forEach var="i" begin="${page - 2}" end="${page + 2 > totalPages ? totalPages : page + 2}">
+                                    <li class="page-item ${page == i ? 'active' : ''}">
+                                        <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
 
-                <c:if test="${page < totalPages}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">Next</a>
-                    </li>
-                </c:if>
+                <!-- Next 버튼 자리 고정 -->
+                <li class="page-item ${page == totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">Next</a>
+                </li>
             </ul>
         </nav>
 
+
         <!-- 작성자명으로 게시글 조회 -->
-        <form action="${contextPath}/board/list" method="get">
+        <form action="${contextPath}/board/list" method="get" class="search-box">
             <input type="text" name="bb_nickname" placeholder="작성자명 입력" value="${bb_nickname}">
             <button type="submit">검색</button>
         </form>

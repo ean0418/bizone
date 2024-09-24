@@ -77,12 +77,16 @@
         </div>
 
         <div class="btn-container" style="text-align: center; margin-top: 20px;">
-            <input type="button" class="btn btn-default" value="목록" onclick="location.href='${contextPath}/board/list'">
-            <input type="button" class="btn btn-primary" value="수정" onclick="location.href='${contextPath}/board/update.go?bb_no=${board.bb_no}'">
-            <form action="${contextPath}/board/delete" method="post" style="display:inline;">
-                <input type="hidden" name="bb_no" value="${board.bb_no}">
-                <input type="submit" class="btn btn-danger" value="삭제">
-            </form>
+            <a href="${contextPath}/board/list" class="btn btn-default">목록</a>
+
+            <!-- 작성자와 로그인한 사용자가 일치할 때만 수정/삭제 버튼 표시 -->
+            <c:if test="${sessionScope.loginMember.bm_nickname == board.bb_bm_nickname}">
+                <a href="${contextPath}/board/update.go?bb_no=${board.bb_no}" class="btn btn-primary">수정</a>
+                <form action="${contextPath}/board/delete" method="post" style="display:inline;">
+                    <input type="hidden" name="bb_no" value="${board.bb_no}">
+                    <input type="submit" class="btn btn-danger" value="삭제">
+                </form>
+            </c:if>
         </div>
     </div>
 </body>
