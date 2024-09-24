@@ -10,6 +10,109 @@ git <%--
 <head>
     <title>Title</title>
 </head>
+<style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #F5F6FA;
+        margin: 0;
+        padding: 0;
+    }
+
+    .mypage-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* 프로필 섹션 */
+    .profile-section {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 300px;
+        margin-right: 20px;
+    }
+
+
+    .edit-profile-btn {
+        padding: 10px 20px;
+        background-color: #2ECC71;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .edit-profile-btn:hover {
+        background-color: #27AE60;
+    }
+
+    /* 정보 섹션 */
+    .info-section {
+        flex: 1;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: #101E4E;
+        border-bottom: 2px solid #E9F0FA;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .info-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .info-table th, .info-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #E9F0FA;
+    }
+
+    .info-table th {
+        color: #737373;
+        font-weight: normal;
+    }
+
+    .info-table td {
+        color: #101E4E;
+    }
+
+    .info-table input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #D1D5DB;
+        border-radius: 5px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    .delete-btn {
+        padding: 10px 20px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+
+    .delete-btn:hover {
+        background-color: #C0392B;
+    }
+</style>
 <body>
         <div class="mypage-container">
             <!-- 프로필 섹션 -->
