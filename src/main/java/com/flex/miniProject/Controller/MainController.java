@@ -16,4 +16,10 @@ public class MainController {
     public String main2(HttpServletRequest req) {
         return main(req);
     }
+
+    @RequestMapping("/board")
+    public String board(HttpServletRequest req) {
+        req.setAttribute("contentPage", "../board/list.jsp");
+        return "main/index";
+    }
 }
