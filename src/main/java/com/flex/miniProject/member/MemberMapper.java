@@ -1,6 +1,7 @@
 package com.flex.miniProject.member;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
 
@@ -10,4 +11,5 @@ public interface MemberMapper {
     public abstract List<Bizone_member> getMemberById(Bizone_member m);
     public abstract int deleteMember(Bizone_member m);
     public abstract int updateMember(Bizone_member m);
+    int checkIfIdExists(Bizone_member m);
 }

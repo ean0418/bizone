@@ -26,6 +26,9 @@ public class MemberController {
     @Autowired
     private MemberDAO mDAO;
 
+
+
+
     @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
     public String showStep1(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/joinStep1.jsp");

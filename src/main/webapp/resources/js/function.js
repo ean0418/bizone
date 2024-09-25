@@ -11,8 +11,13 @@ function logout() {
 function memberInfoGo() {
     location.href = "/member.info.go"; // 회원 정보 페이지로 이동
 }
-
+function idCheck() {
+    location.href="/idCheck"
+}
 // 회원가입 페이지로 이동하는 함수
 function signUpgo() {
     location.href = "/member.step1"; // 회원가입 페이지로 이동
+}
+function analyze() {
+    location.href = "/main";
 }

@@ -10,14 +10,12 @@
 <head>
     <title>Title</title>
 </head>
-<style>
 
-</style>
 <body>
 <nav class="navbar navbar-expand bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand ms-3" href="/">
-            Contact us
+            Bizone
         </a>
         <div class="collapse navbar-collapse" id="navbarText">
             <ul class="navbar-nav me-auto lg-3">
