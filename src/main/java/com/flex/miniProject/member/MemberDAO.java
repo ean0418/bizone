@@ -106,7 +106,7 @@ public class MemberDAO {
                     req.getSession().setAttribute("loginMember", dbM);
                     req.getSession().setMaxInactiveInterval(600); // 세션 유지 시간 설정
                     // 로그인 성공 시 success.jsp로 이동
-                    req.setAttribute("contentPage", "../member/success.jsp");
+                    req.setAttribute("contentPage", "../index.jsp");
                 } else {
                     // 비밀번호 오류 시
                     req.setAttribute("r", "로그인 실패(PW 오류)");
@@ -128,7 +128,7 @@ public class MemberDAO {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
         if (m != null) {
             // 로그인 성공 + 상태 유지시
-            req.setAttribute("lp", "../member/success.jsp");
+            req.setAttribute("lp", "../main/main.jsp");
             return true;
         }
         // 로그인상태가 아니거나 + 로그인 실패시

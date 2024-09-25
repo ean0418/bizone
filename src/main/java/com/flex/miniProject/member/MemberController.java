@@ -84,9 +84,10 @@ public class MemberController {
 
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
         if (mDAO.loginCheck(req)) {
-            return "member/success";  // 로그인 성공 시 메인 페이지로 이동
+            req.setAttribute("contentPage", "main/main.jsp");
+            return "index";  // 로그인 성공 시 메인 페이지로 이동
         } else {
-            req.setAttribute("contentPage", "map/map.jsp");
+            req.setAttribute("contentPage", "member/login.jsp");
             return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
         }
     }

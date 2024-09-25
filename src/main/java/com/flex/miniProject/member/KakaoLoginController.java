@@ -1,15 +1,19 @@
 package com.flex.miniProject.member;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 @Controller
 public class KakaoLoginController {
     Kakao kakao = new Kakao();
+    @Autowired
+    private HttpSession session;
 
     @RequestMapping(value = "/kakaoGetCode", method = RequestMethod.GET)
     public String kakao() {
@@ -19,38 +23,32 @@ public class KakaoLoginController {
     }
 
     @RequestMapping(value = "kakaologin", method = RequestMethod.GET)
-    public String kakaoLogin
-            (
-             @RequestParam("code") String code
-            ) throws Exception {
+    public String kakaoLogin(@RequestParam("code") String code, HttpSession session) throws Exception {
         System.out.println("code : " + code);
 
-        String data = (String) kakao.getHtml((kakao.getAccessToken(code)));
-        System.out.println("data : " + data);
+        // 액세스 토큰 가져오기
+        String accessToken = kakao.getAccessToken(code);
+        System.out.println("accessToken : " + accessToken);
 
-        Map<String, String> map = kakao.JsonStringMap(data);
-        System.out.println("map : "+map);
-
-        if (map.isEmpty()) {
-            System.out.println("Map is empty or failed to parse.");
-        } else {
-            System.out.println("map : " + map); // 변환된 map 출력
-            System.out.println("access_token :" + map.get("access_token"));
-            System.out.println("refresh_token : " + map.get("refresh_token"));
-            System.out.println("scope :" + map.get("scope"));
-            System.out.println("token_type : " + map.get("token_type"));
-            System.out.println("expires_in : " + map.get("expires_in"));
-
-            String list = kakao.getAllList((String) map.get("access_token"));
-            System.out.println("list : " + list);
-
-            Map<String, String> getAllListMap = kakao.JsonStringMap(list);
-            System.out.println("getAllListMap :" + getAllListMap);
-            System.out.println("nickName : " + getAllListMap.get("nickName").toString());
-            System.out.println("profileImageURL :" + (String) getAllListMap.get("profileImageURL"));
-            System.out.println("thumbnailURL :" + (String) getAllListMap.get("thumbnailURL"));
+        if (accessToken == null || accessToken.isEmpty()) {
+            System.out.println("Failed to get access token");
+            return "member/success"; // 액세스 토큰을 받지 못하면 에러 페이지로 리턴
         }
-        return "kakaologin";
+
+        // 사용자 정보 가져오기
+        KakaoVO userInfo = kakao.getUserInfo(accessToken);
+
+        if (userInfo == null) {
+            System.out.println("Failed to get user info");
+            return "member/success"; // 사용자 정보를 가져오지 못하면 에러 페이지로 리턴
+        }
+
+        // 사용자 정보를 세션에 저장
+        session.invalidate(); // 기존 세션 초기화
+        session.setAttribute("bk_nickname", userInfo.getBk_nickname());
+        session.setAttribute("bk_profile_image_url", userInfo.getBk_profile_image_url());
+
+        return "member/signup";
     }
 
 }
