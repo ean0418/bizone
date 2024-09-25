@@ -142,10 +142,15 @@
     <div id="sidebar">
         <div id="sidebar-content">
             <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="sample5_address" placeholder="주소 검색" readonly
+                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly
                        style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 검색"
+                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기"
                        style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            </div>
+
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+                <input type="button" id="eupMyeonDongSearchButton" value="지역 검색" style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
             </div>
 
             <select id="industrySelect">
@@ -213,6 +218,7 @@
     var marker = null;
     var infowindow = null;
     var overlayVisible = false;
+    var searchPolygons = [];
 
     // 경계 데이터 로드 상태를 추적하는 변수
     var isEupMyeonDongLoaded = false;  // 읍면동 경계 데이터 로드 여부
@@ -373,7 +379,7 @@
                 var coords = $(this).val().split(',');
                 var latLng = new kakao.maps.LatLng(coords[0], coords[1]);
                 map.setCenter(latLng);
-                map.setLevel(6);
+                map.setLevel(8);
             }
         });
 
@@ -390,7 +396,7 @@
                         isSiGunGuLoaded = false;
                         isSiDoLoaded = false;
                     }
-                } else if (level >= 7 && level <= 8) {
+                } else if (level >= 7 && level <= 9) {
                     if (!isSiGunGuLoaded) {  // 시군구 경계가 안 켜져 있을 때만 불러오기
                         removePolygons();  // 기존 나머지 경계 제거
                         loadSiGunGuData();  // 시군구 경계 불러오기
@@ -398,7 +404,7 @@
                         isEupMyeonDongLoaded = false;
                         isSiDoLoaded = false;
                     }
-                } else if (level >= 9 && level <= 10) {
+                } else if (level >= 10 && level <= 12) {
                     if (!isSiDoLoaded) {  // 시도 경계가 안 켜져 있을 때만 불러오기
                         removePolygons();  // 기존 나머지 경계 제거
                         loadSiDoData();  // 시도 경계 불러오기
@@ -406,7 +412,7 @@
                         isEupMyeonDongLoaded = false;
                         isSiGunGuLoaded = false;
                     }
-                } else if (level >= 11) {
+                } else if (level >= 13) {
                     removePolygons();
                     isEupMyeonDongLoaded = false;
                     isSiGunGuLoaded = false;
@@ -416,8 +422,8 @@
                 }
             }
 
-            if (level > 12) {
-                map.setLevel(12);  // 최대 축소 레벨 제한
+            if (level > 14) {
+                map.setLevel(14);  // 최대 축소 레벨 제한
             }
         });
     }
@@ -502,7 +508,7 @@
                 });
             });
             return {
-                name: feature.properties.adm_nm ?? feature.properties.sggnm,
+                name: feature.properties.adm_nm ?? feature.properties.sggnm ?? feature.properties.sidonm,
                 path: path
             };
         },
@@ -567,61 +573,7 @@
             polygon.setMap(map);
             polygons.push(polygon);
         },
-        // setPolygon: function (area, fillColor, strokeColor, type) {
-        //     var polygon = new kakao.maps.Polygon({
-        //         path: area.path,
-        //         strokeWeight: 2,
-        //         strokeColor: strokeColor,
-        //         strokeOpacity: 0.8,
-        //         fillColor: fillColor,
-        //         fillOpacity: 0.3,
-        //     });
-        //
-        //     let isMouseOver = false;
-        //
-        //     kakao.maps.event.addListener(polygon, "mouseover", function () {
-        //         if (!isMouseOver) {
-        //             isMouseOver = true;
-        //             polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });
-        //             customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");
-        //             customOverlay.setMap(map);
-        //         }
-        //     });
-        //
-        //     kakao.maps.event.addListener(polygon, "mousemove", function (mouseEvent) {
-        //         if (isMouseOver) {
-        //             // 마우스 커서의 우측하단(5시 방향)으로 위치 조정
-        //             const offsetX = 35; // x축 오프셋
-        //             const offsetY = 35; // y축 오프셋
-        //             const projection = map.getProjection();
-        //             const point = projection.pointFromCoords(mouseEvent.latLng);
-        //             point.x += offsetX;
-        //             point.y += offsetY;
-        //             const newPosition = projection.coordsFromPoint(point);
-        //             customOverlay.setPosition(newPosition);
-        //         }
-        //     });
-        //
-        //     kakao.maps.event.addListener(polygon, "mouseout", function () {
-        //         if (isMouseOver) {
-        //             isMouseOver = false;
-        //             polygon.setOptions({ fillColor: fillColor });
-        //             customOverlay.setMap(null);
-        //         }
-        //     });
-        //
-        //     kakao.maps.event.addListener(polygon, "click", function () {
-        //         if (type === "읍면동") {
-        //             $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);
-        //         } else if (type === "시군구") {
-        //             $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);
-        //         }
-        //         map.setLevel(8);
-        //         map.setCenter(kkoMap.centroid(area.path[0]));
-        //     });
-        //
-        //     polygon.setMap(map);
-        //     polygons.push(polygon);
+
         centroid: function (path) {
             let sumX = 0, sumY = 0, length = path.length;
             path.forEach(function (coord) {
@@ -643,10 +595,10 @@
             if (level <= 6) {
                 loadEupMyeonDongData();
                 isEupMyeonDongLoaded = true;
-            } else if (level >= 7 && level <= 8) {
+            } else if (level >= 7 && level <= 9) {
                 loadSiGunGuData();
                 isSiGunGuLoaded = true;
-            } else if (level >= 9 && level <= 10) {
+            } else if (level >= 10 && level <= 12) {
                 loadSiDoData();
                 isSiDoLoaded = true;
             }
@@ -659,6 +611,63 @@
         initKakaoMap();
         // 버튼 클릭 이벤트 설정
         $("#boundaryToggleButton").on("click", toggleBoundaryData);
+    });
+
+    // 기존 검색된 마커 및 인포윈도우 제거 함수
+    function removeSearchMarkers() {
+        if (marker) {
+            marker.setMap(null);
+            marker = null;
+        }
+        if (infowindow) {
+            infowindow.close();
+            infowindow = null;
+        }
+    }
+
+    // 지역 검색 기능 (마커와 인포윈도우 사용)
+    $("#eupMyeonDongSearchButton").on("click", function () {
+        var searchQuery = $("#eupMyeonDongSearch").val();
+
+        if (!searchQuery) {
+            alert("지역명을 입력하세요.");
+            return;
+        }
+
+        // Kakao Geocoder를 사용하여 지역 검색
+        var geocoder = new kakao.maps.services.Geocoder();
+        geocoder.addressSearch(searchQuery, function (results, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var result = results[0];
+                var coords = new kakao.maps.LatLng(result.y, result.x);
+
+                // 기존 마커 및 인포윈도우 제거
+                removeSearchMarkers();
+
+                // 중심 좌표로 이동
+                map.setCenter(coords);
+                map.setLevel(5);
+
+                // 마커 생성
+                marker = new kakao.maps.Marker({
+                    position: coords,
+                    map: map
+                });
+
+                // 인포윈도우 생성
+                var infowindowContent = '<div style="padding:5px;">' + result.address_name + '<br><a href="https://map.kakao.com/link/map/' + result.address_name + ',' + result.y + ',' + result.x + '" target="_blank">큰지도보기</a></div>';
+
+                infowindow = new kakao.maps.InfoWindow({
+                    content: infowindowContent,
+                    removable: true
+                });
+
+                // 인포윈도우를 마커에 연결
+                infowindow.open(map, marker);
+            } else {
+                alert("검색된 지역이 없습니다. 다시 시도하세요.");
+            }
+        });
     });
 
     function sample5_execDaumPostcode() {
@@ -708,6 +717,7 @@
 </body>
 </html>
 
+<%-- 수정 전 코드 --%>
 <%--<%@ page contentType="text/html;charset=UTF-8" language="java" %>--%>
 <%--<html>--%>
 <%--<head>--%>
@@ -845,7 +855,6 @@
 <%--    </style>--%>
 <%--</head>--%>
 <%--<body>--%>
-
 <%--<div class="content">--%>
 <%--    <div class="header" style="position:absolute;">--%>
 <%--        <h1>상권분석</h1>--%>
@@ -853,8 +862,10 @@
 <%--    <div id="sidebar">--%>
 <%--        <div id="sidebar-content">--%>
 <%--            <div style="display: flex; align-items: center; margin-bottom: 20px;">--%>
-<%--                <input type="text" id="sample5_address" placeholder="주소 검색" readonly style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">--%>
-<%--                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 검색" style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">--%>
+<%--                <input type="text" id="sample5_address" placeholder="주소 검색" readonly--%>
+<%--                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">--%>
+<%--                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 검색"--%>
+<%--                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">--%>
 <%--            </div>--%>
 
 <%--            <select id="industrySelect">--%>
@@ -904,10 +915,10 @@
 <%--                <option value="37.6063241,127.092728">중랑구</option>--%>
 <%--            </select>--%>
 
-<%--            <button id="toggleEupMyeonDongBoundaries">읍면동 경계 표시/숨기기</button>--%>
-<%--            <div id="eupMyeonDongSelectedArea" style="display: none;"></div>--%>
+<%--            <!-- 단일 버튼으로 경계데이터 토글 -->--%>
+<%--            <button id="boundaryToggleButton">경계데이터 켜기</button>--%>
 
-<%--            <button id="toggleSiGunGuBoundaries">시군구 경계 표시/숨기기</button>--%>
+<%--            <div id="eupMyeonDongSelectedArea" style="display: none;"></div>--%>
 <%--            <div id="siGunGuSelectedArea" style="display: none;"></div>--%>
 <%--        </div>--%>
 <%--    </div>--%>
@@ -918,11 +929,15 @@
 
 <%--<script>--%>
 <%--    var map, customOverlay, polygons = [];--%>
-<%--    var isEupMyeonDongLoaded = false;--%>
-<%--    var isSiGunGuLoaded = false;--%>
+<%--    var isBoundaryLoaded = false;--%>
 <%--    var marker = null;--%>
 <%--    var infowindow = null;--%>
 <%--    var overlayVisible = false;--%>
+
+<%--    // 경계 데이터 로드 상태를 추적하는 변수--%>
+<%--    var isEupMyeonDongLoaded = false;  // 읍면동 경계 데이터 로드 여부--%>
+<%--    var isSiGunGuLoaded = false;  // 시군구 경계 데이터 로드 여부--%>
+<%--    var isSiDoLoaded = false;   // 시도 경계 데이터 로드 여부--%>
 
 <%--    var industryData = {--%>
 <%--        "농업, 임업 및 어업": {--%>
@@ -1014,7 +1029,7 @@
 <%--    }--%>
 
 <%--    // 대분류 선택 시 중분류 옵션 추가--%>
-<%--    industrySelect.addEventListener('change', function() {--%>
+<%--    industrySelect.addEventListener('change', function () {--%>
 <%--        subIndustrySelect.innerHTML = '<option selected disabled>중분류 선택</option>';--%>
 <%--        subIndustrySelect.disabled = false;--%>
 <%--        smallIndustrySelect.innerHTML = '<option selected disabled>소분류 선택</option>';--%>
@@ -1030,14 +1045,13 @@
 <%--            subIndustrySelect.appendChild(option);--%>
 <%--        }--%>
 
-<%--        // 선택한 대분류 표시--%>
 <%--        document.getElementById('selectedLarge').textContent = selectedIndustry;--%>
 <%--        document.getElementById('selectedMedium').textContent = '';--%>
 <%--        document.getElementById('selectedSmall').textContent = '';--%>
 <%--    });--%>
 
 <%--    // 중분류 선택 시 소분류 옵션 추가--%>
-<%--    subIndustrySelect.addEventListener('change', function() {--%>
+<%--    subIndustrySelect.addEventListener('change', function () {--%>
 <%--        smallIndustrySelect.innerHTML = '<option selected disabled>소분류 선택</option>';--%>
 <%--        smallIndustrySelect.disabled = false;--%>
 
@@ -1045,26 +1059,24 @@
 <%--        var selectedSubIndustry = this.value;--%>
 <%--        var smallCategories = industryData[selectedIndustry][selectedSubIndustry];--%>
 
-<%--        smallCategories.forEach(function(smallIndustry) {--%>
+<%--        smallCategories.forEach(function (smallIndustry) {--%>
 <%--            var option = document.createElement('option');--%>
 <%--            option.value = smallIndustry;--%>
 <%--            option.textContent = smallIndustry;--%>
 <%--            smallIndustrySelect.appendChild(option);--%>
 <%--        });--%>
 
-<%--        // 선택한 중분류 표시--%>
 <%--        document.getElementById('selectedMedium').textContent = selectedSubIndustry;--%>
 <%--        document.getElementById('selectedSmall').textContent = '';--%>
 <%--    });--%>
 
 <%--    // 소분류 선택 시 선택된 항목 표시--%>
-<%--    smallIndustrySelect.addEventListener('change', function() {--%>
+<%--    smallIndustrySelect.addEventListener('change', function () {--%>
 <%--        var selectedSmallIndustry = this.value;--%>
 <%--        document.getElementById('selectedSmall').textContent = selectedSmallIndustry;--%>
 <%--    });--%>
 
 <%--    function initKakaoMap() {--%>
-<%--        console.log("Initializing Kakao Map");--%>
 <%--        var container = document.getElementById('map');--%>
 <%--        var options = {--%>
 <%--            center: new kakao.maps.LatLng(37.5665, 126.9780),--%>
@@ -1073,125 +1085,131 @@
 <%--        map = new kakao.maps.Map(container, options);--%>
 <%--        customOverlay = new kakao.maps.CustomOverlay({});--%>
 
+<%--        var previousZoomLevel = map.getLevel();--%>
+
 <%--        // 서울시 구 선택 시 해당 구로 지도 이동--%>
 <%--        $("#locationSelect").on("change", function () {--%>
 <%--            if (map) {--%>
 <%--                var coords = $(this).val().split(',');--%>
 <%--                var latLng = new kakao.maps.LatLng(coords[0], coords[1]);--%>
 <%--                map.setCenter(latLng);--%>
-<%--                map.setLevel(6);--%>
+<%--                map.setLevel(8);--%>
+<%--            }--%>
+<%--        });--%>
+
+<%--        // 지도 레벨 변경에 따른 경계 데이터 처리--%>
+<%--        kakao.maps.event.addListener(map, 'zoom_changed', function () {--%>
+<%--            var level = map.getLevel();--%>
+
+<%--            if (isBoundaryLoaded) {  // 경계 데이터가 켜져 있을 때만 작동--%>
+<%--                if (level <= 6) {--%>
+<%--                    if (!isEupMyeonDongLoaded) {  // 읍면동 경계가 안 켜져 있을 때만 불러오기--%>
+<%--                        removePolygons();  // 기존 시군구 경계 제거--%>
+<%--                        loadEupMyeonDongData();  // 읍면동 경계 불러오기--%>
+<%--                        isEupMyeonDongLoaded = true;--%>
+<%--                        isSiGunGuLoaded = false;--%>
+<%--                        isSiDoLoaded = false;--%>
+<%--                    }--%>
+<%--                } else if (level >= 7 && level <= 9) {--%>
+<%--                    if (!isSiGunGuLoaded) {  // 시군구 경계가 안 켜져 있을 때만 불러오기--%>
+<%--                        removePolygons();  // 기존 나머지 경계 제거--%>
+<%--                        loadSiGunGuData();  // 시군구 경계 불러오기--%>
+<%--                        isSiGunGuLoaded = true;--%>
+<%--                        isEupMyeonDongLoaded = false;--%>
+<%--                        isSiDoLoaded = false;--%>
+<%--                    }--%>
+<%--                } else if (level >= 10 && level <= 12) {--%>
+<%--                    if (!isSiDoLoaded) {  // 시도 경계가 안 켜져 있을 때만 불러오기--%>
+<%--                        removePolygons();  // 기존 나머지 경계 제거--%>
+<%--                        loadSiDoData();  // 시도 경계 불러오기--%>
+<%--                        isSiDoLoaded = true;--%>
+<%--                        isEupMyeonDongLoaded = false;--%>
+<%--                        isSiGunGuLoaded = false;--%>
+<%--                    }--%>
+<%--                } else if (level >= 13) {--%>
+<%--                    removePolygons();--%>
+<%--                    isEupMyeonDongLoaded = false;--%>
+<%--                    isSiGunGuLoaded = false;--%>
+<%--                    isSiDoLoaded = false;--%>
+<%--                    $("#boundaryToggleButton").text("경계데이터 켜기");  // 버튼 상태 변경--%>
+<%--                    isBoundaryLoaded = false;  // 경계 데이터 해제--%>
+<%--                }--%>
+<%--            }--%>
+
+<%--            if (level > 14) {--%>
+<%--                map.setLevel(14);  // 최대 축소 레벨 제한--%>
 <%--            }--%>
 <%--        });--%>
 <%--    }--%>
 
-<%--    // 시군구 데이터 로드--%>
+<%--    function loadSiDoData() {--%>
+<%--        $.ajax({--%>
+<%--            url: "/resources/data/SiDo.geojson",  // 시도 경계 데이터--%>
+<%--            dataType: "json",--%>
+<%--            success: function (data) {--%>
+<%--                kkoMap.loadGeoJson(data, "시도");--%>
+<%--            },--%>
+<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
+<%--                console.error("Error loading SiDo GeoJSON data:", textStatus, errorThrown);--%>
+<%--            }--%>
+<%--        });--%>
+<%--    }--%>
+
 <%--    function loadSiGunGuData() {--%>
 <%--        $.ajax({--%>
 <%--            url: "/resources/data/SiGunGuDataFinal.geojson",  // 시군구 경계 데이터--%>
 <%--            dataType: "json",--%>
-<%--            success: function(data) {--%>
+<%--            success: function (data) {--%>
 <%--                kkoMap.loadGeoJson(data, "시군구");--%>
 <%--            },--%>
-<%--            error: function(jqXHR, textStatus, errorThrown) {--%>
+<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
 <%--                console.error("Error loading SiGunGu GeoJSON data:", textStatus, errorThrown);--%>
 <%--            }--%>
 <%--        });--%>
 <%--    }--%>
 
-<%--    // 읍면동 데이터 로드--%>
 <%--    function loadEupMyeonDongData() {--%>
 <%--        $.ajax({--%>
 <%--            url: "/resources/data/EupMyeonDong.geojson",  // 읍면동 경계 데이터--%>
 <%--            dataType: "json",--%>
-<%--            success: function(data) {--%>
+<%--            success: function (data) {--%>
 <%--                kkoMap.loadGeoJson(data, "읍면동");--%>
 <%--            },--%>
-<%--            error: function(jqXHR, textStatus, errorThrown) {--%>
+<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
 <%--                console.error("Error loading EupMyeonDong GeoJSON data:", textStatus, errorThrown);--%>
 <%--            }--%>
 <%--        });--%>
 <%--    }--%>
 
-<%--    // 버튼 초기화--%>
-<%--    function initializeButtons() {--%>
-<%--        console.log("Initializing buttons");--%>
-
-<%--        $("#toggleSiGunGuBoundaries").on("click", function () {--%>
-<%--            if (isSiGunGuLoaded) {--%>
-<%--                kkoMap.removePolygons();--%>
-<%--                isSiGunGuLoaded = false;--%>
-<%--                $("#siGunGuSelectedArea").hide();--%>
-<%--            } else {--%>
-<%--                // 읍면동 경계가 활성화되어 있으면 숨기기--%>
-<%--                if (isEupMyeonDongLoaded) {--%>
-<%--                    kkoMap.removePolygons();--%>
-<%--                    isEupMyeonDongLoaded = false;--%>
-<%--                    $("#eupMyeonDongSelectedArea").hide();--%>
-<%--                }--%>
-<%--                // 시군구 경계 로드--%>
-<%--                loadSiGunGuData();--%>
-<%--                map.relayout();--%>
-<%--                isSiGunGuLoaded = true;--%>
-<%--                $("#siGunGuSelectedArea").show().text("선택된 시군구: 없음");--%>
-<%--            }--%>
+<%--    function removePolygons() {--%>
+<%--        polygons.forEach(function (polygon) {--%>
+<%--            polygon.setMap(null);--%>
 <%--        });--%>
+<%--        polygons = [];--%>
 
-<%--        $("#toggleEupMyeonDongBoundaries").on("click", function () {--%>
-<%--            if (isEupMyeonDongLoaded) {--%>
-<%--                kkoMap.removePolygons();--%>
-<%--                isEupMyeonDongLoaded = false;--%>
-<%--                $("#eupMyeonDongSelectedArea").hide();--%>
-<%--            } else {--%>
-<%--                // 시군구 경계가 활성화되어 있으면 숨기기--%>
-<%--                if (isSiGunGuLoaded) {--%>
-<%--                    kkoMap.removePolygons();--%>
-<%--                    isSiGunGuLoaded = false;--%>
-<%--                    $("#siGunGuSelectedArea").hide();--%>
-<%--                }--%>
-<%--                // 읍면동 경계 로드--%>
-<%--                loadEupMyeonDongData();--%>
-<%--                map.relayout();--%>
-<%--                isEupMyeonDongLoaded = true;--%>
-<%--                $("#eupMyeonDongSelectedArea").show().text("선택된 읍면동: 없음");--%>
-<%--            }--%>
-<%--        });--%>
+<%--        // 남아있는 overlaybox 제거--%>
+<%--        if (customOverlay) {--%>
+<%--            customOverlay.setMap(null);--%>
+<%--        }--%>
 <%--    }--%>
-
-<%--    // 성능 향상에 도움이 되는지는 ..--%>
-<%--    // var clusterer = new kakao.maps.MarkerClusterer({--%>
-<%--    //     map: map,--%>
-<%--    //     averageCenter: true,--%>
-<%--    //     minLevel: 10--%>
-<%--    // });--%>
-<%--    //--%>
-<%--    // function addClusteredPolygons(data) {--%>
-<%--    //     var markers = data.features.map(function (feature) {--%>
-<%--    //         var coords = feature.geometry.coordinates;--%>
-<%--    //         return new kakao.maps.Marker({--%>
-<%--    //             position: new kakao.maps.LatLng(coords[1], coords[0])--%>
-<%--    //         });--%>
-<%--    //     });--%>
-<%--    //     clusterer.addMarkers(markers);--%>
-<%--    // }--%>
 
 <%--    var kkoMap = {--%>
 <%--        loadGeoJson: function (geoJsonData, type) {--%>
-<%--            console.log("Loading GeoJSON data for", type);--%>
-
-<%--            let fillColor;--%>
-<%--            let strokeColor;--%>
+<%--            var fillColor, strokeColor;--%>
 <%--            if (type === "읍면동") {--%>
 <%--                fillColor = "rgba(30, 144, 255, 0.1)";--%>
 <%--                strokeColor = "#104486";--%>
 <%--            } else if (type === "시군구") {--%>
 <%--                fillColor = "rgba(30, 144, 255, 0.1)";--%>
 <%--                strokeColor = "#163599";--%>
+<%--            } else if (type === "시도") {--%>
+<%--                fillColor = "rgba(30, 144, 255, 0.1)"--%>
+<%--                strokeColor = "#101e4e";--%>
 <%--            }--%>
 
 <%--            geoJsonData.features.forEach(function (feature) {--%>
 <%--                kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);--%>
 <%--            });--%>
-<%--            console.log("Finished loading GeoJSON data for", type);--%>
 <%--        },--%>
 
 <%--        getPolygonData: function (feature) {--%>
@@ -1204,21 +1222,19 @@
 <%--                });--%>
 <%--            });--%>
 <%--            return {--%>
-<%--                name: feature.properties.adm_nm ?? feature.properties.sggnm,--%>
+<%--                name: feature.properties.adm_nm ?? feature.properties.sggnm ?? feature.properties.sidonm,--%>
 <%--                path: path--%>
 <%--            };--%>
 <%--        },--%>
 
 <%--        setPolygon: function (area, fillColor, strokeColor, type) {--%>
-<%--            console.log("Setting polygon for: " + area.name);--%>
-
 <%--            var polygon = new kakao.maps.Polygon({--%>
 <%--                path: area.path,--%>
-<%--                strokeWeight: 2,  // 경계선 굵기--%>
+<%--                strokeWeight: 2,--%>
 <%--                strokeColor: strokeColor,--%>
 <%--                strokeOpacity: 0.8,--%>
 <%--                fillColor: fillColor,--%>
-<%--                fillOpacity: 0.3,  // 투명도 조정--%>
+<%--                fillOpacity: 0.3,--%>
 <%--            });--%>
 
 <%--            let isMouseOver = false;--%>
@@ -1226,7 +1242,7 @@
 <%--            kakao.maps.event.addListener(polygon, "mouseover", function () {--%>
 <%--                if (!isMouseOver) {--%>
 <%--                    isMouseOver = true;--%>
-<%--                    polygon.setOptions({ fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD" });--%>
+<%--                    polygon.setOptions({fillColor: type === "읍면동" ? "#0D94E8" : "#0031FD"});--%>
 <%--                    customOverlay.setContent("<div class='overlaybox'>" + area.name + "</div>");--%>
 <%--                    customOverlay.setMap(map);--%>
 <%--                }--%>
@@ -1234,9 +1250,8 @@
 
 <%--            kakao.maps.event.addListener(polygon, "mousemove", function (mouseEvent) {--%>
 <%--                if (isMouseOver) {--%>
-<%--                    // 마우스 커서의 우측하단(5시 방향)으로 위치 조정--%>
-<%--                    const offsetX = 35; // x축 오프셋--%>
-<%--                    const offsetY = 35; // y축 오프셋--%>
+<%--                    const offsetX = 35;--%>
+<%--                    const offsetY = 35;--%>
 <%--                    const projection = map.getProjection();--%>
 <%--                    const point = projection.pointFromCoords(mouseEvent.latLng);--%>
 <%--                    point.x += offsetX;--%>
@@ -1249,19 +1264,24 @@
 <%--            kakao.maps.event.addListener(polygon, "mouseout", function () {--%>
 <%--                if (isMouseOver) {--%>
 <%--                    isMouseOver = false;--%>
-<%--                    polygon.setOptions({ fillColor: fillColor });--%>
+<%--                    polygon.setOptions({fillColor: fillColor});--%>
 <%--                    customOverlay.setMap(null);--%>
 <%--                }--%>
 <%--            });--%>
 
 <%--            kakao.maps.event.addListener(polygon, "click", function () {--%>
+<%--                previousZoomLevel = map.getLevel();  // 현재 확대 레벨을 저장--%>
+
 <%--                if (type === "읍면동") {--%>
 <%--                    $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);--%>
 <%--                } else if (type === "시군구") {--%>
 <%--                    $("#siGunGuSelectedArea").text("선택된 시군구: " + area.name);--%>
+<%--                } else if (type === "시도") {--%>
+<%--                    $("#siDoSelectedArea").text("선택된 시도: " + area.name);--%>
 <%--                }--%>
-<%--                map.setLevel(8);--%>
+<%--                // 클릭 후 이전 확대 레벨을 유지하면서 중심 이동--%>
 <%--                map.setCenter(kkoMap.centroid(area.path[0]));--%>
+<%--                map.setLevel(previousZoomLevel);  // 이전 확대 레벨로 설정--%>
 <%--            });--%>
 
 <%--            polygon.setMap(map);--%>
@@ -1276,26 +1296,46 @@
 <%--            });--%>
 <%--            return new kakao.maps.LatLng(sumY / length, sumX / length);--%>
 <%--        },--%>
-
-<%--        removePolygons: function () {--%>
-<%--            console.log("Removing polygons");--%>
-<%--            polygons.forEach(function (polygon) {--%>
-<%--                polygon.setMap(null);--%>
-<%--            });--%>
-<%--            polygons = [];--%>
-<%--            console.log("Polygons removed successfully");--%>
-<%--        }--%>
 <%--    };--%>
+
+<%--    // 버튼 토글--%>
+<%--    function toggleBoundaryData() {--%>
+<%--        if (isBoundaryLoaded) {--%>
+<%--            removePolygons();--%>
+<%--            isBoundaryLoaded = false;--%>
+<%--            $("#boundaryToggleButton").text("경계데이터 켜기");--%>
+<%--        } else {--%>
+<%--            var level = map.getLevel();--%>
+<%--            if (level <= 6) {--%>
+<%--                loadEupMyeonDongData();--%>
+<%--                isEupMyeonDongLoaded = true;--%>
+<%--            } else if (level >= 7 && level <= 8) {--%>
+<%--                loadSiGunGuData();--%>
+<%--                isSiGunGuLoaded = true;--%>
+<%--            } else if (level >= 9 && level <= 10) {--%>
+<%--                loadSiDoData();--%>
+<%--                isSiDoLoaded = true;--%>
+<%--            }--%>
+<%--            isBoundaryLoaded = true;--%>
+<%--            $("#boundaryToggleButton").text("경계데이터 끄기");--%>
+<%--        }--%>
+<%--    }--%>
+
+<%--    $(document).ready(function () {--%>
+<%--        initKakaoMap();--%>
+<%--        // 버튼 클릭 이벤트 설정--%>
+<%--        $("#boundaryToggleButton").on("click", toggleBoundaryData);--%>
+<%--    });--%>
 
 <%--    function sample5_execDaumPostcode() {--%>
 <%--        new daum.Postcode({--%>
-<%--            oncomplete: function(data) {--%>
+<%--            oncomplete: function (data) {--%>
 <%--                var addr = data.address;--%>
 
 <%--                document.getElementById("sample5_address").value = addr;--%>
 
 <%--                var geocoder = new kakao.maps.services.Geocoder();--%>
-<%--                geocoder.addressSearch(addr, function(results, status) {--%>
+<%--                geocoder.addressSearch(addr, function (results, status) {--%>
 <%--                    if (status === kakao.maps.services.Status.OK) {--%>
 <%--                        var result = results[0];--%>
 <%--                        var coords = new kakao.maps.LatLng(result.y, result.x);--%>
@@ -1330,12 +1370,6 @@
 <%--            }--%>
 <%--        }).open();--%>
 <%--    }--%>
-
-<%--    kakao.maps.load(function() {--%>
-<%--        console.log("Kakao Maps API loaded");--%>
-<%--        initKakaoMap();--%>
-<%--        initializeButtons();--%>
-<%--    });--%>
 <%--</script>--%>
 <%--</body>--%>
 <%--</html>--%>
