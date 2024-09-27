@@ -274,13 +274,13 @@ public class Kakao {
                 System.out.println("MemberRepository is null");
             }
 
-            e.printStackTrace();
+//            e.printStackTrace();
             System.out.println("User Info: " + userInfo);
             try {
                 ss.getMapper(KakaoMapper.class).kakaoInsert(userInfo);
                 return ss.getMapper(KakaoMapper.class).findKakao(userInfo).get(0);
             } catch (IndexOutOfBoundsException iooe) {
-                iooe.printStackTrace();
+//                iooe.printStackTrace();
             }
             return null;
         }
