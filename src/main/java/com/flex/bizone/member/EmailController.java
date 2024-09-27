@@ -36,4 +36,25 @@ public class EmailController {
         bm.setBm_mail((String) inputMap.get("email"));
         return eServices.idFind(bm);
     }
+
+    @RequestMapping(value = "/idExist.do", method = RequestMethod.POST)
+    public Map<String, Object> checkIdExist(HttpServletRequest req, HttpServletResponse res,
+                                            @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
+        req.setCharacterEncoding("utf-8");
+        res.setCharacterEncoding("utf-8");
+        Bizone_member bm = new Bizone_member();
+        bm.setBm_id((String) inputMap.get("bm_id"));
+        req.getSession().setAttribute("biz_mem", bm);
+        return eServices.checkIdExist(bm, req);
+    }
+
+    @RequestMapping(value = "/getCurrentPW.do", method = RequestMethod.POST)
+    public Map<String, Object> getCurrentPW(HttpServletRequest req, HttpServletResponse res,
+                                            @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
+        req.setCharacterEncoding("utf-8");
+        res.setCharacterEncoding("utf-8");
+        Bizone_member bm = new Bizone_member();
+        bm.setBm_id((String) inputMap.get("bm_id"));
+        return eServices.getCurrentPW(bm);
+    }
 }

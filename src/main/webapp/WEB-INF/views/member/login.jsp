@@ -139,7 +139,7 @@
     </form>
 
     <div class="text-center mt-4">아이디를 까먹으셨습니까? <a href="${contextPath}/idFindForm.go">아이디 찾기</a></div>
-    <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="${contextPath}/pwFindForm.go">비밀번호 찾기</a></div>
+    <div class="text-center mt-2">비밀번호를 까먹으셨습니까? <a href="${contextPath}/pwFindForm.go">비밀번호 찾기</a></div>
     <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/signupForm.go">회원가입</a></div>
 </div>
 

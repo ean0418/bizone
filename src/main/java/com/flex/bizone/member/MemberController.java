@@ -164,6 +164,45 @@ public class MemberController {
         return "index";
     }
 
+    @RequestMapping(value = "/pwFindForm.go", method = RequestMethod.GET)
+    public String pwFind(HttpServletRequest req) {
+        req.setAttribute("contentPage", "member/pwFind.jsp");
+        return "index";
+    }
+
+    @RequestMapping(value = "/pwChange.go", method = RequestMethod.GET)
+    public String pwChange(HttpServletRequest req) {
+        req.setAttribute("contentPage", "member/pwChange.jsp");
+        String bpt_token = req.getParameter("token");
+        try {
+            if (mDAO.checkToken(bpt_token)) {
+                req.setAttribute("status", true);
+            } else {
+                req.setAttribute("status", false);
+                req.setAttribute("message", "토큰 기한이 만료되었습니다");
+            }   
+        } catch (IndexOutOfBoundsException e) {
+            req.setAttribute("status", false);
+            req.setAttribute("message", "잘못된 접근입니다");
+        }
+        return "index";
+    }
+
+    @RequestMapping(value = "/pwChange.do", method = RequestMethod.POST)
+    public String doChangePW(HttpServletRequest req, HttpServletResponse res, Bizone_member bm) throws UnsupportedEncodingException {
+        res.setCharacterEncoding("utf-8");
+        req.setCharacterEncoding("utf-8");
+        String bm_id = ((Bizone_member) req.getSession().getAttribute("biz_mem")).getBm_id();
+        System.out.println(bm_id);
+        bm.setBm_id(bm_id);
+        bm.setBm_pw(req.getParameter("bm_pw"));
+        if (mDAO.pwChange(bm)) {
+            req.setAttribute("contentPage", "member/pwChangeSuccess.jsp");
+        } else {
+            req.setAttribute("contentPage", "member/login.jsp");
+        }
+        return "index";
+    }
 
 
 

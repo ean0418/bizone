@@ -17,4 +17,7 @@
     <select id="getIdByEmail" parameterType="com.flex.bizone.member.Bizone_member" resultType="com.flex.bizone.member.Bizone_member">
         select bm_id from bizone_member where #{bm_mail} = bm_mail
     </select>
+    <update id="changePW" parameterType="com.flex.bizone.member.Bizone_member">
+        update bizone_member set bm_pw = #{bm_pw} where bm_id = #{bm_id};
+    </update>
 </mapper>

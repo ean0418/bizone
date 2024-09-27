@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -179,6 +180,24 @@ public class MemberDAO {
 
     }
 
+    public boolean checkToken(String bpt_token) throws IndexOutOfBoundsException {
+        Bizone_pw_token bpt = new Bizone_pw_token();
+        bpt.setBpt_token(bpt_token);
+        List<Bizone_pw_token> tokens = ss.getMapper(TokenMapper.class).getFullTokenByToken(bpt);
+        Timestamp exp = tokens.get(0).getBpt_expiration();
+        Timestamp now = new Timestamp(System.currentTimeMillis());
+        return now.before(exp);
+    }
+
+    public boolean pwChange(Bizone_member bm) {
+        try {
+            ss.getMapper(MemberMapper.class).changePW(bm);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 }
 

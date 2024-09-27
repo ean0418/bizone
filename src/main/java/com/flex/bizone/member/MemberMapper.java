@@ -12,4 +12,5 @@ public interface MemberMapper {
     public abstract int updateMember(Bizone_member m);
 
     public abstract List<Bizone_member> getIdByEmail(Bizone_member m);
+    public abstract int changePW(Bizone_member m);
 }
