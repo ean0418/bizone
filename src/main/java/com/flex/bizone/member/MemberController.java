@@ -1,5 +1,8 @@
 package com.flex.bizone.member;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +25,9 @@ public class MemberController {
 
     @Autowired
     private MemberDAO mDAO;
+
+
+
 
     @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
     public String showStep1(HttpServletRequest req) {
@@ -78,9 +84,10 @@ public class MemberController {
 
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
         if (mDAO.loginCheck(req)) {
+            req.setAttribute("contentPage", "main/main.jsp");
             return "index";  // 로그인 성공 시 메인 페이지로 이동
         } else {
-            req.setAttribute("contentPage", "map/map.jsp");
+            req.setAttribute("contentPage", "member/login.jsp");
             return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
         }
     }
@@ -180,7 +187,7 @@ public class MemberController {
             } else {
                 req.setAttribute("status", false);
                 req.setAttribute("message", "토큰 기한이 만료되었습니다");
-            }   
+            }
         } catch (IndexOutOfBoundsException e) {
             req.setAttribute("status", false);
             req.setAttribute("message", "잘못된 접근입니다");

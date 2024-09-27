@@ -12,12 +12,22 @@
     <title>Title</title>
 </head>
 <style>
+    .logo-image {
+        height: 50px; /* Adjust height as needed */
+        margin-right: 10px; /* Space between logo and text */
+        background-color: #101E4E;
+    }
 
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+    }
 </style>
 <body>
 <nav class="navbar navbar-dark" style="background-color: #101E4E;">
     <div class="container-fluid">
-        <a class="navbar-brand fs-3 ms-3" href="/">
+        <a class="navbar-brand fs-3 ms-3" href="/" style="font-size: 40px">
+            <img src="${contextPath}/resources/image/icon.png" alt="Bizone Icon" class="logo-image me-2" style="height: 50px;">
             Bizone <h3 style="display: inline">${r} ${errorMsg}</h3>
         </a>
         <!-- Right-aligned menu items, always visible -->
@@ -46,6 +56,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">공지사항</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/info" style="text-align: left">마이페이지</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
                 </li>
             </ul>
         </div>

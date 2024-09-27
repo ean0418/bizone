@@ -55,7 +55,11 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.10.5</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.8</version> <!-- 최신 버전 확인 -->
+        </dependency>
 
         <!-- Apache HttpClient -->
         <dependency>

@@ -1,28 +1,45 @@
 package com.flex.bizone.member;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class MemberDAO {
 
     @Autowired
     private SqlSession ss;
+
+    public boolean checkIfIdExists(String bm_id) {
+        Integer count = ss.selectOne("MemberMapper.checkIfIdExists", bm_id);
+        System.out.println("ID Count: " + count);  // 로그 출력
+        return count != null && count > 0;
+    }
 
     private String getAccessToken(String code) throws IOException {
 // HTTP Header 생성
@@ -87,7 +104,7 @@ public class MemberDAO {
                     req.getSession().setAttribute("loginMember", dbM);
                     req.getSession().setMaxInactiveInterval(600); // 세션 유지 시간 설정
                     // 로그인 성공 시 success.jsp로 이동
-                    req.setAttribute("contentPage", "member/success.jsp");
+                    req.setAttribute("contentPage", "main/main.jsp");
                 } else {
                     // 비밀번호 오류 시
                     req.setAttribute("r", "로그인 실패(PW 오류)");
@@ -109,11 +126,11 @@ public class MemberDAO {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
         if (m != null) {
             // 로그인 성공 + 상태 유지시
-            req.setAttribute("lp", "../member/success.jsp");
+            req.setAttribute("lp", "main/main.jsp");
             return true;
         }
         // 로그인상태가 아니거나 + 로그인 실패시
-        req.setAttribute("lp", "../member/login.jsp");
+        req.setAttribute("lp", "member/login.jsp");
         return false;
     }
 
