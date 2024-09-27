@@ -1,5 +1,6 @@
 package com.flex.bizone.member;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,10 @@ import java.util.Map;
 
 @Controller
 public class KakaoLoginController {
-    Kakao kakao = new Kakao();
+
+    @Autowired
+    Kakao kakao;
+
     @Autowired
     private HttpSession session;
 
@@ -22,7 +26,7 @@ public class KakaoLoginController {
         return "redirect:" + kakao.getCode();
     }
 
-    @RequestMapping(value = "kakaologin", method = RequestMethod.GET)
+    @RequestMapping(value = "/kakaologin", method = RequestMethod.GET)
     public String kakaoLogin(@RequestParam("code") String code, HttpSession session) throws Exception {
         System.out.println("code : " + code);
 
@@ -44,9 +48,9 @@ public class KakaoLoginController {
         }
 
         // 사용자 정보를 세션에 저장
-        session.invalidate(); // 기존 세션 초기화
         session.setAttribute("bk_nickname", userInfo.getBk_nickname());
         session.setAttribute("bk_profile_image_url", userInfo.getBk_profile_image_url());
+
 
         return "member/signup";
     }

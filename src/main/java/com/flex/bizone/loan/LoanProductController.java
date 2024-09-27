@@ -1,4 +1,4 @@
-package com.flex.miniProject.loan;
+package com.flex.bizone.loan;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

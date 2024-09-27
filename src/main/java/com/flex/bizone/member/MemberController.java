@@ -103,7 +103,7 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.logout(req);
-        req.setAttribute("contentPage", "map/map.jsp");
+        req.setAttribute("contentPage", "main/main.jsp");
         return "index";
     }
 

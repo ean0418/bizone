@@ -13,9 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.codec.Charsets;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -23,6 +25,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import java.io.BufferedReader;
@@ -39,7 +42,13 @@ public class Kakao {
     private static final String keyHost = "https://kauth.kakao.com";
 
     @Autowired
-    private MemberRepository mr;
+    private SqlSession ss;
+
+    @PostConstruct
+    public void init() {
+        // SqlSession이 초기화된 후 사용
+        System.out.println("SqlSession is initialized: " + (ss != null));
+    }
 
     public static String getCode() {
         String getcode = keyHost + "/oauth/authorize?response_type=code&client_id=" + RestApiKey;
@@ -52,7 +61,6 @@ public class Kakao {
         String accessToken = "";
         String refreshToken = "";
         String requestURL = "https://kauth.kakao.com/oauth/token";
-
         try {
             URL url = new URL(requestURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -73,7 +81,7 @@ public class Kakao {
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
-
+            System.out.println("Before try SqlSession is initialized: " + (ss != null));
             // 응답 코드가 200일 때만 성공적으로 토큰을 받음
             if (responseCode == 200) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -253,29 +261,28 @@ public class Kakao {
             e.printStackTrace();
             return null; // 예외 발생 시 null 반환
         }
-
         // 카카오 사용자 정보가 DB에 존재하는지 확인
         try {
-            KakaoVO result = mr.findKakao(userInfo);
-            if (mr == null) {
+            List<KakaoVO> result = ss.getMapper(KakaoMapper.class).findKakao(userInfo);
+            if (ss == null) {
                 System.out.println("MemberRepository is null");
             }
             System.out.println("User Info from DB: " + result);
-            return result;
-        } catch (NullPointerException e) {
-            if (mr == null) {
+            return result.get(0);
+        } catch (IndexOutOfBoundsException e) {
+            if (ss == null) {
                 System.out.println("MemberRepository is null");
             }
 
             e.printStackTrace();
             System.out.println("User Info: " + userInfo);
             try {
-                mr.kakaoInsert(userInfo);
-            } catch (NullPointerException npe) {
-                npe.fillInStackTrace();
+                ss.getMapper(KakaoMapper.class).kakaoInsert(userInfo);
+                return ss.getMapper(KakaoMapper.class).findKakao(userInfo).get(0);
+            } catch (IndexOutOfBoundsException iooe) {
+                iooe.printStackTrace();
             }
-
-            return mr.findKakao(userInfo);
+            return null;
         }
 
 
