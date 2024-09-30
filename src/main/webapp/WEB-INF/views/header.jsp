@@ -55,7 +55,7 @@
                     <a class="nav-link ms-4" href="${contextPath}/main" style="text-align: left">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">공지사항</a>
+                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
                 </li>
             </ul>
         </div>

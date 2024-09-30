@@ -78,7 +78,7 @@
             </c:otherwise>
         </c:choose>
 
-        <p align="center">정말로 이 게시글을 삭제하시겠습니까?</p>
+        <p align="center">게시글을 삭제하시겠습니까?</p>
 
         <!-- 삭제 확인 폼 -->
         <div class="btn-container">

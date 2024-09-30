@@ -152,7 +152,7 @@
                     <c:forEach var="board" items="${boardList}">
                         <tr>
                             <td>${board.bb_postNum}</td>
-                            <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}">${board.bb_title}</a></td>
+                            <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}" style="color: black;">${board.bb_title}</a></td>
                             <td>${board.bb_bm_nickname}</td>
                             <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
                             <td>${board.bb_readCount}</td>
@@ -167,51 +167,6 @@
             </c:choose>
         </tbody>
         </table>
-
-        <!-- 페이징 처리 -->
-<%--        <nav aria-label="Page navigation">--%>
-<%--            <ul class="pagination pagination-container">--%>
-<%--                <!-- Previous 버튼 -->--%>
-<%--                <li class="page-item ${page == 1 ? 'disabled' : ''}">--%>
-<%--                    <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}">Previous</a>--%>
-<%--                </li>--%>
-
-<%--                <!-- 페이지 번호 표시 (1 ~ 5) -->--%>
-<%--                <c:choose>--%>
-<%--                    <c:when test="${totalPages <= 5}">--%>
-<%--                        <!-- 총 페이지가 5 이하일 경우 모든 페이지 번호 표시 -->--%>
-<%--                        <c:forEach var="i" begin="1" end="${totalPages}">--%>
-<%--                            <li class="page-item ${page == i ? 'active' : ''}">--%>
-<%--                                <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>--%>
-<%--                            </li>--%>
-<%--                        </c:forEach>--%>
-<%--                    </c:when>--%>
-<%--                    <c:otherwise>--%>
-<%--                        <!-- 현재 페이지가 1~3 사이일 경우 -->--%>
-<%--                        <c:if test="${page <= 3}">--%>
-<%--                            <c:forEach var="i" begin="1" end="5">--%>
-<%--                                <li class="page-item ${page == i ? 'active' : ''}">--%>
-<%--                                    <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>--%>
-<%--                                </li>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:if>--%>
-<%--                        <!-- 현재 페이지가 4 이상일 경우 -->--%>
-<%--                        <c:if test="${page > 3}">--%>
-<%--                            <c:forEach var="i" begin="${page - 2}" end="${page + 2 > totalPages ? totalPages : page + 2}">--%>
-<%--                                <li class="page-item ${page == i ? 'active' : ''}">--%>
-<%--                                    <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>--%>
-<%--                                </li>--%>
-<%--                            </c:forEach>--%>
-<%--                        </c:if>--%>
-<%--                    </c:otherwise>--%>
-<%--                </c:choose>--%>
-
-<%--                <!-- Next 버튼 -->--%>
-<%--                <li class="page-item ${page == totalPages ? 'disabled' : ''}">--%>
-<%--                    <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">Next</a>--%>
-<%--                </li>--%>
-<%--            </ul>--%>
-<%--        </nav>--%>
 
         <nav aria-label="Page navigation">
             <ul class="pagination pagination-container">

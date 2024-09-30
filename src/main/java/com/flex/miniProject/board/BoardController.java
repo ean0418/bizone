@@ -23,6 +23,9 @@ public class BoardController {
     @Autowired
     private BoardDAO boardDAO;
 
+    @Autowired
+    private CommentDAO commentDAO;
+
     // 게시판 기본 URL로 들어오면 /board/list로 리다이렉트
     @RequestMapping(value = "/board", method = RequestMethod.GET)
     public String redirectToBoardList() {
@@ -85,6 +88,10 @@ public class BoardController {
 
         // 게시글 상세 정보 가져오기
         boardDAO.getBoardByNo(bb_no, req);
+
+        // 댓글 목록 가져오기
+        commentDAO.getAllComments(bb_no, req);
+
         req.setAttribute("contentPage", "board/detail.jsp");
         return "index";
     }

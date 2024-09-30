@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flex.miniProject.board.CommentMapper">
+
+    <!-- 댓글 목록 조회 -->
+    <select id="getCommentsByBoardNo" parameterType="int" resultType="com.flex.miniProject.board.Bizone_comment">
+        SELECT * FROM bizone_comment WHERE bc_bb_no = #{bc_bb_no} ORDER BY bc_createdDate DESC
+    </select>
+
+    <!-- 댓글 작성 -->
+    <insert id="insertComment" parameterType="com.flex.miniProject.board.Bizone_comment">
+        INSERT INTO bizone_comment (bc_bb_no, bc_bm_nickname, bc_content)
+        VALUES (#{bc_bb_no}, #{bc_bm_nickname}, #{bc_content})
+    </insert>
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.flex.miniProject.board.Bizone_comment">
+        UPDATE bizone_comment
+        SET bc_content = #{bc_content}, bc_updatedDate = CURRENT_TIMESTAMP
+        WHERE bc_no = #{bc_no}
+    </update>
+
+    <!-- 댓글 삭제 -->
+    <delete id="deleteComment" parameterType="int">
+        DELETE FROM bizone_comment WHERE bc_no = #{bc_no}
+    </delete>
+
+</mapper>
