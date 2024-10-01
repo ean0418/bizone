@@ -110,43 +110,42 @@
     </style>
 </head>
 <body>
-<table>
-    <div class="mypage-container">
-<div class="login-container">
-    <form action="${contextPath}/member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
-        <input type="hidden" name="login_ok" value="1"/>
+<div class="mypage-container">
+    <div class="login-container">
+        <form action="${contextPath}/member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
+            <input type="hidden" name="login_ok" value="1"/>
 
-        <h2>로그인</h2>
+            <h2>로그인</h2>
 
-        <div class="form-group">
-            <label class="id">아이디</label>
-            <input type="text" class="form-control" name="bm_id" autofocus="autofocus" autocomplete="off" placeholder="ID 입력..." required="required">
-        </div>
+            <div class="form-group">
+                <label class="id">아이디</label>
+                <input type="text" class="form-control" name="bm_id" autofocus="autofocus" autocomplete="off" placeholder="ID 입력..." required="required">
+            </div>
 
-        <div class="form-group mt-3">
-            <label class="bm_pw">비밀번호</label>
-            <input type="password" class="form-control" name="bm_pw" autocomplete="off" placeholder="Password 입력..." required="required">
-        </div>
-        <br>
-        <div class="form-group loginbtn">
-            <button type="submit" id="login_submit" class="btn btn-primary w-100">로그인</button>
-        </div>
+            <div class="form-group mt-3">
+                <label class="bm_pw">비밀번호</label>
+                <input type="password" class="form-control" name="bm_pw" autocomplete="off" placeholder="Password 입력..." required="required">
+            </div>
+            <br>
+            <div class="form-group loginbtn">
+                <button type="submit" id="login_submit" class="btn btn-primary w-100">로그인</button>
+            </div>
 
-        <div class="or-seperator"><b>or</b></div>
+            <div class="or-seperator"><b>or</b></div>
 
-        <div class="form-group kakaobtn">
-            <a class="p-2" href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakaologin&response_type=code'>
-                <img src="../resources/image/kakao_login.png" style="height:60px">
-            </a>
-        </div>
+            <div class="form-group kakaobtn">
+                <a class="p-2" href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakaologin&response_type=code'>
+                    <img src="../resources/image/kakao_login.png" style="height:60px">
+                </a>
+            </div>
 
-    </form>
+        </form>
 
-    <div class="text-center mt-4">비밀번호를 까먹으셨습니까? <a href="/pwFindForm.do">비밀번호 찾기</a></div>
-    <div class="text-center mt-2">아직 회원이 아니십니까? <a href="/signupForm.do">회원가입</a></div>
-</div>
+        <div class="text-center mt-4">아이디를 까먹으셨습니까? <a href="${contextPath}/idFindForm.go">아이디 찾기</a></div>
+        <div class="text-center mt-2">비밀번호를 까먹으셨습니까? <a href="${contextPath}/pwFindForm.go">비밀번호 찾기</a></div>
+        <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/signupForm.go">회원가입</a></div>
     </div>
-</table>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

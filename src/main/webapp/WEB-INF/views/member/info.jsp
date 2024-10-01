@@ -1,4 +1,4 @@
-git <%--
+<%--
   Created by IntelliJ IDEA.
   User: sdedu
   Date: 24. 9. 11.

@@ -27,7 +27,7 @@
     <!-- Process annotations on registered beans like @Autowired... -->
     <context:annotation-config/>
     <!-- 컴포넌트 스캔 -->
-    <context:component-scan base-package="com.flex.miniProject" />
+    <context:component-scan base-package="com.flex.bizone" />
 
     <!-- 추가함-세훈 -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
@@ -37,6 +37,9 @@
         <property name="prefix" value="/WEB-INF/views/" />
         <property name="suffix" value=".jsp" />
     </bean>
+
+    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
+
     <!-- DB 설정파일 로딩 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
@@ -60,7 +63,7 @@
     <!-- MyBatis 설정 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="typeAliasesPackage" value="com.flex.miniProject" />
+        <property name="typeAliasesPackage" value="com.flex.bizone" />
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 
@@ -73,6 +76,11 @@
     <!-- jdbc 설정 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!-- 파일 업로드 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="5000000" />
     </bean>
 
 </beans>

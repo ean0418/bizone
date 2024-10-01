@@ -262,7 +262,7 @@
                     <button type="submit" class="btn">댓글 작성</button>
                 </c:when>
                 <c:otherwise>
-                    <textarea name="bc_content" disabled></textarea>
+                    <textarea name="bc_content" placeholder="로그인 후 이용 가능합니다." disabled></textarea>
                     <button type="button" class="btn" onclick="alert('로그인 후 이용 가능합니다.');">댓글 작성</button>
                 </c:otherwise>
             </c:choose>
@@ -314,44 +314,6 @@
             </c:otherwise>
         </c:choose>
     </div>
-<%--    <div class="comment-section">--%>
-<%--        <h4>댓글</h4>--%>
-<%--        <form class="comment-form" action="${contextPath}/comment/insert" method="post">--%>
-<%--            <input type="hidden" name="bc_bb_no" value="${board.bb_no}">--%>
-<%--            <textarea name="bc_content" placeholder="댓글을 입력하세요." required></textarea>--%>
-<%--            <button type="submit" class="btn" style="weigh">댓글 작성</button>--%>
-<%--        </form>--%>
-<%--        <c:choose>--%>
-<%--            <c:when test="${not empty commentList}">--%>
-<%--                <c:forEach var="comment" items="${commentList}">--%>
-<%--                    <div class="comment-item">--%>
-<%--                        <div class="comment-text">--%>
-<%--                            <p><strong>${comment.bc_bm_nickname}</strong>--%>
-<%--                                <fmt:formatDate value="${comment.bc_createdDate}" pattern="yyyy-MM-dd HH:mm"/>--%>
-<%--                            </p>--%>
-<%--                            <p>${comment.bc_content}</p>--%>
-<%--                        </div>--%>
-<%--                        <c:if test="${sessionScope.loginMember.bm_nickname == comment.bc_bm_nickname}">--%>
-<%--                            <div class="btn-container">--%>
-<%--                                <!-- 수정 버튼 -->--%>
-<%--                                <button class="btn" onclick="editComment(${comment.bc_no})">수정</button>--%>
-
-<%--                                <!-- 삭제 버튼 -->--%>
-<%--                                <form action="${contextPath}/comment/delete" method="post" style="display:inline;">--%>
-<%--                                    <input type="hidden" name="bc_no" value="${comment.bc_no}"> <!-- 댓글 번호 -->--%>
-<%--                                    <input type="hidden" name="bc_bb_no" value="${board.bb_no}"> <!-- 게시글 번호 -->--%>
-<%--                                    <button type="submit" class="btn" onclick="return confirm('댓글을 삭제하시겠습니까?')">삭제</button>--%>
-<%--                                </form>--%>
-<%--                            </div>--%>
-<%--                        </c:if>--%>
-<%--                    </div>--%>
-<%--                </c:forEach>--%>
-<%--            </c:when>--%>
-<%--            <c:otherwise>--%>
-<%--                <p>댓글이 없습니다.</p>--%>
-<%--            </c:otherwise>--%>
-<%--        </c:choose>--%>
-<%--    </div>--%>
 </div>
 </body>
 </html>

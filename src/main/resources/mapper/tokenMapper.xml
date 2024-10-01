@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flex.bizone.member.TokenMapper">
+    <insert id="makeNewToken" parameterType="com.flex.bizone.member.Bizone_pw_token">
+        insert into bizone_pw_token values (#{bpt_token}, #{bpt_expiration})
+    </insert>
+    <select id="getFullTokenByToken" parameterType="com.flex.bizone.member.Bizone_pw_token" resultType="com.flex.bizone.member.Bizone_pw_token">
+        select * from bizone_pw_token where bpt_token = #{bpt_token}
+    </select>
+</mapper>
