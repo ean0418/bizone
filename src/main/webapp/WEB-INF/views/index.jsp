@@ -23,8 +23,13 @@
       overflow-x: hidden;
     }
 
+    @font-face {
+      font-family: 'DotumLight';
+      src: url('${pageContext.request.contextPath}/resources/ttf/DotumLight.ttf') format('truetype');
+    }
     /* Body를 Flexbox 컨테이너로 설정하여 세로 정렬 */
     body {
+      font-family: 'DotumLight', sans-serif;
       display: flex;
       flex-direction: column;
       min-height: 100vh;

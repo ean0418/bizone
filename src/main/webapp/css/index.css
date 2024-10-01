@@ -1,7 +1,7 @@
 
 @font-face {
     font-family: 'a5'; /* 사용자가 정의할 폰트 이름 */
-    src: url('../resources/ttf/A말머리5.TTF') format('truetype'); /* 폰트 경로와 형식 지정 */
+    src: url('../resources/ttf/UDOnGothic.otf') format('truetype'); /* 폰트 경로와 형식 지정 */
     font-weight: normal;
     font-style: normal;
 }

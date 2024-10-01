@@ -8,13 +8,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ include file="../board/style.jsp"%>
+<%--<%@ include file="../board/style.jsp"%>--%>
 <html>
 <head>
     <title>게시글 상세조회</title>
     <style>
+        @font-face {
+            font-family: 'DotumLight';
+            src: url('${pageContext.request.contextPath}/resources/ttf/DotumLight.ttf') format('truetype');
+        }
+
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'DotumLight', sans-serif;
             color: #333;
             background-color: #ffffff; /* 배경색 흰색 */
         }
@@ -108,9 +113,9 @@
         }
 
         .btn {
-            padding: 8px 15px; /* 버튼 크기 줄이기 */
+            padding: 8px 15px;
             border: 1px solid #ced4da;
-            background-color: #ffffff;
+            background-color: white;
             color: #495057;
             cursor: pointer;
             border-radius: 4px;
@@ -119,9 +124,9 @@
         }
 
         .btn:hover {
-            border: 1px solid #495057; /* hover 시 테두리만 굵게 */
-            background-color: #ffffff; /* 배경색 변화 없음 */
-            color: #495057;
+            border: 1px solid; /* hover 시 테두리만 굵게 */
+            background-color: #101E4E; /* 배경색 변화 없음 */
+            color: white;
         }
 
         .btn-primary {
@@ -214,7 +219,7 @@
 
         // 수정 모드 취소 함수
         function cancelEdit() {
-            location.href = '${contextPath}/board/detail?bb_no=' + ${board.bb_no};
+            location.href = '${contextPath}/comment/cancelEdit?bb_no=' + ${board.bb_no};
         }
     </script>
 </head>

@@ -11,6 +11,15 @@
     <title>Title</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        @font-face {
+            font-family: 'DotumMidum';
+            src: url('${pageContext.request.contextPath}/resources/ttf/DotumMidum.ttf') format('truetype');
+        }
+        body {
+            font-family: 'DotumMidum', sans-serif;
+        }
+    </style>
 </head>
 <body>
 <div class="row">

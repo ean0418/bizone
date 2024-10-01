@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 
 @Controller
 @RequestMapping
@@ -46,14 +47,24 @@ public class CommentController {
         return "redirect:/board/detail?bb_no=" + bb_no;
     }
 
+    // 댓글 수정 모드 취소
+    @RequestMapping(value = "/comment/cancelEdit", method = RequestMethod.GET)
+    public String cancelEdit(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
+        // 세션에서 editCommentId 속성 제거
+        req.getSession().removeAttribute("editCommentId");
+        return "redirect:/board/detail?bb_no=" + bb_no;
+    }
+
     // 댓글 수정 처리
     @RequestMapping(value = "/comment/update", method = RequestMethod.POST)
-    public String updateComment(com.flex.bizone.board.Bizone_comment comment, HttpServletRequest req, RedirectAttributes rdAttr) {
+    public String updateComment(Bizone_comment comment, HttpServletRequest req, RedirectAttributes rdAttr) {
         try {
             if (req.getSession().getAttribute("loginMember") == null) {
                 rdAttr.addFlashAttribute("errorMsg", "로그인 후 이용 가능합니다.");
                 return "redirect:/board/detail?bb_no=" + comment.getBc_bb_no();
             }
+            // 현재 시간으로 수정 시간을 업데이트
+            comment.setBc_updatedDate(new Timestamp(System.currentTimeMillis()));
             // 댓글 수정 처리 (DAO 호출)
             commentDAO.updateComment(comment, req);
             // 수정 후 세션에 저장된 댓글 ID 초기화
@@ -65,7 +76,6 @@ public class CommentController {
             return "redirect:/board/detail?bb_no=" + comment.getBc_bb_no();
         }
     }
-
 
     // 댓글 삭제 처리
     @RequestMapping(value = "/comment/delete", method = RequestMethod.POST)

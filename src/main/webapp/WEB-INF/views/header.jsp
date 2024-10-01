@@ -22,6 +22,14 @@
         display: flex;
         align-items: center;
     }
+    @font-face {
+        font-family: 'DotumMidum';
+        src: url('${pageContext.request.contextPath}/resources/ttf/DotumMidum.ttf') format('truetype');
+    }
+
+    body {
+        font-family: 'DotumMidum', sans-serif;
+    }
 </style>
 <body>
 <nav class="navbar navbar-dark" style="background-color: #101E4E;">

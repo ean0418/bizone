@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
     <style>
+        @font-face {
+            font-family: 'DotumMidum';
+            src: url('${pageContext.request.contextPath}/resources/ttf/DotumMidum.ttf') format('truetype');
+        }
         body {
+            font-family: 'DotumMidum', sans-serif;
             margin: 0;
             display: flex;
             flex-direction: column;

@@ -8,11 +8,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<%@ include file="../board/style.jsp"%>
+<%--<%@ include file="../board/style.jsp"%>--%>
 <html>
 <head>
     <title>Board List Page</title>
     <style>
+        @font-face {
+            font-family: 'DotumMidum';
+            src: url('${pageContext.request.contextPath}/resources/ttf/DotumMidum.ttf') format('truetype');
+        }
+
+        body {
+            font-family: 'DotumMidum', sans-serif;
+        }
+
         .container {
             margin-top: 50px;
         }
@@ -29,15 +38,25 @@
             padding: 5px;
             text-align: center;
         }
+
         table th {
             background-color: #f4f4f4;
             font-weight: bold;
             padding: 5px;  /* 테이블 헤더의 패딩을 더 줄여 높이 줄이기 */
         }
+
         /* 테두리 없애기 (세로선 삭제) */
-        table td, table th {
-            border-bottom: 1px solid #ddd; /* 가로선만 남기기 */
+        table th, table td {
+            border-bottom: 1px solid #ddd;
+            border-left: none;
+            border-right: none;
         }
+        /* 링크의 밑줄 제거 */
+        table td a {
+            color: black;
+            text-decoration: none; /* 밑줄 제거 */
+        }
+
         /* 열 크기 조정 */
         table th:nth-child(1), table td:nth-child(1) {
             width: 10%;
@@ -57,19 +76,24 @@
         .btn {
             margin-top: 5px; /* 글쓰기 버튼과 글쓰기 목록 간격 줄이기 */
             margin-bottom: 10px; /* 글쓰기 버튼과 테이블 사이 간격 늘리기 */
-            padding: 8px 15px; /* 버튼 크기를 줄이기 위해 padding 조정 */
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            padding: 5px 13px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            color: #495057;
             cursor: pointer;
-            text-decoration: none;
-            font-size: 14px; /* 버튼의 글씨 크기 조정 */
+            border-radius: 4px;
+            transition: border 0.3s;
+            font-weight: bold;
         }
         .btn:hover {
-            background-color: #0056b3;
+            border: 1px solid; /* hover 시 테두리만 굵게 */
+            background-color: #101E4E; /* 배경색 변화 없음 */
+            color: white;
         }
-
+        .btn-container {
+            text-align: right;
+            margin-bottom: 10px;
+        }
         .pagination-container {
             display: flex;
             justify-content: center; /* 중앙 정렬 */
@@ -81,20 +105,31 @@
             margin: 0 5px; /* 간격 유지 */
         }
 
+        .page-item a {
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
         .page-item a:hover {
             text-decoration: none;
             padding: 8px 12px;
-            color: #007bff;
+            color: #495057;
         }
 
         .page-item.disabled a {
-            color: grey;
-            pointer-events: none;
+            border: 1px solid #101E4E;
+            background-color: #101E4E;
+            color: white;
         }
 
         .page-item.active a {
             font-weight: bold;
-            color: black;
+            color: #101E4E;
         }
 
         .page-item {
@@ -106,14 +141,31 @@
         .search-box {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-top: 20px;
         }
+
         .search-box input[type="text"] {
-            padding: 5px;
-            width: 200px;
-        }
-        .search-box button:hover {
             padding: 5px 10px;
+            width: 250px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .search-box button {
+            padding: 5px 15px;
+            border: 1px solid #ced4da;
+            background-color: white;
+            color: #495057;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+
+        .search-box button:hover {
+            border: 1px solid #101E4E;
+            background-color: #101E4E;
+            color: white;
         }
     </style>
     <script>
@@ -132,7 +184,7 @@
     <div class="container">
         <h2 style="text-align: center">게시물 목록</h2>
         <!-- 글쓰기 버튼 -->
-        <div class="text-right">
+        <div class="btn-container">
             <button class="btn btn-primary" onClick="location.href='${contextPath}/board/insert.go'">글쓰기</button>
         </div>
 
