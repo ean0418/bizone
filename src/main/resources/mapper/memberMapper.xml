@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.flex.bizone.member.MemberMapper">
     <insert id="signupMember" parameterType="com.flex.bizone.member.Bizone_member">
-        insert into bizone_member values(#{bm_id}, #{bm_pw}, #{bm_name}, #{bm_nickname}, #{bm_address}, #{bm_phoneNum}, #{bm_birthday}, #{bm_mail})
+        insert into bizone_member values(#{bm_id}, #{bm_pw}, #{bm_name}, #{bm_nickname}, #{bm_address}, #{bm_phoneNum}, #{bm_birthday}, #{bm_mail}, #{bm_kakao_id});
     </insert>
     <select id="getMemberById" parameterType="com.flex.bizone.member.Bizone_member" resultType="com.flex.bizone.member.Bizone_member">
         select * from bizone_member where bm_id = #{bm_id}
@@ -22,5 +22,12 @@
     </select>
     <update id="changePW" parameterType="com.flex.bizone.member.Bizone_member">
         update bizone_member set bm_pw = #{bm_pw} where bm_id = #{bm_id};
+    </update>
+
+    <select id="getMemberByKakaoID" resultType="com.flex.bizone.member.Bizone_member">
+        select * from bizone_member where #{bm_kakao_id} = bm_kakao_id
+    </select>
+    <update id="connectKakao" parameterType="com.flex.bizone.member.Bizone_member">
+        update bizone_member set bm_kakao_id = #{bm_kakao_id} where bm_id = #{bm_id}
     </update>
 </mapper>

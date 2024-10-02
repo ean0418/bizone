@@ -117,7 +117,9 @@
         <div class="mypage-container">
             <!-- 프로필 섹션 -->
             <div class="profile-section">
-                <button class="delete-btn">계정 삭제</button>
+                <a href="${contextPath}/member.delete">
+                    <button class="delete-btn">계정 삭제</button>
+                </a>
             </div>
 
             <!-- 회원 정보 섹션 -->

@@ -133,11 +133,13 @@
 
             <div class="or-seperator"><b>or</b></div>
 
-            <div class="form-group kakaobtn">
-                <a class="p-2" href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakaologin&response_type=code'>
-                    <img src="../resources/image/kakao_login.png" style="height:60px">
-                </a>
-            </div>
+            <c:if test="${sessionScope.kakaoID == null}">
+                <div class="form-group kakaobtn">
+                    <a class="p-2" href='https://kauth.kakao.com/oauth/authorize?client_id=412e7727ffd0b8900060854044814879&redirect_uri=http://localhost/kakaologin&response_type=code'>
+                        <img src="../resources/image/kakao_login.png" style="height:60px">
+                    </a>
+                </div>
+            </c:if>
 
         </form>
 

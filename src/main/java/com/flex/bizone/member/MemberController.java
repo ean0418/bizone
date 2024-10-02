@@ -49,9 +49,14 @@ public class MemberController {
     }
 
     @RequestMapping(value = "/member.signup", method = RequestMethod.POST)
-    public String signupMember(Bizone_member m, Model model, HttpServletRequest req, HttpServletResponse res) throws Exception {
+    public String signupMember(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws Exception {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
+        try {
+            String kakao_id = (String) req.getSession().getAttribute("kakaoID");
+            m.setBm_kakao_id(kakao_id);
+            req.getSession().setAttribute("kakaoID", null);
+        } catch (Exception ignored) {}
         mDAO.signupMember(req, m);
         req.setAttribute("contentPage", "member/joinStep3.jsp");
         return "index";
@@ -112,7 +117,7 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.delete(req);
-        req.setAttribute("contentPage", "map/map.jsp");
+        req.setAttribute("contentPage", "main/main.jsp");
         return "index";
     }
 

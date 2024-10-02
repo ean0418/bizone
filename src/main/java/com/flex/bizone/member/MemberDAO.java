@@ -95,6 +95,12 @@ public class MemberDAO {
         try {
             // 데이터베이스에서 ID로 회원 조회
             List<Bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
+            try {
+                String kakao_id = (String) req.getSession().getAttribute("kakaoID");
+                m.setBm_kakao_id(kakao_id);
+                ss.getMapper(MemberMapper.class).connectKakao(m);
+                req.getSession().setAttribute("kakaoID", null);
+            } catch (Exception ignored) {}
             if (members.size() != 0) {
                 Bizone_member dbM = members.get(0);
 

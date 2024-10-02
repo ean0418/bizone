@@ -293,4 +293,10 @@ public class Kakao {
 //            return result; // 기존 사용자 정보 반환
 //        }
     }
+
+    /** 해당 카카오 id를 사용하는 유저 정보 리턴 */
+    public Bizone_member isKakaoUser(Bizone_member m) throws IndexOutOfBoundsException {
+        return ss.getMapper(MemberMapper.class).getMemberByKakaoID(m).get(0);
+    }
+
 }
