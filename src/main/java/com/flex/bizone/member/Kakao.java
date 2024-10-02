@@ -257,41 +257,12 @@ public class Kakao {
                 return null; // 200 응답이 아닌 경우 null 반환
             }
 
+            return userInfo;
+
         } catch (IOException e) {
             e.printStackTrace();
             return null; // 예외 발생 시 null 반환
         }
-        // 카카오 사용자 정보가 DB에 존재하는지 확인
-        try {
-            List<KakaoVO> result = ss.getMapper(KakaoMapper.class).findKakao(userInfo);
-            if (ss == null) {
-                System.out.println("MemberRepository is null");
-            }
-            System.out.println("User Info from DB: " + result);
-            return result.get(0);
-        } catch (IndexOutOfBoundsException e) {
-            if (ss == null) {
-                System.out.println("MemberRepository is null");
-            }
-
-//            e.printStackTrace();
-            System.out.println("User Info: " + userInfo);
-            try {
-                ss.getMapper(KakaoMapper.class).kakaoInsert(userInfo);
-                return ss.getMapper(KakaoMapper.class).findKakao(userInfo).get(0);
-            } catch (IndexOutOfBoundsException iooe) {
-//                iooe.printStackTrace();
-            }
-            return null;
-        }
-
-
-//        if (result == null) {
-//            // 저장되지 않은 사용자 정보인 경우 DB에 저장
-//; // 저장된 사용자 정보 반환
-//        } else {
-//            return result; // 기존 사용자 정보 반환
-//        }
     }
 
     /** 해당 카카오 id를 사용하는 유저 정보 리턴 */
