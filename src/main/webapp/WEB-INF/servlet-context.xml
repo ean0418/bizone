@@ -67,6 +67,11 @@
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 
+    <!-- map 읽어와지지 않아(500오류, MapperScan) 추가한 부분 - 세훈 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.flex.bizone.map" />
+    </bean>
+
     <!-- sqlSession 취득 (생성자에 인자 넣기) -->
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory"/>
