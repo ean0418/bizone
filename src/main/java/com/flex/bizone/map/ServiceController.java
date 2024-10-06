@@ -8,14 +8,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-public class ServiceCodeController {
+public class ServiceController {
 
     @Autowired
-    private ServiceCodeMapper serviceCodeMapper;  // MyBatis DAO(Mapper) 주입
+    private ServiceMapper serviceMapper;  // MyBatis DAO(Mapper) 주입
 
     @GetMapping("/services/all")
     @ResponseBody
-    public List<ServiceCode> getAllServices() {
-        return serviceCodeMapper.getAllServices();  // DB에서 서비스 코드 가져오기
+    public List<Bizone_service> getAllServices() {
+        return serviceMapper.getAllServices();  // DB에서 서비스 코드 가져오기
     }
 }
