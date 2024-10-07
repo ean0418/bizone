@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flex.bizone.map.BusinessMapper">
+    <select id="getAllServices" resultType="com.flex.bizone.map.Bizone_business">
+        SELECT bb_name, bb_code FROM bizone_business
+    </select>
+
+    <!-- 차트 데이터 가져오기 (평균 임대료, 총 직장인구, 총 지출 금액, 집객시설 수, 평균 월 매출, 기타 항목) -->
+    <select id="getChartDataForDetail" parameterType="map" resultType="map">
+        SELECT
+            ba.ba_avg_rent_fee AS avgRentFee,
+            ba.ba_total_workplace_population AS totalWorkplacePopulation,
+            ba.ba_total_expenditure AS totalExpenditure,
+            ba.ba_attraction_count AS attractionCount,
+            bs.bs_avg_monthly_sales_score AS avgMonthlySales,
+            (ba.ba_total_resident_population + ba.ba_total_floating_population) AS 기타
+        FROM
+            bizone_admin ba
+                LEFT JOIN
+            bizone_score bs ON ba.ba_code = bs.ba_code
+        WHERE
+            ba.ba_code = #{admin_code} AND bs.bb_code = #{service_code}
+    </select>
+
+    <!-- 평균 월매출 점수 가져오기 -->
+    <select id="getAvgMonthlySalesScore" parameterType="map" resultType="int">
+        SELECT bs_avg_monthly_sales_score
+        FROM bizone_score
+        WHERE bb_code = #{service_code} AND ba_code = #{admin_code}
+    </select>
+
+    <!-- 총 직장인구 점수 가져오기 -->
+    <select id="getTotalWorkplacePopulationScore" parameterType="map" resultType="int">
+        SELECT ba_total_workplace_population_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 집객시설 수 점수 가져오기 -->
+    <select id="getAttractionCountScore" parameterType="map" resultType="int">
+        SELECT ba_attraction_count_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 총 지출 금액 점수 가져오기 -->
+    <select id="getTotalExpenditureScore" parameterType="map" resultType="int">
+        SELECT ba_total_expenditure_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 평균 임대료 점수 가져오기 -->
+    <select id="getAvgRentFeeScore" parameterType="map" resultType="int">
+        SELECT ba_avg_rent_fee_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 기타 점수 계산 (기타 항목에 해당하는 점수들의 총합) -->
+    <select id="getOtherScoresTotal" parameterType="map" resultType="int">
+        SELECT
+            COALESCE(SUM(
+                             bs_other_score_1 + bs_other_score_2 + bs_other_score_3 +
+                             ba_other_score_1 + ba_other_score_2 + ba_other_score_3), 0)
+                AS otherScoresTotal
+        FROM bizone_score bs
+                 JOIN bizone_admin ba ON bs.ba_code = ba.ba_code
+        WHERE bs.bb_code = #{service_code} AND ba.ba_code = #{admin_code}
+    </select>
+
+    <!-- 성공 확률 가져오기 -->
+    <select id="getSuccessProbability" parameterType="map" resultType="int">
+        SELECT bs_success_probability
+        FROM bizone_score
+        WHERE bb_code = #{service_code} AND ba_code = #{admin_code}
+    </select>
+</mapper>
