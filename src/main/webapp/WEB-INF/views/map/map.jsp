@@ -242,6 +242,9 @@
     var isSiGunGuLoaded = false;  // 시군구 경계 데이터 로드 여부
     var isSiDoLoaded = false;   // 시도 경계 데이터 로드 여부
 
+    // detailInfo.jsp를 위함
+    var selectedAreaCode = null;
+
     function initKakaoMap() {
         var container = document.getElementById('map');
         var options = {
@@ -316,31 +319,49 @@
             url: `/api/bizone/getChartDataForDetail`,
             method: 'GET',
             data: {
-                admin_code: adminCode,
-                service_code: serviceCode
+                admin_code: adminCode,  // 행정동 코드
+                service_code: serviceCode  // 서비스 코드
             },
             success: function (data) {
-                // 실제 데이터를 바탕으로 모달 창 업데이트
+                console.log('Received Data for Chart:', data);  // 데이터를 콘솔에 출력하여 확인
+
+                // 모달 창 업데이트 코드
                 $('#regionName').text(regionName + " 상권분석");
                 $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
-
                 const chartData = {
                     labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
                     datasets: [{
                         label: '상권분석 데이터',
                         data: [
-                            data.avgRentFee,
-                            data.totalWorkplacePopulation,
-                            data.totalExpenditure,
-                            data.attractionCount,
-                            data.avgMonthlySales,
-                            data.기타
+                            data.avgRentFeeScore.toFixed(2),               // 평균 임대료 점수
+                            data.totalWorkplacePopulationScore.toFixed(2), // 총 직장 인구 점수
+                            data.totalExpenditureScore.toFixed(2),         // 총 지출 금액 점수
+                            data.attractionCountScore.toFixed(2),          // 집객시설 수 점수
+                            data.avgMonthlySalesScore.toFixed(2),          // 평균 월 매출 점수
+                            data.otherScoresTotal.toFixed(2)               // 기타 점수
                         ],
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     }]
                 };
+                // const chartData = {
+                //     labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
+                //     datasets: [{
+                //         label: '상권분석 데이터',
+                //         data: [
+                //             data.avgRentFeeScore,               // 평균 임대료 점수
+                //             data.totalWorkplacePopulationScore, // 총 직장 인구 점수
+                //             data.totalExpenditureScore,         // 총 지출 금액 점수
+                //             data.attractionCountScore,          // 집객시설 수 점수
+                //             data.avgMonthlySalesScore,          // 평균 월 매출 점수
+                //             data.otherScoresTotal               // 기타 점수
+                //         ],
+                //         backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                //         borderColor: 'rgba(54, 162, 235, 1)',
+                //         borderWidth: 1
+                //     }]
+                // };
 
                 if (chartInstance) {
                     chartInstance.destroy();
@@ -359,13 +380,12 @@
                     }
                 });
 
-                // 성공 확률과 평가 업데이트
-                const successProbability = calculateSuccessProbability(data); // 성공 확률 계산 로직에 따라 변경
+                const successProbability = parseFloat(data.successProbability).toFixed(2);
                 $('#successProbability').text(successProbability + '%');
                 const evaluation = getEvaluation(successProbability);
                 $('#successEvaluation').text(evaluation);
 
-                $('#regionModal').modal('show'); // 모달 창 열기
+                $('#regionModal').modal('show');
             },
             error: function () {
                 alert("데이터를 불러오는 중 오류가 발생했습니다.");
@@ -373,47 +393,6 @@
         });
     }
 
-    // // 모달 창에 지역 이름과 그래프 데이터를 표시하는 함수
-    // function showRegionInfo(regionName) {
-    //     $('#regionName').text(regionName + " 상권분석");
-    //     $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
-    //
-    //     const chartData = {
-    //         labels: ['평균 월매출', '총 직장인구수', '지역 집객시설 수', '지역 지출 총금액', '평균 임대료', '기타'],
-    //         datasets: [{
-    //             label: '상권분석 데이터',
-    //             data: [300, 5000, 10, 7000, 1000, 200], // 예시 데이터, 실제 데이터로 교체 필요
-    //             backgroundColor: 'rgba(54, 162, 235, 0.6)',
-    //             borderColor: 'rgba(54, 162, 235, 1)',
-    //             borderWidth: 1
-    //         }]
-    //     };
-    //
-    //     if (chartInstance) {
-    //         chartInstance.destroy();
-    //     }
-    //
-    //     const ctx = document.getElementById('regionChart').getContext('2d');
-    //     chartInstance = new Chart(ctx, {
-    //         type: 'bar',
-    //         data: chartData,
-    //         options: {
-    //             scales: {
-    //                 y: {
-    //                     beginAtZero: true
-    //                 }
-    //             }
-    //         }
-    //     });
-    //
-    //     // 성공 확률과 평가 업데이트
-    //     const successProbability = 85; // 예시 점수, 실제 계산된 값으로 교체 필요
-    //     $('#successProbability').text(successProbability + '%');
-    //     const evaluation = getEvaluation(successProbability);
-    //     $('#successEvaluation').text(evaluation);
-    //
-    //     $('#regionModal').modal('show'); // 모달 창 열기
-    // }
 
     // 성공 확률 평가 함수
     function getEvaluation(score) {
@@ -538,7 +517,7 @@
                 });
             });
             return {
-                code: feature.properties?.adm_cd2,
+                code: feature.properties.adm_cd2,
                 name: feature.properties.adm_nm ?? feature.properties.sggnm ?? feature.properties.sidonm,
                 path: path
             };
@@ -589,9 +568,13 @@
             kakao.maps.event.addListener(polygon, "click", function () {
                 previousZoomLevel = map.getLevel();  // 현재 확대 레벨을 저장
 
+                selectedAreaCode = area.code; // detailInfo.jsp를 위한 저장
                 console.log(area.code)
+                console.log('Clicked Area Code:', area.code);  // 행정동 코드 확인
+                console.log('Selected Business Code:', selectedBusiness ? selectedBusiness.bb_code : null);  // 선택된 업종 코드 확인
 
-                showRegionInfo(null, area.code, "CS100007");
+                // showRegionInfo 함수에 행정동 이름과 행정동 코드, 그리고 선택된 업종 코드를 함께 전달
+                showRegionInfo(area.name, area.code, selectedBusiness ? selectedBusiness.bb_code : null);
 
                 if (type === "읍면동") {
                     $("#eupMyeonDongSelectedArea").text("선택된 읍면동: " + area.name);
@@ -864,6 +847,18 @@
         },
         error: function (xhr, status, error) {
             console.error("Error fetching business data:", error);
+        }
+    });
+
+    // 모달 창에 있는 "자세히 보기" 버튼을 클릭할 때 동작
+    $('.btn.btn-primary').on('click', function () {
+        const serviceCode = selectedBusiness ? selectedBusiness.bb_code : null;
+        const adminCode = selectedAreaCode; // 선택한 행정동 코드
+
+        if (serviceCode && adminCode) {
+            window.location.href = `/map/detail?service_code=${serviceCode}&admin_code=${adminCode}`;
+        } else {
+            alert("업종 또는 지역이 선택되지 않았습니다.");
         }
     });
 
