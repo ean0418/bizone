@@ -42,23 +42,22 @@
             box-sizing: border-box;
             font-family: Arial, sans-serif;
             z-index: 100;
-            height: calc(100vh - 240px);
+            height: calc(100vh - 140px);
             border-radius: 5px;
-            top: 100px;
             position: absolute;
         }
 
-        div.header {
-            z-index: 100;
-            border-radius: 10px;
-            margin: 20px;
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-            width: 75%;
-            height: 80px;
-            padding: 10px;
-        }
+        /*div.header {*/
+        /*    z-index: 100;*/
+        /*    border-radius: 10px;*/
+        /*    margin: 20px;*/
+        /*    background-color: rgba(255, 255, 255, 0.8);*/
+        /*    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);*/
+        /*    box-sizing: border-box;*/
+        /*    width: 75%;*/
+        /*    height: 80px;*/
+        /*    padding: 10px;*/
+        /*}*/
 
         #sidebar-content {
             padding: 20px;
@@ -139,11 +138,9 @@
 </head>
 <body>
 <div class="content">
-    <div class="header" style="position:absolute;">
-        <h1>상권분석</h1>
-    </div>
     <div id="sidebar">
         <div id="sidebar-content">
+            <h1>상권분석</h1>
             <div style="display: flex; align-items: center; margin-bottom: 20px;">
                 <input type="text" id="sample5_address" placeholder="주소 찾기" readonly
                        style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
@@ -225,20 +222,89 @@
                 <div>성공 확률 평가: <strong id="successEvaluation">정보 없음</strong></div>
                 <hr/>
                 <!-- 자세히 보기 버튼 추가 -->
-                <a href="/map/detail" class="btn btn-primary">자세히 보기</a>
-                <button id="testbtn" class="btn btn-secondary">버튼</button>
+                <button id="detailbtn" class="btn btn-primary">데이터 자세히보기</button>
             </div>
         </div>
     </div>
 </div>
 
-<script language="JavaScript">
-    const modalDiv = document.querySelector("#modal-body")
-    document.querySelector("#testbtn").addEventListener("click", () => {
-        console.log("qkqh")
-        modalDiv.innerHTML = `
-        <div>바뀌었어요!</div>`
-    })
+<!-- 두 번째 모달 창 추가 -->
+<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="detailed-modal-body">
+                <h5>업종: <span id="detailedBusinessName"></span>, 지역: <span id="detailedRegionName"></span></h5>
+                <ul>
+                    <li>총 거주 인구: <span id="totalResidentPopulation"></span></li>
+                    <li>총 직장 인구: <span id="totalWorkplacePopulation"></span></li>
+                    <li>평균 월 소득: <span id="avgMonthlyIncome"></span></li>
+                    <li>총 지출 금액: <span id="totalExpenditure"></span></li>
+                    <li>총 유동 인구: <span id="totalFloatingPopulation"></span></li>
+                    <li>집객시설 수: <span id="attractionCount"></span></li>
+                    <li>평균 임대료: <span id="avgRentFee"></span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#detailbtn').on('click', function () {
+        const serviceCode = selectedBusiness ? selectedBusiness.bb_code : null;
+        const adminCode = selectedAreaCode; // 선택된 행정동 코드
+
+        if (serviceCode && adminCode) {
+            fetch(`/api/bizone/getDetailData?service_code=${serviceCode}&admin_code=${adminCode}`)
+                .then(response => response.json())
+                .then(data => {
+                    $('#detailedBusinessName').text(selectedBusiness.bb_name);
+                    $('#detailedRegionName').text(data.regionName);
+                    $('#totalResidentPopulation').text(data.totalResidentPopulation);
+                    $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation);
+                    $('#avgMonthlyIncome').text(data.avgMonthlyIncome);
+                    $('#totalExpenditure').text(data.totalExpenditure);
+                    $('#totalFloatingPopulation').text(data.totalFloatingPopulation);
+                    $('#attractionCount').text(data.attractionCount);
+                    $('#avgRentFee').text(data.avgRentFee);
+
+                    $('#detailedModal').modal('show');
+                })
+                .catch(error => {
+                    console.error('Error fetching detailed data:', error);
+                    alert('데이터를 불러오는 중 오류가 발생했습니다.');
+                });
+        } else {
+            alert("업종과 지역을 선택해주세요.");
+        }
+    });
+
+<%--<!-- 모달 창 관련 부분 -->--%>
+<%--<div class="modal fade" id="regionModal" tabindex="-1" role="dialog" aria-labelledby="regionModalLabel" aria-hidden="true">--%>
+<%--    <div class="modal-dialog" role="document">--%>
+<%--        <div class="modal-content">--%>
+<%--            <div class="modal-body" id="modal-body">--%>
+<%--                <h5 id="regionName">지역명</h5>--%>
+<%--                <canvas id="regionChart" style="max-width: 100%;"></canvas>--%>
+<%--                <div>선택된 업종: <strong id="selectedBusinessModal">정보 없음</strong></div>--%>
+<%--                <hr/>--%>
+<%--                <div>성공 확률: <strong id="successProbability">정보 없음</strong></div>--%>
+<%--                <div>성공 확률 평가: <strong id="successEvaluation">정보 없음</strong></div>--%>
+<%--                <hr/>--%>
+<%--                <!-- 자세히 보기 버튼 추가 -->--%>
+<%--                <a href="/map/detail" class="btn btn-primary">자세히 보기</a>--%>
+<%--                <button id="testbtn" class="btn btn-secondary">버튼</button>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</div>--%>
+
+<%--<script language="JavaScript">--%>
+<%--    const modalDiv = document.querySelector("#modal-body")--%>
+<%--    document.querySelector("#testbtn").addEventListener("click", () => {--%>
+<%--        console.log("qkqh")--%>
+<%--        modalDiv.innerHTML = `--%>
+<%--        <div>바뀌었어요!</div>`--%>
+<%--    })--%>
 </script>
 
 <script>

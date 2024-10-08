@@ -119,4 +119,34 @@
         FROM bizone_score
         WHERE bb_code = #{service_code} AND ba_code = #{admin_code}
     </select>
+
+    <!-- 상세 데이터 MySQL 쿼리문  -->
+    <select id="getTotalResidentPopulation" parameterType="map" resultType="float">
+        SELECT ba_total_resident_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalWorkplacePopulation" parameterType="map" resultType="float">
+        SELECT ba_total_workplace_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAvgMonthlyIncome" parameterType="map" resultType="float">
+        SELECT ba_avg_monthly_income FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalExpenditure" parameterType="map" resultType="float">
+        SELECT ba_total_expenditure FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalFloatingPopulation" parameterType="map" resultType="float">
+        SELECT ba_total_floating_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAttractionCount" parameterType="map" resultType="float">
+        SELECT ba_total_attractions FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAvgRentFee" parameterType="map" resultType="float">
+        SELECT ba_avg_rent_fee FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
 </mapper>

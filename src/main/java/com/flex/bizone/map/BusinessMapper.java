@@ -34,4 +34,13 @@ public interface BusinessMapper {
 
     // 차트 데이터 가져오기
     Map<String, Object> getChartDataForDetail(@Param("service_code") String serviceCode, @Param("admin_code") String adminCode);
+
+    // 상세 데이터 가져오기
+    float getTotalResidentPopulation(@Param("admin_code") String adminCode);
+    float getTotalWorkplacePopulation(@Param("admin_code") String adminCode);
+    float getAvgMonthlyIncome(@Param("admin_code") String adminCode);
+    float getTotalExpenditure(@Param("admin_code") String adminCode);
+    float getTotalFloatingPopulation(@Param("admin_code") String adminCode);
+    float getAttractionCount(@Param("admin_code") String adminCode);
+    float getAvgRentFee(@Param("admin_code") String adminCode);
 }
