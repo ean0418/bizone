@@ -123,4 +123,10 @@
         SELECT ba_avg_rent_fee FROM bizone_admin WHERE ba_code = #{admin_code}
     </select>
 
+    <!-- 행정동명 가져오기 -->
+    <select id="getBaNameByCode" parameterType="string" resultType="string">
+        SELECT ba_name
+        FROM bizone_admin
+        WHERE ba_code = #{ba_code}
+    </select>
 </mapper>

@@ -43,4 +43,8 @@ public interface BusinessMapper {
     float getTotalFloatingPopulation(@Param("admin_code") String adminCode);
     float getAttractionCount(@Param("admin_code") String adminCode);
     float getAvgRentFee(@Param("admin_code") String adminCode);
+
+    // 행정동명 가져오기
+   String getBaNameByCode(String baCode);
+
 }

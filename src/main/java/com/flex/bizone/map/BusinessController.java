@@ -1,6 +1,7 @@
 package com.flex.bizone.map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,6 +63,13 @@ public class BusinessController {
 
         return detailedResponse;
     }
+
+    @GetMapping("/getRegionName")
+    public ResponseEntity<String> getRegionName(@RequestParam("admin_code") String adminCode) {
+        String regionName = serviceMapper.getBaNameByCode(adminCode);
+        return ResponseEntity.ok(regionName != null ? regionName : "정보 없음");
+    }
+
 }
 
 //package com.flex.bizone.map;
