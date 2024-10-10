@@ -6,7 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ChartDataResponse {
-    // Getter와 Setter 메서드
     private double avgMonthlySalesScore;
     private double totalWorkplacePopulationScore;
     private double attractionCountScore;
