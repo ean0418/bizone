@@ -116,10 +116,27 @@
 <body>
 <div class="mypage-container">
     <!-- 프로필 섹션 -->
+    <form action="${contextPath}/member.delete" name="deleteForm" method="get"
+          enctype="multipart/form-data" onsubmit="return deleteCheck();">
     <div class="profile-section">
         <button class="delete-btn">계정 삭제</button>
     </div>
+    </form>
+<script>
+    function deleteCheck() {
+        // 삭제 확인 메시지 표시
+        const userInput = prompt("계정을 삭제하시겠습니까? 삭제하려면 'y' 또는 'Y'를 입력하세요.");
 
+        // 사용자가 'y' 또는 'Y'를 입력하면 폼 제출
+        if (userInput === 'y' || userInput === 'Y') {
+            alert("계정이 삭제됩니다.");
+            return true; // 폼 제출 허용
+        } else {
+            alert("계정 삭제가 취소되었습니다.");
+            return false; // 폼 제출 차단
+        }
+    }
+</script>
     <!-- 회원 정보 섹션 -->
     <div class="info-section">
         <h2 class="section-title">회원 정보</h2>
@@ -129,13 +146,13 @@
                 <tr>
                     <th>아이디</th>
                     <td>
-                        <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10">
+                        <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10" readonly>
                     </td>
                 </tr>
                 <tr>
                     <th>비밀번호</th>
                     <td>
-                        <input name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password">
+                        <input value="${sessionScope.loginMember.bm_pw}" name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password">
                     </td>
                 </tr>
                 <tr>
