@@ -33,32 +33,6 @@
             ba.ba_code = #{admin_code} AND bs.bb_code = #{service_code}
     </select>
 
-    <!--    <select id="getChartDataForDetail" parameterType="map" resultType="map">-->
-<!--        SELECT-->
-<!--            ba.ba_avg_rent_fee_score AS avgRentFee,-->
-<!--            ba.ba_total_workplace_pop_score AS totalWorkplacePopulation,-->
-<!--            ba.ba_total_expenditure_score AS totalExpenditure,-->
-<!--            ba.ba_total_attractions_score AS attractionCount,-->
-<!--            bs.bs_avg_monthly_sales_score AS avgMonthlySales,-->
-<!--            COALESCE((-->
-<!--                         bs.bs_sales_to_resident_score +-->
-<!--                         bs.bs_sales_to_workplace_score +-->
-<!--                         bs.bs_sales_to_floating_score +-->
-<!--                         bs.bs_sales_to_attraction_score +-->
-<!--                         bs.bs_store_count_score +-->
-<!--                         ba.ba_avg_operating_months_score +-->
-<!--                         ba.ba_total_floating_pop_score +-->
-<!--                         ba.ba_total_resident_pop_score +-->
-<!--                         ba.ba_avg_monthly_income_score-->
-<!--                         ) / 9, 0) AS otherScoresTotal-->
-<!--        FROM-->
-<!--            bizone_admin ba-->
-<!--                LEFT JOIN-->
-<!--            bizone_score bs ON ba.ba_code = bs.ba_code-->
-<!--        WHERE-->
-<!--            ba.ba_code = #{admin_code} AND bs.bb_code = #{service_code}-->
-<!--    </select>-->
-
     <!-- 평균 월매출 점수 가져오기 -->
     <select id="getAvgMonthlySalesScore" parameterType="map" resultType="float">
         SELECT bs_avg_monthly_sales_score
