@@ -10,156 +10,153 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
+        body, html {
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; /* 전체 배경을 투명하게 설정 */
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .content {
             display: flex;
-            height: calc(100vh);
-            position: relative;
+            height: 100vh; /* 전체 화면 높이를 유지 */
+            background-color: transparent; /* content의 배경을 투명하게 설정 */
+            position: relative; /* content를 상대 위치로 설정 */
+        }
+
+        #sidebar {
+            width: 350px; /* 사이드바 너비 설정 */
+            background-color: rgba(255, 255, 255, 0); /* 사이드바를 완전히 투명하게 설정 */
+            border: none; /* 경계선 제거 */
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin: 20px;
+            position: absolute; /* 절대 위치로 설정 */
+            z-index: 10; /* z-index를 높여 지도의 위에 배치 */
+        }
+
+        #sidebar-content {
+            width: 380px; /* 사이드바 너비 설정 */
+            background-color: #ffffff; /* 흰색 배경 */
+            border-radius: 20px; /* 둥근 모서리 설정 */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+            padding: 30px 25px; /* 내부 여백 설정 */
+            margin: 20px;
+            position: relative;; /* 사이드바 내용의 배경을 투명하게 설정 */
+        }
+
+        #sidebar h1 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선을 투명하게 설정 */
+            border-radius: 6px;
+            font-size: 14px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            background-color: rgba(255, 255, 255, 0.2); /* 입력 필드 배경 투명하게 설정 */
+            color: #333; /* 텍스트 색상 설정 */
+            transition: all 0.3s ease;
+        }
+
+        .input-container input[type="text"]:focus {
+            border-color: rgba(65, 105, 225, 0.5); /* 포커스 시 테두리 색 변경 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.4); /* 포커스 시 배경 덜 투명하게 */
+        }
+
+        .input-container input[type="button"] {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: rgba(65, 105, 225, 0.8); /* 버튼 배경 설정 */
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-container input[type="button"]:hover {
+            background-color: rgba(39, 72, 179, 0.9); /* 마우스 오버 시 배경 덜 투명하게 */
+        }
+
+        .select-container select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선 투명도 설정 */
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.2); /* 드롭다운 배경 투명하게 설정 */
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #boundaryToggleButton {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background-color: rgba(255, 165, 0, 0.8); /* 오렌지색을 80% 투명하게 설정 */
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #boundaryToggleButton:hover {
+            background-color: rgba(230, 149, 0, 0.9); /* 마우스 오버 시 배경 덜 투명하게 */
         }
 
         #mapContainer {
-            flex-grow: 1;
-            height: 100%;
+            flex: 1;
+            height: 100vh; /* 전체 화면 높이를 사용 */
+            background-color: transparent; /* 지도 컨테이너 배경 투명하게 설정 */
+            position: relative;
         }
 
         #map {
             width: 100%;
             height: 100%;
         }
-
-        #sidebar {
-            width: 35%;
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.8);
-            margin: 20px;
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            z-index: 100;
-            height: calc(100vh - 140px);
-            border-radius: 5px;
-            position: absolute;
-        }
-
-        /*div.header {*/
-        /*    z-index: 100;*/
-        /*    border-radius: 10px;*/
-        /*    margin: 20px;*/
-        /*    background-color: rgba(255, 255, 255, 0.8);*/
-        /*    box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);*/
-        /*    box-sizing: border-box;*/
-        /*    width: 75%;*/
-        /*    height: 80px;*/
-        /*    padding: 10px;*/
-        /*}*/
-
-        #sidebar-content {
-            padding: 20px;
-            height: max-content;
-        }
-
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .selected-categories {
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        div#sidebar-content > div {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        input[type="button"] {
-            flex: 0 1 auto;
-            box-sizing: border-box;
-            width: auto;
-            min-width: 10px;
-        }
-
-        .header {
-            height: 100px;
-            background-color: #f8f9fa;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            position: sticky;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .overlaybox {
-            background-color: hotpink;
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        #boundaryToggleButton {
-            margin-bottom: 20px;
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #FF2C97;
-            border-radius: 5px;
-            background-color: #FFB0DD80;
-            font-size: 16px;
-            cursor: pointer;
+        .footer {
+            display: none; /* 하단 푸터 숨김 처리 */
         }
     </style>
 </head>
+<body>
 <body>
 <div class="content">
     <div id="sidebar">
         <div id="sidebar-content">
             <h1>상권분석</h1>
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly>
+                <input type="button" id="search_button" value="주소 찾기">
             </div>
-
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색"
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="eupMyeonDongSearchButton" value="지역 검색"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색">
+                <input type="button" id="eupMyeonDongSearchButton" value="지역 검색">
             </div>
-
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="businessCategorySearch" placeholder="업종 검색"
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="businessCategorySearchButton" value="업종 검색"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="businessCategorySearch" placeholder="업종 검색">
+                <input type="button" id="businessCategorySearchButton" value="업종 검색">
             </div>
 
             <ul id="searchResults"></ul>
@@ -167,41 +164,37 @@
             <div id="selectedBusiness" style="margin-top: 20px;">
                 <!-- 선택된 업종이 여기에 표시됩니다. -->
             </div>
-
-            <select id="locationSelect">
-                <option selected disabled>서울시 구 바로가기</option>
-                <option value="37.5172363,127.0473248">강남구</option>
-                <option value="37.5511,127.1465">강동구</option>
-                <option value="37.6397743,127.0259653">강북구</option>
-                <option value="37.5509787,126.8495384">강서구</option>
-                <option value="37.4784064,126.9516133">관악구</option>
-                <option value="37.5384841,127.0822934">광진구</option>
-                <option value="37.4954856,126.8877243">구로구</option>
-                <option value="37.4568502,126.8958117">금천구</option>
-                <option value="37.6541916,127.0567936">노원구</option>
-                <option value="37.6686912,127.0472104">도봉구</option>
-                <option value="37.5742915,127.0395685">동대문구</option>
-                <option value="37.5124095,126.9395078">동작구</option>
-                <option value="37.5663244,126.9014017">마포구</option>
-                <option value="37.5791433,126.9369178">서대문구</option>
-                <option value="37.4836042,127.0327595">서초구</option>
-                <option value="37.5632561,127.0364285">성동구</option>
-                <option value="37.5893624,127.0167415">성북구</option>
-                <option value="37.5145436,127.1059163">송파구</option>
-                <option value="37.5270616,126.8561536">양천구</option>
-                <option value="37.5263614,126.8966016">영등포구</option>
-                <option value="37.5322958,126.9904348">용산구</option>
-                <option value="37.6026956,126.9291993">은평구</option>
-                <option value="37.573293,126.979672">종로구</option>
-                <option value="37.5636152,126.9979403">중구</option>
-                <option value="37.6063241,127.092728">중랑구</option>
-            </select>
-
-            <!-- 단일 버튼으로 경계데이터 토글 -->
+            <div class="select-container">
+                <select id="locationSelect">
+                    <option selected disabled>서울시 구 바로가기</option>
+                    <option value="37.5172363,127.0473248">강남구</option>
+                    <option value="37.5511,127.1465">강동구</option>
+                    <option value="37.6397743,127.0259653">강북구</option>
+                    <option value="37.5509787,126.8495384">강서구</option>
+                    <option value="37.4784064,126.9516133">관악구</option>
+                    <option value="37.5384841,127.0822934">광진구</option>
+                    <option value="37.4954856,126.8877243">구로구</option>
+                    <option value="37.4568502,126.8958117">금천구</option>
+                    <option value="37.6541916,127.0567936">노원구</option>
+                    <option value="37.6686912,127.0472104">도봉구</option>
+                    <option value="37.5742915,127.0395685">동대문구</option>
+                    <option value="37.5124095,126.9395078">동작구</option>
+                    <option value="37.5663244,126.9014017">마포구</option>
+                    <option value="37.5791433,126.9369178">서대문구</option>
+                    <option value="37.4836042,127.0327595">서초구</option>
+                    <option value="37.5632561,127.0364285">성동구</option>
+                    <option value="37.5893624,127.0167415">성북구</option>
+                    <option value="37.5145436,127.1059163">송파구</option>
+                    <option value="37.5270616,126.8561536">양천구</option>
+                    <option value="37.5263614,126.8966016">영등포구</option>
+                    <option value="37.5322958,126.9904348">용산구</option>
+                    <option value="37.6026956,126.9291993">은평구</option>
+                    <option value="37.573293,126.979672">종로구</option>
+                    <option value="37.5636152,126.9979403">중구</option>
+                    <option value="37.6063241,127.092728">중랑구</option>
+                </select>
+            </div>
             <button id="boundaryToggleButton">경계데이터 켜기</button>
-
-            <div id="eupMyeonDongSelectedArea" style="display: none;"></div>
-            <div id="siGunGuSelectedArea" style="display: none;"></div>
         </div>
     </div>
     <div id="mapContainer">
