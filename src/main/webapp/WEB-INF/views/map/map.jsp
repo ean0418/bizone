@@ -141,7 +141,6 @@
     </style>
 </head>
 <body>
-<body>
 <div class="content">
     <div id="sidebar">
         <div id="sidebar-content">
@@ -202,7 +201,7 @@
     </div>
 </div>
 
-<!-- 모달 창 관련 부분 -->
+<!-- 기존 모달 -->
 <div class="modal fade" id="regionModal" tabindex="-1" role="dialog" aria-labelledby="regionModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -214,28 +213,28 @@
                 <div>성공 확률: <strong id="successProbability">정보 없음</strong></div>
                 <div>성공 확률 평가: <strong id="successEvaluation">정보 없음</strong></div>
                 <hr/>
-                <!-- 자세히 보기 버튼 추가 -->
-                <button id="detailbtn" class="btn btn-primary">데이터 자세히보기</button>
+                <!-- 자세히 보기 버튼 -->
+                <button id="detailbtn" class="btn btn-primary">데이터 자세히 보기</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 두 번째 모달 창 추가 -->
+<!-- 상세 데이터를 보여주는 모달 -->
 <div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-body" id="detailed-modal-body">
-                <h5>업종: <span id="detailedBusinessName"></span>, 지역: <span id="detailedRegionName"></span></h5>
-                <ul>
-                    <li>총 거주 인구: <span id="totalResidentPopulation"></span></li>
-                    <li>총 직장 인구: <span id="totalWorkplacePopulation"></span></li>
-                    <li>평균 월 소득: <span id="avgMonthlyIncome"></span></li>
-                    <li>총 지출 금액: <span id="totalExpenditure"></span></li>
-                    <li>총 유동 인구: <span id="totalFloatingPopulation"></span></li>
-                    <li>집객시설 수: <span id="attractionCount"></span></li>
-                    <li>평균 임대료: <span id="avgRentFee"></span></li>
-                </ul>
+            <div class="modal-body">
+                <h5 id="detailedBusinessName">업종명</h5>
+                <div>지역명: <strong id="detailedRegionName">정보 없음</strong></div>
+                <div>총 거주 인구: <strong id="totalResidentPopulation">정보 없음</strong></div>
+                <div>총 직장 인구: <strong id="totalWorkplacePopulation">정보 없음</strong></div>
+                <div>평균 월 소득: <strong id="avgMonthlyIncome">정보 없음</strong></div>
+                <div>총 지출 금액: <strong id="totalExpenditure">정보 없음</strong></div>
+                <div>총 유동 인구: <strong id="totalFloatingPopulation">정보 없음</strong></div>
+                <div>집객시설 수: <strong id="attractionCount">정보 없음</strong></div>
+                <div>평균 임대료: <strong id="avgRentFee">정보 없음</strong></div>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
             </div>
         </div>
     </div>
@@ -324,8 +323,47 @@
 
     let chartInstance = null;
 
+
+    $(document).ready(function () {
+        // '자세히 보기' 버튼 클릭 이벤트
+        $('#detailbtn').off('click').on('click', function () {
+            // admin_code 및 service_code는 전역 변수로 설정되었으므로 이를 사용하여 데이터 요청
+            $.ajax({
+                url: '/api/bizone/getDetailData',
+                method: 'GET',
+                data: {
+                    admin_code: selectedAdminCode,  // 전역 변수로 설정된 행정동 코드
+                    service_code: selectedServiceCode  // 전역 변수로 설정된 서비스 코드
+                },
+                success: function (data) {
+                    console.log('Detailed Data:', data);
+
+                    // 모달 창에 데이터 업데이트
+                    $('#detailedBusinessName').text(selectedServiceCode || '정보 없음');
+                    $('#detailedRegionName').text(data.regionName || '정보 없음');
+                    $('#totalResidentPopulation').text(data.totalResidentPopulation || '정보 없음');
+                    $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation || '정보 없음');
+                    $('#avgMonthlyIncome').text(data.avgMonthlyIncome || '정보 없음');
+                    $('#totalExpenditure').text(data.totalExpenditure || '정보 없음');
+                    $('#totalFloatingPopulation').text(data.totalFloatingPopulation || '정보 없음');
+                    $('#attractionCount').text(data.attractionCount || '정보 없음');
+                    $('#avgRentFee').text(data.avgRentFee || '정보 없음');
+
+                    // 상세 데이터 모달 창 열기
+                    $('#detailedModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error fetching detailed data:', error);
+                    alert('상세 데이터를 불러오는 중 오류가 발생했습니다.');
+                }
+            });
+        });
+    });
+
     // 모달 창에 지역 이름과 그래프 데이터를 표시하는 함수
     function showRegionInfo(regionName, adminCode, serviceCode) {
+        selectedAdminCode = adminCode; // 전역 변수에 선택된 값 저장
+        selectedServiceCode = serviceCode; // 전역 변수에 선택된 값 저장
         $.ajax({
             url: `/api/bizone/getChartDataForDetail`,
             method: 'GET',
@@ -338,18 +376,19 @@
 
                 // 모달 창 업데이트 코드
                 $('#regionName').text(regionName + " 상권분석");
-                $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
+                $('#selectedBusinessModal').text(selectedServiceCode || '정보 없음');
+
                 const chartData = {
                     labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
                     datasets: [{
                         label: '상권분석 데이터',
                         data: [
-                            data.avgRentFeeScore.toFixed(2),               // 평균 임대료 점수
-                            data.totalWorkplacePopulationScore.toFixed(2), // 총 직장 인구 점수
-                            data.totalExpenditureScore.toFixed(2),         // 총 지출 금액 점수
-                            data.attractionCountScore.toFixed(2),          // 집객시설 수 점수
-                            data.avgMonthlySalesScore.toFixed(2),          // 평균 월 매출 점수
-                            data.otherScoresTotal.toFixed(2)               // 기타 점수
+                            data.avgRentFeeScore ? data.avgRentFeeScore.toFixed(2) : 0,                // 평균 임대료 점수
+                            data.totalWorkplacePopulationScore ? data.totalWorkplacePopulationScore.toFixed(2) : 0, // 총 직장 인구 점수
+                            data.totalExpenditureScore ? data.totalExpenditureScore.toFixed(2) : 0,         // 총 지출 금액 점수
+                            data.attractionCountScore ? data.attractionCountScore.toFixed(2) : 0,          // 집객시설 수 점수
+                            data.avgMonthlySalesScore ? data.avgMonthlySalesScore.toFixed(2) : 0,          // 평균 월 매출 점수
+                            data.otherScoresTotal ? data.otherScoresTotal.toFixed(2) : 0              // 기타 점수
                         ],
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
@@ -374,11 +413,12 @@
                     }
                 });
 
-                const successProbability = parseFloat(data.successProbability).toFixed(2);
+                const successProbability = parseFloat(data.successProbability || 0).toFixed(2);
                 $('#successProbability').text(successProbability + '%');
                 const evaluation = getEvaluation(successProbability);
                 $('#successEvaluation').text(evaluation);
 
+                // 모달 창을 보여줌
                 $('#regionModal').modal('show');
             },
             error: function () {
@@ -386,7 +426,6 @@
             }
         });
     }
-
 
     // 성공 확률 평가 함수
     function getEvaluation(score) {
@@ -900,49 +939,49 @@
         }).open();
     }
 
-    function updateSelectedData(business, areaCode) {
-        selectedServiceCode = business.bb_code;
-        selectedAdminCode = areaCode;
+    <%--function updateSelectedData(adminCode, serviceCode) {--%>
+    <%--    selectedServiceCode = serviceCode;--%>
+    <%--    selectedAdminCode = adminCode;--%>
 
-        console.log('Selected data updated:', selectedServiceCode, selectedAdminCode);
-    }
+    <%--    console.log('Selected data updated:', selectedServiceCode, selectedAdminCode);--%>
+    <%--}--%>
 
-    // 자세히 보기 버튼 클릭 이벤트
-    $('#detailbtn').on('click', function () {
-        console.log('Requesting detailed data with:', selectedServiceCode, selectedAdminCode);
+    <%--// 자세히 보기 버튼 클릭 이벤트--%>
+    <%--$('#detailbtn').on('click', function () {--%>
+    <%--    console.log('Requesting detailed data with:', selectedServiceCode, selectedAdminCode);--%>
 
-        if (selectedServiceCode && selectedAdminCode) {
-            fetch(`/api/bizone/getDetailData?admin_code=${selectedAdminCode}&service_code=${selectedServiceCode}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Detailed data received:', data);
+    <%--    if (selectedServiceCode && selectedAdminCode) {--%>
+    <%--        fetch(`/api/bizone/getDetailData?admin_code=${selectedAdminCode}&service_code=${selectedServiceCode}`)--%>
+    <%--            .then(response => {--%>
+    <%--                if (!response.ok) {--%>
+    <%--                    throw new Error('Network response was not ok');--%>
+    <%--                }--%>
+    <%--                return response.json();--%>
+    <%--            })--%>
+    <%--            .then(data => {--%>
+    <%--                console.log('Detailed data received:', data);--%>
 
-                    // 데이터 채우기
-                    $('#detailedBusinessName').text(selectedServiceCode);
-                    $('#detailedRegionName').text(data.regionName);
-                    $('#totalResidentPopulation').text(data.totalResidentPopulation || '정보 없음');
-                    $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation || '정보 없음');
-                    $('#avgMonthlyIncome').text(data.avgMonthlyIncome || '정보 없음');
-                    $('#totalExpenditure').text(data.totalExpenditure || '정보 없음');
-                    $('#totalFloatingPopulation').text(data.totalFloatingPopulation || '정보 없음');
-                    $('#attractionCount').text(data.attractionCount || '정보 없음');
-                    $('#avgRentFee').text(data.avgRentFee || '정보 없음');
+    <%--                // 데이터 채우기--%>
+    <%--                $('#detailedBusinessName').text(selectedServiceCode);--%>
+    <%--                $('#detailedRegionName').text(data.regionName);--%>
+    <%--                $('#totalResidentPopulation').text(data.totalResidentPopulation || '정보 없음');--%>
+    <%--                $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation || '정보 없음');--%>
+    <%--                $('#avgMonthlyIncome').text(data.avgMonthlyIncome || '정보 없음');--%>
+    <%--                $('#totalExpenditure').text(data.totalExpenditure || '정보 없음');--%>
+    <%--                $('#totalFloatingPopulation').text(data.totalFloatingPopulation || '정보 없음');--%>
+    <%--                $('#attractionCount').text(data.attractionCount || '정보 없음');--%>
+    <%--                $('#avgRentFee').text(data.avgRentFee || '정보 없음');--%>
 
-                    $('#detailedModal').modal('show');
-                })
-                .catch(error => {
-                    console.error('Error fetching detailed data:', error);
-                    alert('데이터를 불러오는 중 오류가 발생했습니다.');
-                });
-        } else {
-            alert("업종과 지역을 선택해주세요.");
-        }
-    });
+    <%--                $('#detailedModal').modal('show');--%>
+    <%--            })--%>
+    <%--            .catch(error => {--%>
+    <%--                console.error('Error fetching detailed data:', error);--%>
+    <%--                alert('데이터를 불러오는 중 오류가 발생했습니다.');--%>
+    <%--            });--%>
+    <%--    } else {--%>
+    <%--        alert("업종과 지역을 선택해주세요.");--%>
+    <%--    }--%>
+    <%--});--%>
 
 </script>
 </body>
