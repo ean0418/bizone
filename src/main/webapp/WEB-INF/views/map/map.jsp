@@ -3,12 +3,29 @@
 <head>
     <title>상권분석</title>
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- jQuery 로드 (필수) -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+    <!-- Popper.js 로드 (Bootstrap 4에서 필수) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JavaScript 로드 (jQuery 이후에 로드) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Font Awesome 아이콘 CSS (옵션) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Chart.js 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 카카오 맵 및 우편번호 서비스 -->
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=695af2d9d27326c791e215b580236791&libraries=services,clusterer"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body, html {
             margin: 0;
@@ -138,6 +155,18 @@
         .footer {
             display: none; /* 하단 푸터 숨김 처리 */
         }
+        #welcomeModal .modal-content {
+            border-radius: 12px; /* 모달의 테두리를 둥글게 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 그림자 효과 추가 */
+        }
+
+        #welcomeModal .modal-header {
+            border-bottom: 2px solid #17a2b8; /* 모달 헤더 하단 테두리 */
+        }
+
+        #welcomeModal .modal-body h6 {
+            color: #0056b3; /* 안내 텍스트 색상 */
+        }
     </style>
 </head>
 <body>
@@ -147,7 +176,7 @@
             <h1>상권분석</h1>
             <div class="input-container">
                 <input type="text" id="sample5_address" placeholder="주소 찾기" readonly>
-                <input type="button" id="search_button" value="주소 찾기">
+                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기">
             </div>
             <div class="input-container">
                 <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색">
@@ -201,44 +230,201 @@
     </div>
 </div>
 
-<!-- 모달 창 관련 부분 -->
+<!-- 모달 창 (regionModal) -->
 <div class="modal fade" id="regionModal" tabindex="-1" role="dialog" aria-labelledby="regionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+            <!-- 모달 헤더 (닫기 버튼 없음) -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="regionModalLabel"><i class="fas fa-chart-area"></i> 지역 상권 분석</h5>
+            </div>
+
+            <!-- 모달 바디 시작 -->
             <div class="modal-body" id="modal-body">
-                <h5 id="regionName">지역명</h5>
-                <canvas id="regionChart" style="max-width: 100%;"></canvas>
-                <div>선택된 업종: <strong id="selectedBusinessModal">정보 없음</strong></div>
-                <hr/>
-                <div>성공 확률: <strong id="successProbability">정보 없음</strong></div>
-                <div>성공 확률 평가: <strong id="successEvaluation">정보 없음</strong></div>
-                <hr/>
-                <!-- 자세히 보기 버튼 추가 -->
-                <button id="detailbtn" class="btn btn-primary">데이터 자세히보기</button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 지역명 및 차트 -->
+                        <div class="col-md-12 mb-4">
+                            <h5 class="text-center font-weight-bold" id="regionName">지역명</h5>
+                            <canvas id="regionChart" style="max-width: 100%;"></canvas>
+                        </div>
+
+                        <!-- 선택된 업종 정보 -->
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-body bg-light">
+                                    <h6 class="font-weight-bold"><i class="fas fa-store"></i> 선택된 업종: <span id="selectedBusinessModal" class="text-primary">정보 없음</span></h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 성공 확률 정보 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
+                                    <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 성공 확률 평가 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 성공 확률 평가:</h6>
+                                    <span id="successEvaluation" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 모달 바디 끝 -->
+
+
+            <!-- 모달 푸터 (닫기 버튼 없음) -->
+            <div class="modal-footer">
+                <button id="detailbtn" class="btn btn-primary btn-lg w-100"><i class="fas fa-info-circle"></i> 데이터 자세히 보기</button>
+            </div>
+                <!-- 첫 번째 모달의 확인 버튼 -->
+                <button id="closeRegionModal" class="btn btn-primary"><i class="fas fa-check-circle"></i> 확인</button>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- 두 번째 모달 창 (detailedModal) -->
+<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!-- 모달 헤더 (닫기 버튼 없음) -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="detailedModalLabel"><i class="fas fa-info-circle"></i> 상세 정보 보기</h5>
+            </div>
+
+            <!-- 모달 바디 -->
+            <div class="modal-body" id="detailed-modal-body">
+                <div class="container-fluid">
+                    <!-- 업종 및 지역 정보 -->
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h6 class="font-weight-bold"><i class="fas fa-briefcase"></i> 업종: <span id="detailedBusinessName" class="text-primary">정보 없음</span></h6>
+                            <h6 class="font-weight-bold"><i class="fas fa-map-marker-alt"></i> 지역: <span id="detailedRegionName" class="text-primary">정보 없음</span></h6>
+                        </div>
+                    </div>
+
+                    <!-- 상세 데이터 리스트 -->
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-users"> 총 거주 인구: <span id="totalResidentPopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-building"> 총 직장 인구: <span id="totalWorkplacePopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-dollar-sign"> 평균 월 소득: <span id="avgMonthlyIncome"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-coins"> 총 지출 금액: <span id="totalExpenditure"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-chart-line"> 총 유동 인구: <span id="totalFloatingPopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-hotel"> 집객시설 수: <span id="attractionCount"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-home"> 평균 임대료: <span id="avgRentFee"></span></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 모달 푸터 (닫기 버튼 없음) -->
+            <div class="modal-footer">
+                <button id="closeDetailedModal" class="btn btn-primary">확인</button> <!-- 확인 버튼을 눌렀을 때 모달 닫기 -->
             </div>
         </div>
     </div>
 </div>
 
-<!-- 두 번째 모달 창 추가 -->
-<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- JavaScript -->
+<script>
+    $(document).ready(function () {
+        // 첫 번째 모달의 확인 버튼 클릭 시 모달 닫기
+        $('#closeRegionModal').on('click', function () {
+            $('#regionModal').modal('hide'); // regionModal 닫기
+        });
+
+    });
+
+    $(document).ready(function () {
+    // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+    $('#closeDetailedModal').on('click', function () {
+        $('#detailedModal').modal('hide'); // detailedModal 닫기
+    });
+
+    });
+
+</script>
+
+<!-- 페이지 첫 접속 시 보여줄 안내 팝업 -->
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-body" id="detailed-modal-body">
-                <h5>업종: <span id="detailedBusinessName"></span>, 지역: <span id="detailedRegionName"></span></h5>
-                <ul>
-                    <li>총 거주 인구: <span id="totalResidentPopulation"></span></li>
-                    <li>총 직장 인구: <span id="totalWorkplacePopulation"></span></li>
-                    <li>평균 월 소득: <span id="avgMonthlyIncome"></span></li>
-                    <li>총 지출 금액: <span id="totalExpenditure"></span></li>
-                    <li>총 유동 인구: <span id="totalFloatingPopulation"></span></li>
-                    <li>집객시설 수: <span id="attractionCount"></span></li>
-                    <li>평균 임대료: <span id="avgRentFee"></span></li>
-                </ul>
+            <!-- 팝업 헤더 -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="welcomeModalLabel"><i class="fas fa-info-circle"></i> 상권 분석 시스템 안내</h5>
+            </div>
+
+            <!-- 팝업 바디 -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <!-- 안내 내용 구성 -->
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h6 class="font-weight-bold"><i class="fas fa-lightbulb"></i> 상권 분석 시스템에 오신 것을 환영합니다!</h6>
+                            <p>
+                                이 시스템을 통해 지역별 상권 분석, 업종 선택 및 분석, 상세 데이터를 확인할 수 있습니다.
+                                <br><br>
+                                <strong>간단 분석 방법 안내:</strong>
+                            <ol>
+                                <li>분석할 지역 및 업종을 선택합니다.</li>
+                                <li>분석하기 버튼을 클릭하여 결과를 확인합니다.</li>
+                                <li>결과를 확인 후, 상세 데이터 보기 버튼을 통해 더 많은 정보를 얻을 수 있습니다.</li>
+                            </ol>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 팝업 푸터 (닫기 버튼) -->
+            <div class="modal-footer">
+                <button id="closePopupModal" class="btn btn-primary">확인</button> <!-- 확인 버튼을 눌렀을 때 모달 닫기 -->
             </div>
         </div>
     </div>
 </div>
+
+<!-- 메인홈페이지에서 설명 팝업창 -->
+<script>
+    $(document).ready(function () {
+        // 페이지가 로드되면 자동으로 팝업을 띄우는 함수
+        $('#popupModal').modal('show');  // Bootstrap 모달 표시
+
+    });
+
+        $(document).ready(function () {
+            // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+            $('#closePopupModal').on('click', function () {
+                $('#popupModal').modal('hide'); // detailedModal 닫기
+            });
+
+        });
+</script>
 
 <script>
     var map, customOverlay, polygons = [];
@@ -378,7 +564,7 @@
                 $('#regionModal').modal('show');
             },
             error: function () {
-                alert("데이터를 불러오는 중 오류가 발생했습니다.");
+                alert("데이터정보가 없습니다");
             }
         });
     }
@@ -932,6 +1118,7 @@
         }).open();
     }
 </script>
+
 </body>
 </html>
 

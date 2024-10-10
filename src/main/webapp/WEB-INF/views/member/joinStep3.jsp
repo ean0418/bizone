@@ -80,6 +80,9 @@
     .step-indicator .active {
       background-color: #101E4E; /* 활성화된 스텝의 배경색 */
     }
+    .step-indicator .active2 {
+      background-color: #2ECC71; /* 활성화된 스텝의 배경색 */
+    }
     /* 설명 문구 */
     p {
       font-size: 18px;
@@ -111,7 +114,7 @@
   <div class="container">
     <h1>회원가입 완료</h1>
     <div class="step-indicator">
-      <span>1</span> → <span>2</span> → <span class="active">3</span>
+      <span class="active">1</span> → <span  class="active">2</span> → <span  class="active2">3</span>
     </div>
     <p>회원가입이 완료되었습니다. 로그인하여 다양한 서비스를 이용해보세요.</p>
     <a href="${contextPath}/member.login.go" class="btn">로그인</a>
