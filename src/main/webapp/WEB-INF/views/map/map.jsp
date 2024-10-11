@@ -3,95 +3,151 @@
 <head>
     <title>상권분석</title>
     <meta charset="UTF-8">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <!-- jQuery 로드 (필수) -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+    <!-- Popper.js 로드 (Bootstrap 4에서 필수) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
+    <!-- Bootstrap JavaScript 로드 (jQuery 이후에 로드) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Font Awesome 아이콘 CSS (옵션) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <!-- Chart.js 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- 카카오 맵 및 우편번호 서비스 -->
     <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=695af2d9d27326c791e215b580236791&libraries=services,clusterer"></script>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
-        body {
+        body, html {
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: transparent; /* 전체 배경을 투명하게 설정 */
+            font-family: 'Noto Sans KR', sans-serif;
         }
 
         .content {
             display: flex;
-            height: calc(100vh);
-            position: relative;
+            height: 100vh; /* 전체 화면 높이를 유지 */
+            background-color: transparent; /* content의 배경을 투명하게 설정 */
+            position: relative; /* content를 상대 위치로 설정 */
+        }
+
+        #sidebar {
+            width: 350px; /* 사이드바 너비 설정 */
+            background-color: rgba(255, 255, 255, 0); /* 사이드바를 완전히 투명하게 설정 */
+            border: none; /* 경계선 제거 */
+            padding: 20px 15px;
+            border-radius: 12px;
+            margin: 20px;
+            position: absolute; /* 절대 위치로 설정 */
+            z-index: 10; /* z-index를 높여 지도의 위에 배치 */
+        }
+
+        #sidebar-content {
+            width: 380px; /* 사이드바 너비 설정 */
+            background-color: #ffffff; /* 흰색 배경 */
+            border-radius: 20px; /* 둥근 모서리 설정 */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+            padding: 30px 25px; /* 내부 여백 설정 */
+            margin: 20px;
+            position: relative;; /* 사이드바 내용의 배경을 투명하게 설정 */
+        }
+
+        #sidebar h1 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .input-container input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선을 투명하게 설정 */
+            border-radius: 6px;
+            font-size: 14px;
+            margin-right: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            background-color: rgba(255, 255, 255, 0.2); /* 입력 필드 배경 투명하게 설정 */
+            color: #333; /* 텍스트 색상 설정 */
+            transition: all 0.3s ease;
+        }
+
+        .input-container input[type="text"]:focus {
+            border-color: rgba(65, 105, 225, 0.5); /* 포커스 시 테두리 색 변경 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.4); /* 포커스 시 배경 덜 투명하게 */
+        }
+
+        .input-container input[type="button"] {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            background-color: rgba(65, 105, 225, 0.8); /* 버튼 배경 설정 */
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-container input[type="button"]:hover {
+            background-color: rgba(39, 72, 179, 0.9); /* 마우스 오버 시 배경 덜 투명하게 */
+        }
+
+        .select-container select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선 투명도 설정 */
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            background-color: rgba(255, 255, 255, 0.2); /* 드롭다운 배경 투명하게 설정 */
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         #mapContainer {
-            flex-grow: 1;
-            height: 100%;
+            flex: 1;
+            height: 100vh; /* 전체 화면 높이를 사용 */
+            background-color: transparent; /* 지도 컨테이너 배경 투명하게 설정 */
+            position: relative;
         }
 
         #map {
             width: 100%;
             height: 100%;
         }
-
-        #sidebar {
-            width: 35%;
-            max-width: 400px;
-            background-color: rgba(255, 255, 255, 0.8);
-            margin: 20px;
-            box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-            z-index: 100;
-            height: calc(100vh - 140px);
-            border-radius: 5px;
-            position: absolute;
+        .footer {
+            display: none; /* 하단 푸터 숨김 처리 */
+        }
+        #welcomeModal .modal-content {
+            border-radius: 12px; /* 모달의 테두리를 둥글게 */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 모달에 그림자 효과 추가 */
         }
 
-        #sidebar-content {
-            padding: 20px;
-            height: max-content;
+        #welcomeModal .modal-header {
+            border-bottom: 2px solid #17a2b8; /* 모달 헤더 하단 테두리 */
         }
 
-        select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        div#sidebar-content > div {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-        }
-
-        input[type="text"] {
-            flex: 1;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        input[type="button"] {
-            flex: 0 1 auto;
-            box-sizing: border-box;
-            width: auto;
-            min-width: 10px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .overlaybox {
-            background-color: hotpink;
-            padding: 5px 10px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-size: 14px;
+        #welcomeModal .modal-body h6 {
+            color: #0056b3; /* 안내 텍스트 색상 */
         }
     </style>
 </head>
@@ -100,25 +156,17 @@
     <div id="sidebar">
         <div id="sidebar-content">
             <h1>상권분석</h1>
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly>
+                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기">
             </div>
-
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색"
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="eupMyeonDongSearchButton" value="지역 검색"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색">
+                <input type="button" id="eupMyeonDongSearchButton" value="지역 검색">
             </div>
-
-            <div style="display: flex; align-items: center; margin-bottom: 20px;">
-                <input type="text" id="businessCategorySearch" placeholder="업종 검색"
-                       style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
-                <input type="button" id="businessCategorySearchButton" value="업종 검색"
-                       style="padding: 10px; margin-left: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f0f0f0; font-size: 16px; cursor: pointer;">
+            <div class="input-container">
+                <input type="text" id="businessCategorySearch" placeholder="업종 검색">
+                <input type="button" id="businessCategorySearchButton" value="업종 검색">
             </div>
 
             <ul id="searchResults"></ul>
@@ -126,38 +174,36 @@
             <div id="selectedBusiness" style="margin-top: 20px;">
                 <!-- 선택된 업종이 여기에 표시됩니다. -->
             </div>
-
-            <select id="locationSelect">
-                <option selected disabled>서울시 구 바로가기</option>
-                <option value="37.5172363,127.0473248">강남구</option>
-                <option value="37.5511,127.1465">강동구</option>
-                <option value="37.6397743,127.0259653">강북구</option>
-                <option value="37.5509787,126.8495384">강서구</option>
-                <option value="37.4784064,126.9516133">관악구</option>
-                <option value="37.5384841,127.0822934">광진구</option>
-                <option value="37.4954856,126.8877243">구로구</option>
-                <option value="37.4568502,126.8958117">금천구</option>
-                <option value="37.6541916,127.0567936">노원구</option>
-                <option value="37.6686912,127.0472104">도봉구</option>
-                <option value="37.5742915,127.0395685">동대문구</option>
-                <option value="37.5124095,126.9395078">동작구</option>
-                <option value="37.5663244,126.9014017">마포구</option>
-                <option value="37.5791433,126.9369178">서대문구</option>
-                <option value="37.4836042,127.0327595">서초구</option>
-                <option value="37.5632561,127.0364285">성동구</option>
-                <option value="37.5893624,127.0167415">성북구</option>
-                <option value="37.5145436,127.1059163">송파구</option>
-                <option value="37.5270616,126.8561536">양천구</option>
-                <option value="37.5263614,126.8966016">영등포구</option>
-                <option value="37.5322958,126.9904348">용산구</option>
-                <option value="37.6026956,126.9291993">은평구</option>
-                <option value="37.573293,126.979672">종로구</option>
-                <option value="37.5636152,126.9979403">중구</option>
-                <option value="37.6063241,127.092728">중랑구</option>
-            </select>
-
-            <div id="eupMyeonDongSelectedArea" style="display: none;"></div>
-            <div id="siGunGuSelectedArea" style="display: none;"></div>
+            <div class="select-container">
+                <select id="locationSelect">
+                    <option selected disabled>서울시 구 바로가기</option>
+                    <option value="37.5172363,127.0473248">강남구</option>
+                    <option value="37.5511,127.1465">강동구</option>
+                    <option value="37.6397743,127.0259653">강북구</option>
+                    <option value="37.5509787,126.8495384">강서구</option>
+                    <option value="37.4784064,126.9516133">관악구</option>
+                    <option value="37.5384841,127.0822934">광진구</option>
+                    <option value="37.4954856,126.8877243">구로구</option>
+                    <option value="37.4568502,126.8958117">금천구</option>
+                    <option value="37.6541916,127.0567936">노원구</option>
+                    <option value="37.6686912,127.0472104">도봉구</option>
+                    <option value="37.5742915,127.0395685">동대문구</option>
+                    <option value="37.5124095,126.9395078">동작구</option>
+                    <option value="37.5663244,126.9014017">마포구</option>
+                    <option value="37.5791433,126.9369178">서대문구</option>
+                    <option value="37.4836042,127.0327595">서초구</option>
+                    <option value="37.5632561,127.0364285">성동구</option>
+                    <option value="37.5893624,127.0167415">성북구</option>
+                    <option value="37.5145436,127.1059163">송파구</option>
+                    <option value="37.5270616,126.8561536">양천구</option>
+                    <option value="37.5263614,126.8966016">영등포구</option>
+                    <option value="37.5322958,126.9904348">용산구</option>
+                    <option value="37.6026956,126.9291993">은평구</option>
+                    <option value="37.573293,126.979672">종로구</option>
+                    <option value="37.5636152,126.9979403">중구</option>
+                    <option value="37.6063241,127.092728">중랑구</option>
+                </select>
+            </div>
         </div>
     </div>
     <div id="mapContainer">
@@ -165,43 +211,201 @@
     </div>
 </div>
 
-<!-- 모달 창 관련 부분 -->
+<!-- 모달 창 (regionModal) -->
 <div class="modal fade" id="regionModal" tabindex="-1" role="dialog" aria-labelledby="regionModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
+            <!-- 모달 헤더 (닫기 버튼 없음) -->
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="regionModalLabel"><i class="fas fa-chart-area"></i> 지역 상권 분석</h5>
+            </div>
+
+            <!-- 모달 바디 시작 -->
             <div class="modal-body" id="modal-body">
-                <h5 id="regionName">지역명</h5>
-                <canvas id="regionChart" style="max-width: 100%;"></canvas>
-                <div>선택된 업종: <strong id="selectedBusinessModal">정보 없음</strong></div>
-                <hr/>
-                <div>성공 확률: <strong id="successProbability">정보 없음</strong></div>
-                <div>성공 확률 평가: <strong id="successEvaluation">정보 없음</strong></div>
-                <hr/>
-                <button id="detailbtn" class="btn btn-primary">데이터 자세히보기</button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <!-- 지역명 및 차트 -->
+                        <div class="col-md-12 mb-4">
+                            <h5 class="text-center font-weight-bold" id="regionName">지역명</h5>
+                            <canvas id="regionChart" style="max-width: 100%;"></canvas>
+                        </div>
+
+                        <!-- 선택된 업종 정보 -->
+                        <div class="col-md-12">
+                            <div class="card mb-4">
+                                <div class="card-body bg-light">
+                                    <h6 class="font-weight-bold"><i class="fas fa-store"></i> 선택된 업종: <span id="selectedBusinessModal" class="text-primary">정보 없음</span></h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 성공 확률 정보 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
+                                    <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 성공 확률 평가 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 성공 확률 평가:</h6>
+                                    <span id="successEvaluation" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 모달 바디 끝 -->
+
+
+            <!-- 모달 푸터 (닫기 버튼 없음) -->
+            <div class="modal-footer">
+                <button id="detailbtn" class="btn btn-primary btn-lg w-100"><i class="fas fa-info-circle"></i> 데이터 자세히 보기</button>
+            </div>
+                <!-- 첫 번째 모달의 확인 버튼 -->
+                <button id="closeRegionModal" class="btn btn-primary"><i class="fas fa-check-circle"></i> 확인</button>
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- 두 번째 모달 창 (detailedModal) -->
+<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <!-- 모달 헤더 (닫기 버튼 없음) -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="detailedModalLabel"><i class="fas fa-info-circle"></i> 상세 정보 보기</h5>
+            </div>
+
+            <!-- 모달 바디 -->
+            <div class="modal-body" id="detailed-modal-body">
+                <div class="container-fluid">
+                    <!-- 업종 및 지역 정보 -->
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h6 class="font-weight-bold"><i class="fas fa-briefcase"></i> 업종: <span id="detailedBusinessName" class="text-primary">정보 없음</span></h6>
+                            <h6 class="font-weight-bold"><i class="fas fa-map-marker-alt"></i> 지역: <span id="detailedRegionName" class="text-primary">정보 없음</span></h6>
+                        </div>
+                    </div>
+
+                    <!-- 상세 데이터 리스트 -->
+                    <ul class="list-group">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-users"> 총 거주 인구: <span id="totalResidentPopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-building"> 총 직장 인구: <span id="totalWorkplacePopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-dollar-sign"> 평균 월 소득: <span id="avgMonthlyIncome"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-coins"> 총 소비 금액: <span id="totalExpenditure"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-chart-line"> 총 유동 인구: <span id="totalFloatingPopulation"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-hotel"> 집객시설 수: <span id="attractionCount"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-home"> 평균 임대료: <span id="avgRentFee"></span></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 모달 푸터 (닫기 버튼 없음) -->
+            <div class="modal-footer">
+                <button id="closeDetailedModal" class="btn btn-primary">확인</button> <!-- 확인 버튼을 눌렀을 때 모달 닫기 -->
             </div>
         </div>
     </div>
 </div>
 
-<!-- 두 번째 모달 창 추가 -->
-<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<!-- JavaScript -->
+<script>
+    $(document).ready(function () {
+        // 첫 번째 모달의 확인 버튼 클릭 시 모달 닫기
+        $('#closeRegionModal').on('click', function () {
+            $('#regionModal').modal('hide'); // regionModal 닫기
+        });
+
+    });
+
+    $(document).ready(function () {
+    // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+    $('#closeDetailedModal').on('click', function () {
+        $('#detailedModal').modal('hide'); // detailedModal 닫기
+    });
+
+    });
+
+</script>
+
+<!-- 페이지 첫 접속 시 보여줄 안내 팝업 -->
+<div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-body" id="detailed-modal-body">
-                <h5>업종: <span id="detailedBusinessName"></span>, 지역: <span id="detailedRegionName"></span></h5>
-                <ul>
-                    <li>총 거주 인구: <span id="totalResidentPopulation"></span></li>
-                    <li>총 직장 인구: <span id="totalWorkplacePopulation"></span></li>
-                    <li>평균 월 소득: <span id="avgMonthlyIncome"></span></li>
-                    <li>총 지출 금액: <span id="totalExpenditure"></span></li>
-                    <li>총 유동 인구: <span id="totalFloatingPopulation"></span></li>
-                    <li>집객시설 수: <span id="attractionCount"></span></li>
-                    <li>평균 임대료: <span id="avgRentFee"></span></li>
-                </ul>
+            <!-- 팝업 헤더 -->
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="welcomeModalLabel"><i class="fas fa-info-circle"></i> 상권 분석 시스템 안내</h5>
+            </div>
+
+            <!-- 팝업 바디 -->
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <!-- 안내 내용 구성 -->
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h6 class="font-weight-bold"><i class="fas fa-lightbulb"></i> 상권 분석 시스템에 오신 것을 환영합니다!</h6>
+                            <p>
+                                이 시스템을 통해 지역별 상권 분석, 업종 선택 및 분석, 상세 데이터를 확인할 수 있습니다.
+                                <br><br>
+                                <strong>간단 분석 방법 안내:</strong>
+                            <ol>
+                                <li>분석할 지역 및 업종을 선택합니다.</li>
+                                <li>분석하기 버튼을 클릭하여 결과를 확인합니다.</li>
+                                <li>결과를 확인 후, 상세 데이터 보기 버튼을 통해 더 많은 정보를 얻을 수 있습니다.</li>
+                            </ol>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 팝업 푸터 (닫기 버튼) -->
+            <div class="modal-footer">
+                <button id="closePopupModal" class="btn btn-primary">확인</button> <!-- 확인 버튼을 눌렀을 때 모달 닫기 -->
             </div>
         </div>
     </div>
 </div>
+
+<!-- 메인홈페이지에서 설명 팝업창 -->
+<script>
+    $(document).ready(function () {
+        // 페이지가 로드되면 자동으로 팝업을 띄우는 함수
+        $('#popupModal').modal('show');  // Bootstrap 모달 표시
+
+    });
+
+        $(document).ready(function () {
+            // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+            $('#closePopupModal').on('click', function () {
+                $('#popupModal').modal('hide'); // detailedModal 닫기
+            });
+
+        });
+</script>
 
 <script>
     var map, customOverlay, polygons = [];
@@ -316,7 +520,7 @@
                 $('#detailedRegionName').text(globalRegionName || adminCode);  // 전역 변수 사용
 
                 const chartData = {
-                    labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
+                    labels: ['평균 임대료', '총 직장인구수', '총 소비 금액', '집객시설 수', '평균 월 매출', '기타'],
                     datasets: [{
                         label: '상권분석 데이터',
                         data: [
@@ -424,50 +628,6 @@
             alert("업종과 지역을 선택해주세요.");
         }
     });
-
-    // // 업종과 지역 선택 시 데이터를 설정하는 함수
-    // function updateSelectedData(business, areaCode) {
-    //     selectedServiceCode = business ? business.bb_code : null;
-    //     selectedAdminCode = areaCode;
-    //     console.log('Selected data updated:', selectedServiceCode, selectedAdminCode);
-    // }
-
-    // // 자세히 보기 버튼 클릭 이벤트 핸들러
-    // $('#detailbtn').on('click', function () {
-    //     console.log('Before sending request, selectedServiceCode:', selectedServiceCode, 'selectedAdminCode:', selectedAdminCode);
-    //
-    //     if (selectedServiceCode && selectedAdminCode) {
-    //         $.ajax({
-    //             url: `/api/bizone/getDetailData`,
-    //             method: 'GET',
-    //             data: {
-    //                 admin_code: selectedAdminCode,
-    //                 service_code: selectedServiceCode
-    //             },
-    //             success: function (data) {
-    //                 console.log('Detailed data received:', data);
-    //                 // 모달 창에 데이터를 표시하는 로직
-    //                 $('#detailedBusinessName').text(data.businessName || selectedServiceCode);
-    //                 $('#detailedRegionName').text(data.regionName || selectedAdminCode);
-    //                 $('#totalResidentPopulation').text(data.totalResidentPopulation);
-    //                 $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation);
-    //                 $('#avgMonthlyIncome').text(data.avgMonthlyIncome);
-    //                 $('#totalExpenditure').text(data.totalExpenditure);
-    //                 $('#totalFloatingPopulation').text(data.totalFloatingPopulation);
-    //                 $('#attractionCount').text(data.attractionCount);
-    //                 $('#avgRentFee').text(data.avgRentFee);
-    //                 $('#detailedModal').modal('show');
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error('Error fetching detailed data:', error);
-    //                 alert('자세한 데이터를 불러오는 중 오류가 발생했습니다.');
-    //             }
-    //         });
-    //     } else {
-    //         console.warn("업종과 지역 정보가 누락되었습니다.");
-    //         alert("업종과 지역을 선택해주세요.");
-    //     }
-    // });
 
     // 성공 확률 평가 함수
     function getEvaluation(score) {
