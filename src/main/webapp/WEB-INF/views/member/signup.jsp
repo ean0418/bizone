@@ -51,6 +51,10 @@
             background-color: #101E4E;
             text-align: center;
         }
+        .step-indicator .active {
+            background-color: #2ECC71;
+            text-align: center;
+        }
         body {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: white;

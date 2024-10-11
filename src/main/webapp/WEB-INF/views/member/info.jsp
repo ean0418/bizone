@@ -114,66 +114,81 @@
     }
 </style>
 <body>
-        <div class="mypage-container">
-            <!-- 프로필 섹션 -->
-            <div class="profile-section">
-                <a href="${contextPath}/member/delete">
-                    <button class="delete-btn">계정 삭제</button>
-                </a>
-            </div>
+<div class="mypage-container">
+    <!-- 프로필 섹션 -->
+    <form action="${contextPath}/member/delete" name="deleteForm" method="get"
+          enctype="multipart/form-data" onsubmit="return deleteCheck();">
+    <div class="profile-section">
+        <button class="delete-btn">계정 삭제</button>
+    </div>
+    </form>
+<script>
+    function deleteCheck() {
+        // 삭제 확인 메시지 표시
+        const userInput = prompt("계정을 삭제하시겠습니까? 삭제하려면 'y' 또는 'Y'를 입력하세요.");
 
-            <!-- 회원 정보 섹션 -->
-            <div class="info-section">
-                <h2 class="section-title">회원 정보</h2>
-                <form action="${contextPath}/member/update" name="updateForm" method="post"
-                      enctype="multipart/form-data" onsubmit="return updateCheck();">
-                    <table class="info-table">
-                        <tr>
-                            <th>아이디</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>비밀번호</th>
-                            <td>
-                                <input name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>닉네임</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_nickname}" name="bm_nickname" placeholder="닉네임" autocomplete="off" maxlength="10">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>전화번호</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_phoneNum}" name="bm_phoneNum" placeholder="전화번호" autocomplete="off" maxlength="11">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>주소</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_address}" name="bm_address" placeholder="주소" autocomplete="off" maxlength="100">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>생년월일</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_birthday}" name="bm_birthday" placeholder="생년월일" autocomplete="off" maxlength="10">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>이메일</th>
-                            <td>
-                                <input value="${sessionScope.loginMember.bm_mail}" name="bm_mail" placeholder="이메일" autocomplete="off" maxlength="50">
-                            </td>
-                        </tr>
-                    </table>
-                    <button class="edit-profile-btn">프로필 수정</button>
-                </form>
-            </div>
-        </div>
-        </body>
+        // 사용자가 'y' 또는 'Y'를 입력하면 폼 제출
+        if (userInput === 'y' || userInput === 'Y') {
+            alert("계정이 삭제됩니다.");
+            return true; // 폼 제출 허용
+        } else {
+            alert("계정 삭제가 취소되었습니다.");
+            return false; // 폼 제출 차단
+        }
+    }
+</script>
+    <!-- 회원 정보 섹션 -->
+    <div class="info-section">
+        <h2 class="section-title">회원 정보</h2>
+        <form action="${contextPath}/member/update" name="updateForm" method="post"
+              enctype="multipart/form-data" onsubmit="return updateCheck();">
+            <table class="info-table">
+                <tr>
+                    <th>아이디</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <th>비밀번호</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_pw}" name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password">
+                    </td>
+                </tr>
+                <tr>
+                    <th>닉네임</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_nickname}" name="bm_nickname" placeholder="닉네임" autocomplete="off" maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <th>전화번호</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_phoneNum}" name="bm_phoneNum" placeholder="전화번호" autocomplete="off" maxlength="11">
+                    </td>
+                </tr>
+                <tr>
+                    <th>주소</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_address}" name="bm_address" placeholder="주소" autocomplete="off" maxlength="100">
+                    </td>
+                </tr>
+                <tr>
+                    <th>생년월일</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_birthday}" name="bm_birthday" placeholder="생년월일" autocomplete="off" maxlength="10">
+                    </td>
+                </tr>
+                <tr>
+                    <th>이메일</th>
+                    <td>
+                        <input value="${sessionScope.loginMember.bm_mail}" name="bm_mail" placeholder="이메일" autocomplete="off" maxlength="50">
+                    </td>
+                </tr>
+            </table>
+            <button class="edit-profile-btn">프로필 수정</button>
+        </form>
+    </div>
+</div>
+</body>
 </html>

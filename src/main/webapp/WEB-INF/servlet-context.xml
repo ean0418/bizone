@@ -15,9 +15,6 @@
         http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-
-
-
     <!-- This tag registers the DefaultAnnotationHandlerMapping and
          AnnotationMethodHandlerAdapter beans that are required for Spring MVC  -->
     <mvc:annotation-driven />
@@ -49,7 +46,7 @@
         </property>
     </bean>
 
-    <!-- DBMS 설정 (db서버 대기시간 최대 3초) -->
+    <!-- DBMS 설정 (db서버 대기시간 최대 3초) / 학원에서 할 때 jdbc도 같이 바꿔야함!(ip관련) 세훈 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://192.168.0.119:3306/bizone"/>
@@ -65,6 +62,11 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="typeAliasesPackage" value="com.flex.bizone" />
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+
+    <!-- map 읽어와지지 않아(500오류, MapperScan) 추가한 부분 - 세훈 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.flex.bizone.map" />
     </bean>
 
     <!-- sqlSession 취득 (생성자에 인자 넣기) -->

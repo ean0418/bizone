@@ -1,5 +1,8 @@
 package com.flex.bizone.member;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,9 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 @RequestMapping("/member")
 @Controller
@@ -75,7 +76,7 @@ public class MemberController {
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
         // 로그인 실패 시 로그인 페이지에 그대로 유지
         if (mDAO.loginCheck(req)) {
-            req.setAttribute("contentPage", "main/main.jsp");
+            req.setAttribute("contentPage", "map/map.jsp");
         } else {
             req.setAttribute("contentPage", "member/login.jsp");
         }
@@ -93,7 +94,7 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.logout(req);
-        req.setAttribute("contentPage", "main/main.jsp");
+        req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }
 
@@ -102,7 +103,7 @@ public class MemberController {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.delete(req);
-        req.setAttribute("contentPage", "main/main.jsp");
+        req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }
 
@@ -119,7 +120,7 @@ public class MemberController {
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
                                            HttpSession session, Model model) throws Exception {
 
-        // URL Path 및 파라미터 처리bizone
+        // URL Path 및 파라미터 처리
         UrlPathHelper urlPathHelper = new UrlPathHelper();
         String originalURL = urlPathHelper.getOriginatingRequestUri(request);
         Map<String, String[]> paramMap = request.getParameterMap();
@@ -200,4 +201,7 @@ public class MemberController {
         }
         return "index";
     }
+
+
+
 }

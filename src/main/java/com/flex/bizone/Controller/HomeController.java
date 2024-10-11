@@ -13,7 +13,7 @@ public class HomeController {
 
     @RequestMapping("/")
     public String home(HttpServletRequest req) {
-        req.setAttribute("contentPage", "main/main.jsp");
+        req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }
 }

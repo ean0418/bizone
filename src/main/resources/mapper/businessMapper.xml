@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flex.bizone.map.BusinessMapper">
+    <select id="getAllServices" resultType="com.flex.bizone.map.Bizone_business">
+        SELECT bb_name, bb_code FROM bizone_business
+    </select>
+
+    <!-- 차트 데이터 가져오기 (평균 임대료, 총 직장인구, 총 지출 금액, 집객시설 수, 평균 월 매출, 기타 항목) -->
+    <select id="getChartDataForDetail" parameterType="map" resultType="map">
+        SELECT
+            ba.ba_avg_rent_fee_score AS avgRentFeeScore,
+            ba.ba_total_workplace_pop_score AS totalWorkplacePopulationScore,
+            ba.ba_total_expenditure_score AS totalExpenditureScore,
+            ba.ba_total_attractions_score AS attractionCountScore,
+            bs.bs_avg_monthly_sales_score AS avgMonthlySalesScore,
+            COALESCE((
+                         bs.bs_sales_to_resident_score +
+                         bs.bs_sales_to_workplace_score +
+                         bs.bs_sales_to_floating_score +
+                         bs.bs_sales_to_attraction_score +
+                         bs.bs_store_count_score +
+                         ba.ba_avg_operating_months_score +
+                         ba.ba_total_floating_pop_score +
+                         ba.ba_total_resident_pop_score +
+                         ba.ba_avg_monthly_income_score
+                         ) / 9, 0) AS otherScoresTotal
+        FROM
+            bizone_admin ba
+                LEFT JOIN bizone_score bs ON ba.ba_code = bs.ba_code
+        WHERE
+            ba.ba_code = #{admin_code} AND bs.bb_code = #{service_code}
+    </select>
+
+    <!-- 평균 월매출 점수 가져오기 -->
+    <select id="getAvgMonthlySalesScore" parameterType="map" resultType="float">
+        SELECT bs_avg_monthly_sales_score
+        FROM bizone_score
+        WHERE bb_code = #{service_code} AND ba_code = #{admin_code}
+    </select>
+
+    <!-- 총 직장인구 점수 가져오기 -->
+    <select id="getTotalWorkplacePopulationScore" parameterType="map" resultType="float">
+        SELECT ba_total_workplace_pop_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 집객시설 수 점수 가져오기 -->
+    <select id="getAttractionCountScore" parameterType="map" resultType="float">
+        SELECT ba_total_attractions_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 총 지출 금액 점수 가져오기 -->
+    <select id="getTotalExpenditureScore" parameterType="map" resultType="float">
+        SELECT ba_total_expenditure_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 평균 임대료 점수 가져오기 -->
+    <select id="getAvgRentFeeScore" parameterType="map" resultType="float">
+        SELECT ba_avg_rent_fee_score
+        FROM bizone_admin
+        WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 기타 점수 계산 (기타 항목에 해당하는 점수들의 총합을 나머지 컬럼들의 개수로 나눈 평균) -->
+    <select id="getOtherScoresTotal" parameterType="map" resultType="float">
+        SELECT
+            COALESCE((
+                         bs.bs_sales_to_resident_score +
+                         bs.bs_sales_to_workplace_score +
+                         bs.bs_sales_to_floating_score +
+                         bs.bs_sales_to_attraction_score +
+                         bs.bs_store_count_score +
+                         ba.ba_avg_operating_months_score +
+                         ba.ba_total_floating_pop_score +
+                         ba.ba_total_resident_pop_score +
+                         ba.ba_avg_monthly_income_score
+                         ) / 9, 0) AS otherScoresTotal
+        FROM bizone_score bs
+                 JOIN bizone_admin ba ON bs.ba_code = ba.ba_code
+        WHERE bs.bb_code = #{service_code} AND ba.ba_code = #{admin_code}
+    </select>
+
+    <!-- 성공 확률 가져오기 -->
+    <select id="getSuccessProbability" parameterType="map" resultType="float">
+        SELECT bs_success_probability
+        FROM bizone_score
+        WHERE bb_code = #{service_code} AND ba_code = #{admin_code}
+    </select>
+
+    <!-- 상세 데이터 MySQL 쿼리문  -->
+    <select id="getTotalResidentPopulation" parameterType="map" resultType="float">
+        SELECT ba_total_resident_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalWorkplacePopulation" parameterType="map" resultType="float">
+        SELECT ba_total_workplace_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAvgMonthlyIncome" parameterType="map" resultType="float">
+        SELECT ba_avg_monthly_income FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalExpenditure" parameterType="map" resultType="float">
+        SELECT ba_total_expenditure FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getTotalFloatingPopulation" parameterType="map" resultType="float">
+        SELECT ba_total_floating_pop FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAttractionCount" parameterType="map" resultType="float">
+        SELECT ba_total_attractions FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <select id="getAvgRentFee" parameterType="map" resultType="float">
+        SELECT ba_avg_rent_fee FROM bizone_admin WHERE ba_code = #{admin_code}
+    </select>
+
+    <!-- 행정동명 가져오기 -->
+    <select id="getBaNameByCode" parameterType="string" resultType="string">
+        SELECT ba_name
+        FROM bizone_admin
+        WHERE ba_code = #{ba_code}
+    </select>
+</mapper>

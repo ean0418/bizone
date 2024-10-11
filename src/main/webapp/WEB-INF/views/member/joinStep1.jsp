@@ -160,6 +160,9 @@
     .step-indicator .active {
         background-color: #101E4E;
     }
+    .step-indicator .active2 {
+        background-color: #2ECC71;
+    }
     .submit-btn:hover {
         background-color: #101E4E;
     }
@@ -175,7 +178,7 @@
     <div class="container">
         <h1>회원가입</h1>
         <div class="step-indicator">
-            <span class="active">1</span> → <span>2</span> → <span>3</span>
+            <span class="active2">1</span> → <span  class="active">2</span> → <span  class="active">3</span>
         </div>
         <div class="agreement-box">
             <div class="checkbox-wrapper">
