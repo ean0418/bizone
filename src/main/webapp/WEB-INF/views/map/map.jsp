@@ -295,7 +295,7 @@
 
 
 <!-- 두 번째 모달 창 (detailedModal) -->
-<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
+<div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true" style = "right: 10px">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <!-- 모달 헤더 (닫기 버튼 없음) -->
