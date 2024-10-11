@@ -18,11 +18,14 @@ public class MemberService implements UserDetailsService {
     // 생성자를 통한 의존성 주입
     public MemberService(MemberDAO memberDAO) {
         this.memberDAO = memberDAO;
+        System.out.println("### MemberService 생성자 호출됨. memberDAO: " + memberDAO);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        System.out.println("username : " + username);
         Bizone_member m = memberDAO.findByUsername(username);
+        System.out.println("Role : " + m.getBm_role());
         if (m.getBm_role().equals("ADMIN")){
             return User.withUsername(m.getBm_id())
                     .password(m.getBm_pw())

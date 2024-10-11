@@ -532,6 +532,10 @@
             success: function (data) {
                 console.log('Received Data for Chart:', data);
 
+                if (data.startsWith("<")) {
+                    location.href = "/member/login"
+                }
+
                 // 모달 창 업데이트 코드
                 $('#regionName').text(regionName + " 상권분석");
                 $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
@@ -1148,6 +1152,7 @@
             console.log("AJAX 데이터 로드 성공:", data);  // 콘솔에 로드된 데이터 출력
             businessData = data;  // 가져온 데이터를 businessData에 저장
             // 첫 페이지에서는 검색창에 입력될 때만 결과를 표시하므로 초기 표시하지 않음
+
         },
         error: function (xhr, status, error) {
             console.error("Error fetching business data:", error);

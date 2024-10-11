@@ -99,6 +99,7 @@ public class MemberDAO {
     public Bizone_member findByUsername(String username) {
         Bizone_member m = new Bizone_member();
         m.setBm_id(username);
+        System.out.println("in dao" + username);
         try {
             return ss.getMapper(MemberMapper.class).getMemberById(m).get(0);
         } catch (IndexOutOfBoundsException iooe) {

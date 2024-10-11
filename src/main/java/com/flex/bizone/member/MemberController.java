@@ -42,6 +42,7 @@ public class MemberController {
             m.setBm_kakao_id(kakao_id);
             req.getSession().setAttribute("kakaoID", null);
         } catch (Exception ignored) {}
+        m.setBm_role("USER");
         mDAO.signupMember(req, m);
         req.setAttribute("contentPage", "member/joinStep3.jsp");
         return "index";

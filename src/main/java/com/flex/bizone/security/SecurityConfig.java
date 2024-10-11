@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest().authenticated() // 그 외의 모든 요청은 인증 필요
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/board/**", "/member/info", "/loan-products").authenticated()
+                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()
@@ -51,7 +51,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                     .and()
                 .logout()
-                    .logoutUrl("/logout")
+                    .logoutUrl("/member/logout")
                     .logoutSuccessUrl("/") // 로그아웃 성공 후 경로
                     .permitAll()
                     .and()
