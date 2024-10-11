@@ -45,6 +45,6 @@ public interface BusinessMapper {
     float getAvgRentFee(@Param("admin_code") String adminCode);
 
     // 행정동명 가져오기
-   String getBaNameByCode(String baCode);
+    String getBaNameByCode(String baCode);
 
 }
