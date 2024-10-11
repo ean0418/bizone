@@ -35,12 +35,12 @@
             <!-- Login and Signup links -->
             <c:choose>
                 <c:when test="${sessionScope.loginMember == null}">
-                    <a class="nav-link text-light ms-3" href="${contextPath}/member.login.go" style="white-space: nowrap;">로그인</a>
-                    <a class="nav-link text-light ms-3" href="${contextPath}/member.step1" style="white-space: nowrap;">회원가입</a>
+                    <a class="nav-link text-light ms-3" href="${contextPath}/member/login" style="white-space: nowrap;">로그인</a>
+                    <a class="nav-link text-light ms-3" href="${contextPath}/member/step1" style="white-space: nowrap;">회원가입</a>
                 </c:when>
                 <c:otherwise>
-                    <a class="nav-link text-light ms-3" href="${contextPath}/member.info.go" style="white-space: nowrap;">${sessionScope.loginMember['bm_nickname']} 님</a>
-                    <a class="nav-link text-light ms-3" href="${contextPath}/member.logout" style="white-space: nowrap;">로그아웃</a>
+                    <a class="nav-link text-light ms-3" href="${contextPath}/member/info" style="white-space: nowrap;">${sessionScope.loginMember['bm_nickname']} 님</a>
+                    <a class="nav-link text-light ms-3" href="${contextPath}/member/logout" style="white-space: nowrap;">로그아웃</a>
                 </c:otherwise>
             </c:choose>
             <!-- Toggle button for "지도" and "공지사항" items -->
@@ -58,11 +58,13 @@
                     <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">공지사항</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/info" style="text-align: left">마이페이지</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
                 </li>
+                <c:if test="${sessionScope.loginMember != null}">
+                    <li class="nav-item">
+                        <a class="nav-link ms-4" href="${contextPath}/member/info" style="text-align: left">마이페이지</a>
+                    </li>
+                </c:if>
             </ul>
         </div>
     </div>

@@ -6,11 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>회원가입</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script language="javascript">
         function goPopup() {
             // 팝업 창 열기 (주소 검색 팝업 페이지로 연결)
@@ -212,7 +212,7 @@
 </head>
 <body>
 <div id="signupContainer">
-    <form action="${contextPath}/member.signup" METHOD="post" name="signupForm" onsubmit="return signupCheck();">
+    <form action="${contextPath}/member/signup.do" METHOD="post" name="signupForm" onsubmit="return signupCheck();">
         <table id="signupTbl">
             <tr>
                 <td colspan="2">
@@ -300,7 +300,6 @@
         </table>
     </form>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function(){
         $('#confirmId').click(function () {
@@ -312,14 +311,14 @@
             }
 
             $.ajax({
-                url: "${contextPath}/member.id.check", // 서버의 ID 중복 체크 URL
+                url: "${contextPath}/member/verifyId.check", // 서버의 ID 중복 체크 URL
                 type: "GET",
                 data: {bm_id: bm_id}, // 입력된 ID를 서버로 전달
                 dataType: "json", // 서버 응답을 JSON 형태로 받음
                 success: function(result) {
                     console.log("Result from server:", result);
-                    console.log(result.member[0]); // 서버에서 반환된 값 확인
-                    if (result.member[0] !== undefined) {
+                    console.log(result.bm_id); // 서버에서 반환된 값 확인
+                    if (result.status) {
                         alert("이미 사용중인 ID입니다.");
                     } else {
                         alert("사용 가능한 ID입니다.");

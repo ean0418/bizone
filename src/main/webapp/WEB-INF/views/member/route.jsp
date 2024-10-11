@@ -12,8 +12,8 @@
 </head>
 <body>
 <div>
-    <div>이미 아이디가 있으십니까? <a href="${contextPath}/member.login.go"><img src="../../../resources/image/kakao_login.png"></a></div>
-    <a href="${contextPath}/member.step1">회원가입 하시겠습니까?</a>
+    <div>이미 아이디가 있으십니까? <a href="${contextPath}/member/login"><img src="../../../resources/image/kakao_login.png"></a></div>
+    <a href="${contextPath}/member/step1">회원가입 하시겠습니까?</a>
 </div>
 </body>
 </html>

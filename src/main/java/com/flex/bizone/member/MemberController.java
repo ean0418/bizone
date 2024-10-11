@@ -1,8 +1,5 @@
 package com.flex.bizone.member;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,37 +15,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
+@RequestMapping("/member")
 @Controller
 public class MemberController {
 
     @Autowired
     private MemberDAO mDAO;
 
-
-
-
-    @RequestMapping(value = "/member.step1", method = RequestMethod.GET)
+    @GetMapping("/step1")
     public String showStep1(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/joinStep1.jsp");
         return "index"; // agreement step
     }
 
-
-    @RequestMapping(value = "/step1", method = RequestMethod.POST)
-    public String handleStep1() {
-        return "redirect:/member/signup"; // signup로 리다이렉트
-    }
-
-
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String member(HttpServletRequest req) {
-        req.setAttribute("contentPage", "member/signup.jsp");
-        return "index";
-    }
-
-    @RequestMapping(value = "/member.signup", method = RequestMethod.POST)
+    @PostMapping("/signup.do")
     public String signupMember(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws Exception {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
@@ -62,24 +46,25 @@ public class MemberController {
         return "index";
     }
 
-    @RequestMapping(value = "/member.login.go", method = RequestMethod.GET)
+    @GetMapping("/login")
     public String goMemberLogin(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/login.jsp");
         return "index";
     }
 
-    @RequestMapping(value = "/member.signup.go", method = RequestMethod.GET)
+    @GetMapping("/signup")
     public String goSignup(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/signup.jsp");
         return "index";
     }
 
-    @RequestMapping(value = "/member.id.check", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
-    public @ResponseBody Members memberIdCheck(Bizone_member m) {
+    @GetMapping(value = "/verifyId.check", produces = "application/json; charset=UTF-8")
+    public @ResponseBody Map<String, Object> memberIdCheck(Bizone_member m) {
+        System.out.println(m.getBm_id());
         return mDAO.memberIdCheck(m);
     }
 
-    @RequestMapping(value = "/member.login", method = RequestMethod.POST)
+    @PostMapping("/login.do")
     public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
@@ -88,22 +73,22 @@ public class MemberController {
         mDAO.login(m, req);
 
         // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
+        // 로그인 실패 시 로그인 페이지에 그대로 유지
         if (mDAO.loginCheck(req)) {
             req.setAttribute("contentPage", "main/main.jsp");
-            return "index";  // 로그인 성공 시 메인 페이지로 이동
         } else {
             req.setAttribute("contentPage", "member/login.jsp");
-            return "index";  // 로그인 실패 시 로그인 페이지에 그대로 유지
         }
+        return "index";  // 로그인 성공 시 메인 페이지로 이동
     }
 
-    @RequestMapping(value = "/member.info.go", method = RequestMethod.GET)
+    @GetMapping("/info")
     public String goMemberInfo(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }
 
-    @RequestMapping(value = "/member.logout", method = RequestMethod.GET)
+    @GetMapping("/logout")
     public String memberLogout(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
@@ -112,7 +97,7 @@ public class MemberController {
         return "index";
     }
 
-    @RequestMapping(value = "/member.delete", method = RequestMethod.GET)
+    @GetMapping("/delete")
     public String memberDelete(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
@@ -121,7 +106,7 @@ public class MemberController {
         return "index";
     }
 
-    @RequestMapping(value = "/member.update", method = RequestMethod.POST)
+    @PostMapping("/update")
     public String memberUpdate(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
@@ -130,11 +115,11 @@ public class MemberController {
         return "index";
     }
 
-    @RequestMapping(value = "/kakao.login", method = RequestMethod.GET)
+    @GetMapping("/kakao.login")
     public String loginpage_kakao_callback(HttpServletRequest request, HttpServletResponse response,
                                            HttpSession session, Model model) throws Exception {
 
-        // URL Path 및 파라미터 처리
+        // URL Path 및 파라미터 처리bizone
         UrlPathHelper urlPathHelper = new UrlPathHelper();
         String originalURL = urlPathHelper.getOriginatingRequestUri(request);
         Map<String, String[]> paramMap = request.getParameterMap();
@@ -156,7 +141,7 @@ public class MemberController {
 
         LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", "412e7727ffd0b8900060854044814879");
-        String redirect_url = "http://localhost/kakao.login";
+        String redirect_url = "http://localhost/member/kakao.login";
         map.add("redirect_uri", redirect_url);
         map.add("grant_type", "JGu5TGA6vgs4o_623UC0EKUkFgzabCH8WBHPwEm-l0_1fOKcLa3m5wAAAAQKKcleAAABkg3I7-QFVMIyByjmyg");
         map.add("code", dto.get("code")); // 인가 코드 추가
@@ -167,22 +152,22 @@ public class MemberController {
         // Access Token 출력
         model.addAttribute("access_token", response2.get("access_token"));
 
-        return "/kakao.login";
+        return "/member/kakao.login";
     }
 
-    @RequestMapping(value = "/idFindForm.go", method = RequestMethod.GET)
+    @GetMapping("/findID")
     public String idFind(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/idFind.jsp");
         return "index";
     }
 
-    @RequestMapping(value = "/pwFindForm.go", method = RequestMethod.GET)
+    @RequestMapping(value = "/findPW", method = RequestMethod.GET)
     public String pwFind(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/pwFind.jsp");
         return "index";
     }
 
-    @RequestMapping(value = "/pwChange.go", method = RequestMethod.GET)
+    @RequestMapping(value = "/changePW", method = RequestMethod.GET)
     public String pwChange(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/pwChange.jsp");
         String bpt_token = req.getParameter("token");
@@ -200,7 +185,7 @@ public class MemberController {
         return "index";
     }
 
-    @RequestMapping(value = "/pwChange.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/changePW.do", method = RequestMethod.POST)
     public String doChangePW(HttpServletRequest req, HttpServletResponse res, Bizone_member bm) throws UnsupportedEncodingException {
         res.setCharacterEncoding("utf-8");
         req.setCharacterEncoding("utf-8");
@@ -215,7 +200,4 @@ public class MemberController {
         }
         return "index";
     }
-
-
-
 }

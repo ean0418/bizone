@@ -1,45 +1,39 @@
 package com.flex.bizone.member;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.apache.ibatis.session.SqlSession;
-
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
-@Service
+@Repository
 public class MemberDAO {
 
     @Autowired
     private SqlSession ss;
 
-    public boolean checkIfIdExists(String bm_id) {
-        Integer count = ss.selectOne("MemberMapper.checkIfIdExists", bm_id);
-        System.out.println("ID Count: " + count);  // 로그 출력
-        return count != null && count > 0;
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
     private String getAccessToken(String code) throws IOException {
 // HTTP Header 생성
@@ -87,14 +81,38 @@ public class MemberDAO {
     }
 
 
-    public Members memberIdCheck(Bizone_member m) {
-        return new Members(ss.getMapper(MemberMapper.class).getMemberById(m));
+    public Map<String, Object> memberIdCheck(Bizone_member m) {
+        Map<String, Object> returnMap = new HashMap<>();
+        returnMap.put("status", false);
+        try {
+            Bizone_member bm = ss.getMapper(MemberMapper.class).getMemberById(m).get(0);
+            returnMap.put("status", true);
+            returnMap.put("bm_id", bm.getBm_id());
+        } catch (IndexOutOfBoundsException ignored) {
+            return returnMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return returnMap;
+    }
+
+    public Bizone_member findByUsername(String username) {
+        Bizone_member m = new Bizone_member();
+        m.setBm_id(username);
+        try {
+            return ss.getMapper(MemberMapper.class).getMemberById(m).get(0);
+        } catch (IndexOutOfBoundsException iooe) {
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void login(Bizone_member m, HttpServletRequest req) {
         try {
             // 데이터베이스에서 ID로 회원 조회
             List<Bizone_member> members = ss.getMapper(MemberMapper.class).getMemberById(m);
+            System.out.println(req.getSession().getAttribute("kakaoID"));
             try {
                 String kakao_id = (String) req.getSession().getAttribute("kakaoID");
                 m.setBm_kakao_id(kakao_id);
@@ -128,7 +146,7 @@ public class MemberDAO {
         }
     }
 
-    public static boolean loginCheck(HttpServletRequest req) {
+    public boolean loginCheck(HttpServletRequest req) {
         Bizone_member m = (Bizone_member) req.getSession().getAttribute("loginMember");
         if (m != null) {
             // 로그인 성공 + 상태 유지시

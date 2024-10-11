@@ -20,9 +20,9 @@ public class idController {
     @RequestMapping(value = "/member.id.check", method = RequestMethod.GET)
     @ResponseBody
     public Map<String, Boolean> checkIdDuplication(@RequestParam("bm_id") String bm_id) {
-        boolean exists = memberDAO.checkIfIdExists(bm_id);
+//        boolean exists = memberDAO.checkIfIdExists(bm_id);
         Map<String, Boolean> response = new HashMap<>();
-        response.put("exists", exists); // 존재하면 true, 없으면 false 반환
+//        response.put("exists", exists); // 존재하면 true, 없으면 false 반환
         return response;
     }
 }

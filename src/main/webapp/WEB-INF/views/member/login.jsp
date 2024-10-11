@@ -9,9 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bizone 로그인</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
-
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
@@ -112,7 +110,7 @@
 <body>
 <div class="mypage-container">
     <div class="login-container">
-        <form action="${contextPath}/member.login" name="loginForm" method="post" onsubmit="return loginCheck();">
+        <form action="${contextPath}/member/login.do" name="loginForm" method="post" onsubmit="return loginCheck();">
             <input type="hidden" name="login_ok" value="1"/>
 
             <h2>로그인</h2>
@@ -143,11 +141,10 @@
 
         </form>
 
-        <div class="text-center mt-4">아이디를 까먹으셨습니까? <a href="${contextPath}/idFindForm.go">아이디 찾기</a></div>
-        <div class="text-center mt-2">비밀번호를 까먹으셨습니까? <a href="${contextPath}/pwFindForm.go">비밀번호 찾기</a></div>
-        <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/signupForm.go">회원가입</a></div>
+        <div class="text-center mt-4">아이디를 까먹으셨습니까? <a href="${contextPath}/member/findID">아이디 찾기</a></div>
+        <div class="text-center mt-2">비밀번호를 까먹으셨습니까? <a href="${contextPath}/member/findPW">비밀번호 찾기</a></div>
+        <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/member/signup">회원가입</a></div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -117,7 +117,7 @@
         <div class="mypage-container">
             <!-- 프로필 섹션 -->
             <div class="profile-section">
-                <a href="${contextPath}/member.delete">
+                <a href="${contextPath}/member/delete">
                     <button class="delete-btn">계정 삭제</button>
                 </a>
             </div>
@@ -125,7 +125,7 @@
             <!-- 회원 정보 섹션 -->
             <div class="info-section">
                 <h2 class="section-title">회원 정보</h2>
-                <form action="${contextPath}/member.update" name="updateForm" method="post"
+                <form action="${contextPath}/member/update" name="updateForm" method="post"
                       enctype="multipart/form-data" onsubmit="return updateCheck();">
                     <table class="info-table">
                         <tr>

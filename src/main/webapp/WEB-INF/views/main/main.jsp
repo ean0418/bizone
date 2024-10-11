@@ -9,13 +9,12 @@
 <html>
 <head>
     <title>Title</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${contextPath}/resources/css/main.css">
 </head>
 <body>
 <div class="row">
     <div class="col-md-6 p-0">
-        <img src="resources/image/2.jpg" alt="" >
+        <img src="${contextPath}/resources/image/2.jpg" alt="" >
     </div>
     <div class="col-md-6 p-0 d-flex flex-column align-items-center justify-content-center">
         <div class="description">
@@ -25,6 +24,5 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
