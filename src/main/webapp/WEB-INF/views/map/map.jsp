@@ -437,6 +437,7 @@
     var isSiDoLoaded = false;   // 시도 경계 데이터 로드 여부
 
     let globalRegionName = '';  // 전역 변수 선언
+    let globalSearchedRegion = "";
 
     function initKakaoMap() {
         var container = document.getElementById('map');
@@ -472,12 +473,14 @@
         });
 
         // 확대/축소 레벨 제한
-        kakao.maps.event.addListener(map, 'zoom_changed', function () {
-            var level = map.getLevel();
-            if (level > 10) { // 최대 축소 레벨을 10으로 제한
-                map.setLevel(10); // 축소 레벨이 10을 넘으면 다시 10으로 되돌림
-            }
-        });
+        map.setMinLevel(3);
+        map.setMaxLevel(10);
+        // kakao.maps.event.addListener(map, 'zoom_changed', function () {
+        //     var level = map.getLevel();
+        //     if (level > 10) { // 최대 축소 레벨을 10으로 제한
+        //         map.setLevel(10); // 축소 레벨이 10을 넘으면 다시 10으로 되돌림
+        //     }
+        // });
 
         // 서울시 구 선택 시 해당 구로 지도 이동
         $("#locationSelect").on("change", function () {
@@ -802,8 +805,23 @@
             }
 
             geoJsonData.features.forEach(function (feature) {
-                kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                if (type !== "시도") {
+
+                    if (feature.properties.adm_nm?.split(" ").includes(globalSearchedRegion)) {
+                        kkoMap.setPolygon(kkoMap.getPolygonData(feature), "rgba(0, 0, 0, 1)", strokeColor, type);
+                    } else {
+                        if (feature.properties.sggnm.split(" ").includes(globalSearchedRegion)) {
+                            kkoMap.setPolygon(kkoMap.getPolygonData(feature), "hotpink", strokeColor, type)
+                        } else {
+                            kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                        }
+                    }
+                } else {
+                    kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                }
             });
+
+
         },
 
         getPolygonData: function (feature) {
@@ -829,7 +847,7 @@
                 strokeColor: strokeColor,
                 strokeOpacity: 0.8,
                 fillColor: fillColor,
-                fillOpacity: 0.3,
+                fillOpacity: fillColor === "hotpink" ? 0.7 : 0.3,
             });
 
             let isMouseOver = false;
@@ -938,6 +956,10 @@
             alert("지역명을 입력하세요.");
             return;
         }
+
+        globalSearchedRegion = searchQuery;
+        removePolygons();
+        loadEupMyeonDongData();
 
         // Kakao Geocoder를 사용하여 지역 검색
         var geocoder = new kakao.maps.services.Geocoder();
