@@ -124,7 +124,7 @@
     </select>
 
     <!-- 행정동명 가져오기 -->
-    <select id="getBaNameByCode" parameterType="string" resultType="string">
+    <select id="getBaNameByCode" parameterType="com.flex.bizone.map.Bizone_admin" resultType="com.flex.bizone.map.Bizone_admin">
         SELECT ba_name
         FROM bizone_admin
         WHERE ba_code = #{ba_code}

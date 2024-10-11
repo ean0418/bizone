@@ -1,5 +1,6 @@
 package com.flex.bizone.map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,17 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bizone")  // 공통 경로 설정
 public class BusinessController {
 
     @Autowired
-    private BusinessMapper serviceMapper;  // MyBatis DAO(Mapper) 주입
+    private SqlSession ss;  // MyBatis DAO(Mapper) 주입
 
     @GetMapping("/services/all")
     public List<Bizone_business> getAllServices() {
-        return serviceMapper.getAllServices();  // DB에서 서비스 코드 가져오기
+        return ss.getMapper(BusinessMapper.class).getAllServices();  // DB에서 서비스 코드 가져오기
     }
 
     @GetMapping("/getChartDataForDetail")
@@ -28,17 +30,17 @@ public class BusinessController {
         ChartDataResponse response = new ChartDataResponse();
 
         // 차트에 필요한 점수 데이터 조회
-        response.setAvgMonthlySalesScore(serviceMapper.getAvgMonthlySalesScore(serviceCode, adminCode));
-        response.setTotalWorkplacePopulationScore(serviceMapper.getTotalWorkplacePopulationScore(adminCode));
-        response.setAttractionCountScore(serviceMapper.getAttractionCountScore(adminCode));
-        response.setTotalExpenditureScore(serviceMapper.getTotalExpenditureScore(adminCode));
-        response.setAvgRentFeeScore(serviceMapper.getAvgRentFeeScore(adminCode));
+        response.setAvgMonthlySalesScore(ss.getMapper(BusinessMapper.class).getAvgMonthlySalesScore(serviceCode, adminCode));
+        response.setTotalWorkplacePopulationScore(ss.getMapper(BusinessMapper.class).getTotalWorkplacePopulationScore(adminCode));
+        response.setAttractionCountScore(ss.getMapper(BusinessMapper.class).getAttractionCountScore(adminCode));
+        response.setTotalExpenditureScore(ss.getMapper(BusinessMapper.class).getTotalExpenditureScore(adminCode));
+        response.setAvgRentFeeScore(ss.getMapper(BusinessMapper.class).getAvgRentFeeScore(adminCode));
 
         // 기타 점수 설정
-        response.setOtherScoresTotal(serviceMapper.getOtherScoresTotal(serviceCode, adminCode));
+        response.setOtherScoresTotal(ss.getMapper(BusinessMapper.class).getOtherScoresTotal(serviceCode, adminCode));
 
         // 성공 확률 데이터 설정
-        float successProbability = serviceMapper.getSuccessProbability(serviceCode, adminCode);
+        float successProbability = ss.getMapper(BusinessMapper.class).getSuccessProbability(serviceCode, adminCode);
 
         // 성공 확률을 소수점 두 자리로 포맷팅
         DecimalFormat df = new DecimalFormat("#.##");
@@ -53,21 +55,28 @@ public class BusinessController {
         DetailedDataResponse detailedResponse = new DetailedDataResponse();
 
         // 상세 데이터를 가져와 설정 (_score가 아닌 원본 데이터)
-        detailedResponse.setTotalResidentPopulation(serviceMapper.getTotalResidentPopulation(adminCode));
-        detailedResponse.setTotalWorkplacePopulation(serviceMapper.getTotalWorkplacePopulation(adminCode));
-        detailedResponse.setAvgMonthlyIncome(serviceMapper.getAvgMonthlyIncome(adminCode));
-        detailedResponse.setTotalExpenditure(serviceMapper.getTotalExpenditure(adminCode));
-        detailedResponse.setTotalFloatingPopulation(serviceMapper.getTotalFloatingPopulation(adminCode));
-        detailedResponse.setAttractionCount(serviceMapper.getAttractionCount(adminCode));
-        detailedResponse.setAvgRentFee(serviceMapper.getAvgRentFee(adminCode));
+        detailedResponse.setTotalResidentPopulation(ss.getMapper(BusinessMapper.class).getTotalResidentPopulation(adminCode));
+        detailedResponse.setTotalWorkplacePopulation(ss.getMapper(BusinessMapper.class).getTotalWorkplacePopulation(adminCode));
+        detailedResponse.setAvgMonthlyIncome(ss.getMapper(BusinessMapper.class).getAvgMonthlyIncome(adminCode));
+        detailedResponse.setTotalExpenditure(ss.getMapper(BusinessMapper.class).getTotalExpenditure(adminCode));
+        detailedResponse.setTotalFloatingPopulation(ss.getMapper(BusinessMapper.class).getTotalFloatingPopulation(adminCode));
+        detailedResponse.setAttractionCount(ss.getMapper(BusinessMapper.class).getAttractionCount(adminCode));
+        detailedResponse.setAvgRentFee(ss.getMapper(BusinessMapper.class).getAvgRentFee(adminCode));
 
         return detailedResponse;
     }
 
     @GetMapping("/getRegionName")
-    public ResponseEntity<String> getRegionName(@RequestParam("admin_code") String adminCode) {
-        String regionName = serviceMapper.getBaNameByCode(adminCode);
-        return ResponseEntity.ok(regionName != null ? regionName : "정보 없음");
+    public String getRegionName(@RequestParam("admin_code") String adminCode) {
+        Bizone_admin ba = new Bizone_admin();
+        ba.setBa_code(adminCode);
+        Bizone_admin regionName = ss.getMapper(BusinessMapper.class).getBaNameByCode(ba);
+        try {
+            System.out.println(regionName.getBa_name());
+            return regionName.getBa_name();
+        } catch (NullPointerException ignored) {
+        }
+        return null;
     }
 
 }

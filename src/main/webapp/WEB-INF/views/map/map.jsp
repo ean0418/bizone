@@ -436,7 +436,7 @@
     var isSiGunGuLoaded = false;  // 시군구 경계 데이터 로드 여부
     var isSiDoLoaded = false;   // 시도 경계 데이터 로드 여부
 
-    var globalRegionName = '';  // 전역 변수 선언
+    let globalRegionName = '';  // 전역 변수 선언
 
     function initKakaoMap() {
         var container = document.getElementById('map');
@@ -518,7 +518,6 @@
 
     // 지역 및 업종을 클릭했을 때 호출되는 함수
     function showRegionInfo(regionName, adminCode, serviceCode) {
-        globalRegionName = regionName;  // 지역명을 전역 변수에 저장
         updateSelectedData({ bb_code: serviceCode }, adminCode); // 추가
         $.ajax({
             url: `/api/bizone/getChartDataForDetail`,
@@ -608,7 +607,9 @@
                 method: 'GET',
                 data: { admin_code: selectedAdminCode },
                 success: function (regionName) {
-                    $('#detailedRegionName').text(regionName || selectedAdminCode); // 지역명 업데이트
+                    console.log("in getRegionName")
+                    console.log(regionName)
+                    $('#detailedRegionName').text(globalRegionName); // 지역명 업데이트
                 },
                 error: function () {
                     $('#detailedRegionName').text(selectedAdminCode); // 오류 발생 시 코드 표시
@@ -875,6 +876,7 @@
 
                 previousZoomLevel = map.getLevel(); // 클릭 시 현재 지도 레벨 저장
                 selectedAdminCode = area.code; // 클릭한 지역의 행정동 코드 업데이트
+                globalRegionName = area.name;
 
                 console.log('Clicked Area Code:', selectedAdminCode);  // 행정동 코드 확인
                 console.log('Selected Business Code:', selectedBusiness ? selectedBusiness.bb_code : null);  // 선택된 업종 코드 확인
