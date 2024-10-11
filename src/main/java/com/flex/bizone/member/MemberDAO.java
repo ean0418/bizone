@@ -167,18 +167,14 @@ public class MemberDAO {
 
 
         try {
-            m.setBm_id(req.getParameter("bm_id"));
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
             m.setBm_name(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
 
-            String bm_addr1 = req.getParameter("bm_addr1");
-            String bm_addr2 = req.getParameter("bm_addr2");
-            String bm_addr3 = req.getParameter("bm_addr3");
-            String bm_address = bm_addr2 + "!" + bm_addr3 + "!" + bm_addr1;
-            m.setBm_address(bm_address);
+
+            m.setBm_address(req.getParameter("bm_address"));
 
             if (ss.getMapper(MemberMapper.class).updateMember(m) == 1) {
                 req.setAttribute("r", "정보 수정 성공");
