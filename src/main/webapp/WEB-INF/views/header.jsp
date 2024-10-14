@@ -63,6 +63,9 @@
                 <li class="nav-item">
                     <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/memberManagement" style="text-align: left">마이대출</a>
+                </li>
             </ul>
         </div>
     </div>
