@@ -9,8 +9,8 @@
 
     <!-- 댓글 작성 -->
     <insert id="insertComment" parameterType="com.flex.bizone.board.Bizone_comment">
-        INSERT INTO bizone_comment (bc_bb_no, bc_bm_nickname, bc_content)
-        VALUES (#{bc_bb_no}, #{bc_bm_nickname}, #{bc_content})
+        INSERT INTO bizone_comment (bc_bb_no, bc_bm_id, bc_content)
+        VALUES (#{bc_bb_no}, #{bc_bm_id}, #{bc_content})
     </insert>
 
     <!-- 댓글 수정 -->
@@ -28,11 +28,56 @@
     <resultMap id="CommentResultMap" type="com.flex.bizone.board.Bizone_comment">
         <result property="bc_no" column="bc_no"/>
         <result property="bc_bb_no" column="bc_bb_no"/>
-        <result property="bc_bm_nickname" column="bc_bm_nickname"/>
+        <result property="bc_bm_id" column="bc_bm_id"/>
         <result property="bc_content" column="bc_content"/>
         <result property="bc_createdDate" column="bc_createdDate"/>
         <result property="bc_updatedDate" column="bc_updatedDate"/>
     </resultMap>
 
-</mapper>
+    <!-- 좋아요 수 증가 -->
+    <update id="increaseCommentLikeCount" parameterType="int">
+        UPDATE bizone_comment
+        SET bc_likeCount = bc_likeCount + 1
+        WHERE bc_no = #{bc_no}
+    </update>
 
+    <!-- 좋아요 수 감소 -->
+    <update id="decreaseCommentLikeCount" parameterType="int">
+        UPDATE bizone_comment
+        SET bc_likeCount = bc_likeCount - 1
+        WHERE bc_no = #{bc_no}
+    </update>
+
+    <!-- 사용자가 댓글에 좋아요 했는지 확인 -->
+    <select id="checkUserLikedComment" resultType="int" parameterType="Map">
+        SELECT COUNT(*)
+        FROM bizone_like
+        WHERE bl_bc_no = #{bc_no} AND bl_bm_id = #{bb_bm_id}
+    </select>
+
+    <!-- 댓글 좋아요 상태 추가 -->
+    <insert id="likeComment" parameterType="Map">
+        INSERT INTO bizone_like (bl_bb_no, bl_bc_no, bl_bm_id)
+        VALUES (#{bb_no}, #{bc_no}, #{bb_bm_id})
+    </insert>
+
+    <!-- 좋아요 상태 제거 -->
+    <delete id="unlikeComment" parameterType="Map">
+        DELETE FROM bizone_like
+        WHERE bl_bb_no = #{bb_no} AND bl_bc_no = #{bc_no} AND bl_bm_id = #{bb_bm_id}
+    </delete>
+
+    <select id="getCommentLikeCount" parameterType="int" resultType="int">
+        SELECT bc_likeCount
+        FROM bizone_comment
+        WHERE bc_no = #{bc_no}
+    </select>
+
+    <!-- 댓글 번호로 게시글 번호 가져오기 -->
+    <select id="getBoardNoByCommentNo" parameterType="int" resultType="int">
+        SELECT bc_bb_no
+        FROM bizone_comment
+        WHERE bc_no = #{bc_no}
+    </select>
+
+</mapper>

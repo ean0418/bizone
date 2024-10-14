@@ -221,6 +221,63 @@
         function cancelEdit() {
             location.href = '${contextPath}/comment/cancelEdit?bb_no=' + ${board.bb_no};
         }
+
+        // 게시글 좋아요 토글
+        function toggleLike(bb_no) {
+            $.ajax({
+                type: 'POST',
+                url: '/board/toggleLike',
+                data: { bb_no: bb_no },
+                success: function(response) {
+                    if (response.success) {
+                        const likeBtn = document.getElementById('like-btn-' + bb_no);
+                        const likeCountSpan = document.getElementById('like-count-' + bb_no);
+                        let likeCount = parseInt(likeCountSpan.innerHTML);
+
+                        if (response.isLiked) {
+                            likeBtn.innerHTML = '❤️';
+                            likeCount++;
+                        } else {
+                            likeBtn.innerHTML = '🤍';
+                            likeCount--;
+                        }
+                        likeCountSpan.innerHTML = likeCount;
+                    } else {
+                        alert('오류가 발생했습니다. 다시 시도해주세요.');
+                    }
+                },
+                error: function() {
+                    alert('오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        }
+
+
+        // 댓글 좋아요 토글
+        function toggleCommentLike(bc_no) {
+            $.ajax({
+                type: 'POST',
+                url: '/comment/toggleLike',
+                data: { bc_no: bc_no },
+                success: function(response) {
+                    if (response.success) {
+                        // 댓글 좋아요 상태 변경 및 카운트 업데이트
+                        const likeBtn = document.getElementById('comment-like-btn-' + bc_no);
+                        const isLiked = response.isLiked;
+                        const likeCount = response.likeCount;
+
+                        likeBtn.innerHTML = isLiked ? '❤️ ' : '🤍 ';
+                        likeBtn.innerHTML += likeCount;
+                    } else {
+                        alert('로그인이 필요합니다.');
+                    }
+                },
+                error: function() {
+                    alert('오류가 발생했습니다. 다시 시도해주세요.');
+                }
+            });
+        }
+
     </script>
 </head>
 <body>
@@ -232,9 +289,26 @@
         <span>게시글 상세조회</span>
     </div>
 
-    <div class="board-title">${board.bb_title}</div> <!-- 제목을 굵게 표시 -->
+    <%--    <div class="board-title">${board.bb_title}</div> <!-- 제목을 굵게 표시 -->--%>
+    <!-- 좋아요 버튼 HTML 구조 -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>${board.bb_title}</h2> <!-- 게시글 제목 표시 -->
+        <button type="button" id="like-btn-${board.bb_no}" onclick="toggleLike(${board.bb_no})"
+                style="background: none; border: none; cursor: pointer; font-size: 24px;">
+            <c:choose>
+                <c:when test="${isUserLikedBoard}">
+                    ❤️
+                </c:when>
+                <c:otherwise>
+                    🤍
+                </c:otherwise>
+            </c:choose>
+            <span id="like-count-${board.bb_no}">${board.bb_likeCount}</span>
+        </button>
+    </div>
+
     <div class="board-info">
-        <div><strong>작성자: </strong> ${board.bb_bm_nickname}</div>
+        <div><strong>작성자: </strong> ${board.bb_bm_id}</div>
         <div>
             <strong>조회수: </strong> ${board.bb_readCount} &nbsp;|&nbsp;
             <strong>작성일: </strong> <fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/>
@@ -245,7 +319,7 @@
     </div>
     <div class="btn-container">
         <a href="${contextPath}/board/list" class="btn">목록보기</a>
-        <c:if test="${sessionScope.loginMember.bm_nickname == board.bb_bm_nickname}">
+        <c:if test="${sessionScope.loginMember.bm_id == board.bb_bm_id}">
             <a href="${contextPath}/board/update.go?bb_no=${board.bb_no}" class="btn">수정</a>
             <form action="${contextPath}/board/delete.go" method="post" style="display:inline;">
                 <input type="hidden" name="bb_no" value="${board.bb_no}">
@@ -279,8 +353,26 @@
                 <c:forEach var="comment" items="${commentList}">
                     <div class="comment-item">
                         <div class="comment-text">
-                            <p><strong>${comment.bc_bm_nickname}</strong>
+                            <!-- 댓글 작성자와 날짜 및 좋아요 버튼을 한 줄로 정렬 -->
+                            <p>
+                                <strong>${comment.bc_bm_id}</strong>
                                 <fmt:formatDate value="${comment.bc_createdDate}" pattern="yyyy-MM-dd HH:mm"/>
+
+                                <!-- 기본 모드일 때 좋아요 버튼과 좋아요 수 표시 -->
+                                    <%--                                <c:if test="${sessionScope.editCommentId == null || sessionScope.editCommentId != comment.bc_no}">--%>
+                                <!-- 댓글 좋아요 상태 및 좋아요 수 표시 -->
+                                <button type="button" id="comment-like-btn-${comment.bc_no}" onclick="toggleCommentLike(${comment.bc_no})"
+                                        style="background: none; border: none; cursor: pointer; font-size: 18px;">
+                                    <!-- 좋아요 상태에 따른 하트 표시 -->
+                                    <c:choose>
+                                        <c:when test="${commentLikedMap[comment.bc_no] != null && commentLikedMap[comment.bc_no]}">
+                                            ❤️ ${comment.bc_likeCount} <!-- 이미 좋아요를 누른 상태 -->
+                                        </c:when>
+                                        <c:otherwise>
+                                            🤍 ${comment.bc_likeCount} <!-- 아직 좋아요를 누르지 않은 상태 -->
+                                        </c:otherwise>
+                                    </c:choose>
+                                </button>
                             </p>
 
                             <!-- 댓글 수정 모드인지 아닌지 구분 -->
@@ -298,7 +390,7 @@
                                 <c:otherwise>
                                     <!-- 기본 모드 -->
                                     <p>${comment.bc_content}</p>
-                                    <c:if test="${sessionScope.loginMember.bm_nickname == comment.bc_bm_nickname}">
+                                    <c:if test="${sessionScope.loginMember.bm_id == comment.bc_bm_id}">
                                         <div class="btn-container">
                                             <button class="btn" onclick="editComment(${comment.bc_no})">수정</button>
                                             <form action="${contextPath}/comment/delete" method="post" style="display:inline;">

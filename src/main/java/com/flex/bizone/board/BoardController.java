@@ -5,12 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping
@@ -26,19 +27,19 @@ public class BoardController {
     // 게시판 기본 URL로 들어오면 /board/list로 리다이렉트
     @RequestMapping(value = "/board", method = RequestMethod.GET)
     public String redirectToBoardList() {
-        return "redirect:/board/list"; // /board로 들어올 경우 /board/list로 리다이렉트
+        return "redirect:/board/list";
     }
 
     // 게시글 목록 조회
     @RequestMapping(value = "/board/list", method = RequestMethod.GET)
     public String boardList(@RequestParam(defaultValue = "1") int page,
-                            @RequestParam(defaultValue = "") String bb_nickname,
+                            @RequestParam(defaultValue = "") String bb_bm_id,
                             HttpServletRequest req, Model model) {
-        boardDAO.getAllBoards(page, bb_nickname, req); // 게시글 목록을 요청
+        boardDAO.getAllBoards(page, bb_bm_id, req); // 게시글 목록을 요청
         model.addAttribute("boardList", req.getAttribute("boardList")); // boardList를 JSP로 전달
         model.addAttribute("page", req.getAttribute("page"));
         model.addAttribute("totalPages", req.getAttribute("totalPages"));
-        model.addAttribute("bb_nickname", bb_nickname); // 검색 필터값 유지
+        model.addAttribute("bb_bm_id", bb_bm_id); // 검색 필터값 유지
         model.addAttribute("contentPage", "board/list.jsp");
         return "index";
     }
@@ -80,15 +81,9 @@ public class BoardController {
     // 게시글 상세 보기 (조회 수 증가 포함)
     @RequestMapping(value = "/board/detail", method = RequestMethod.GET)
     public String boardDetail(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
-        // 조회수 증가
         boardDAO.increaseReadCount(bb_no, req);
-
-        // 게시글 상세 정보 가져오기
         boardDAO.getBoardByNo(bb_no, req);
-
-        // 댓글 목록 가져오기
         commentDAO.getAllComments(bb_no, req);
-
         req.setAttribute("contentPage", "board/detail.jsp");
         return "index";
     }
@@ -97,10 +92,10 @@ public class BoardController {
     @RequestMapping(value = "/board/update.go", method = RequestMethod.GET)
     public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
         Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-        String userNickname = loginUser.getBm_nickname();
+        String userId = loginUser.getBm_id();
         Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
-        if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
+        if (board == null || !board.getBb_bm_id().equals(userId)) {
             rdAttr.addFlashAttribute("errorMsg", "수정 권한이 없습니다.");
             return "redirect:/board/list";
         }
@@ -125,10 +120,10 @@ public class BoardController {
     @RequestMapping(value = "/board/delete.go", method = RequestMethod.GET)
     public String goDelete(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
         Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-        String userNickname = loginUser.getBm_nickname();
+        String userId = loginUser.getBm_id();
         Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
-        if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
+        if (board == null || !board.getBb_bm_id().equals(userId)) {
             rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
             return "redirect:/board/list";
         }
@@ -141,16 +136,11 @@ public class BoardController {
     @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
     public String deleteBoard(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
         try {
-//            String loginUser = (String) req.getSession().getAttribute("loginMember");
             Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-            String userNickname = loginUser.getBm_nickname();
+            String userId = loginUser.getBm_id();
             Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
-//            if (board == null || loginUser == null || !board.getBb_bm_nickname().equals(loginUser)) {
-//                rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
-//                return "redirect:/board/list";
-//            }
-            if (board == null || !board.getBb_bm_nickname().equals(userNickname)) {
+            if (board == null || !board.getBb_bm_id().equals(userId)) {
                 rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
                 return "redirect:/board/list";
             }
@@ -163,5 +153,30 @@ public class BoardController {
             rdAttr.addFlashAttribute("errorMsg", "게시글 삭제 중 오류가 발생했습니다.");
             return "redirect:/board/list";
         }
+    }
+
+    // 게시글 좋아요 토글
+    @RequestMapping(value = "/board/toggleLike", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> toggleLike(@RequestParam("bb_no") int bb_no, HttpSession session, HttpServletRequest req) {
+        Map<String, Object> response = new HashMap<>();
+        Bizone_member loginMember = (Bizone_member) session.getAttribute("loginMember");
+
+        // 로그인 체크
+        if (loginMember == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다. 로그인 후 다시 시도해주세요.");
+            return response;
+        }
+
+        String bm_id = loginMember.getBm_id();  // 변경된 부분
+        boardDAO.toggleLike(bb_no, bm_id, req);
+
+        int updatedLikeCount = (int) req.getAttribute("updatedLikeCount");
+        response.put("success", true);
+        response.put("isLiked", boardDAO.checkUserLikedBoard(bb_no, bm_id, req) > 0);
+        response.put("likeCount", updatedLikeCount);
+
+        return response;
     }
 }

@@ -170,8 +170,8 @@
       <input type="text" id="bb_title" name="bb_title" value="${board.bb_title}" required>
     </div>
     <div class="form-group">
-      <label for="bb_bm_nickname">작성자</label>
-      <input type="text" id="bb_bm_nickname" name="bb_bm_nickname" value="${board.bb_bm_nickname}" readonly>
+      <label for="bb_bm_id">작성자</label>
+      <input type="text" id="bb_bm_id" name="bb_bm_id" value="${board.bb_bm_id}" readonly>
     </div>
     <div class="form-group">
       <label for="bb_content">내용</label>

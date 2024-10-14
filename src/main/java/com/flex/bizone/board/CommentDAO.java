@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Repository
@@ -64,5 +66,49 @@ public class CommentDAO {
             e.printStackTrace();
             req.setAttribute("r", "댓글 삭제 실패");
         }
+    }
+
+    // 댓글 좋아요 토글
+    public void toggleLike(int bc_no, String bb_bm_id, HttpServletRequest req) {
+        try {
+            CommentMapper mapper = ss.getMapper(CommentMapper.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("bc_no", bc_no);
+            params.put("bb_bm_id", bb_bm_id);
+
+            int bb_no = mapper.getBoardNoByCommentNo(bc_no);
+            params.put("bb_no", bb_no);  // 댓글이 속한 게시글 번호
+
+            int likeCheck = mapper.checkUserLikedComment(params);
+
+            if (likeCheck > 0) {
+                mapper.unlikeComment(params);
+                mapper.decreaseCommentLikeCount(bc_no);
+            } else {
+                mapper.likeComment(params);
+                mapper.increaseCommentLikeCount(bc_no);
+            }
+
+            int updatedLikeCount = mapper.getCommentLikeCount(bc_no);
+            req.setAttribute("updatedLikeCount", updatedLikeCount);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("errorMsg", "댓글 좋아요 처리 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 댓글 좋아요 체크 메소드 추가
+    public int checkUserLikedComment(int bc_no, String bb_bm_id, HttpServletRequest req) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("bc_no", bc_no);
+        params.put("bb_bm_id", bb_bm_id);
+
+        return ss.getMapper(CommentMapper.class).checkUserLikedComment(params);
+    }
+
+    // 댓글 좋아요 수 가져오기
+    public int getCommentLikeCount(int bc_no) {
+        return ss.getMapper(CommentMapper.class).getCommentLikeCount(bc_no);
     }
 }

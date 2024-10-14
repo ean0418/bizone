@@ -171,108 +171,108 @@
     <script>
         // 성공 메시지가 있을 경우 alert로 표시
         <c:if test="${not empty successMsg}">
-            alert("${successMsg}");
+        alert("${successMsg}");
         </c:if>
 
         // 에러 메시지가 있을 경우 alert로 표시
         <c:if test="${not empty errorMsg}">
-            alert("${errorMsg}");
+        alert("${errorMsg}");
         </c:if>
     </script>
 </head>
 <body>
-    <div class="container">
-        <h2 style="text-align: center">게시물 목록</h2>
-        <!-- 글쓰기 버튼 -->
-        <div class="btn-container">
-            <button class="btn btn-primary" onClick="location.href='${contextPath}/board/insert.go'">글쓰기</button>
-        </div>
+<div class="container">
+    <h2 style="text-align: center">게시물 목록</h2>
+    <!-- 글쓰기 버튼 -->
+    <div class="btn-container">
+        <button class="btn btn-primary" onClick="location.href='${contextPath}/board/insert.go'">글쓰기</button>
+    </div>
 
-        <table class="table table-hover table-bordered text-center">
-            <thead class="thead-white">
-            <tr>
-                <th>번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>작성일</th>
-                <th>조회수</th>
-            </tr>
+    <table class="table table-hover table-bordered text-center">
+        <thead class="thead-white">
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
         </thead>
         <tbody>
+        <c:choose>
+            <c:when test="${not empty boardList}">
+                <c:forEach var="board" items="${boardList}">
+                    <tr>
+                        <td>${board.bb_postNum}</td>
+                        <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}" style="color: black;">${board.bb_title}</a></td>
+                        <td>${board.bb_bm_id}</td>
+                        <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
+                        <td>${board.bb_readCount}</td>
+                    </tr>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <tr>
+                    <td colspan="5">게시글이 없습니다.</td>
+                </tr>
+            </c:otherwise>
+        </c:choose>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-container">
+            <!-- Previous 버튼 -->
+            <c:if test="${page > 1}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=${page - 1}&bb_bm_id=${bb_bm_id}"><</a>
+                </li>
+            </c:if>
+
+            <!-- 페이지 번호 표시 (1 ~ 5) -->
             <c:choose>
-                <c:when test="${not empty boardList}">
-                    <c:forEach var="board" items="${boardList}">
-                        <tr>
-                            <td>${board.bb_postNum}</td>
-                            <td><a href="${contextPath}/board/detail?bb_no=${board.bb_no}" style="color: black;">${board.bb_title}</a></td>
-                            <td>${board.bb_bm_nickname}</td>
-                            <td><fmt:formatDate value="${board.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
-                            <td>${board.bb_readCount}</td>
-                        </tr>
+                <c:when test="${totalPages <= 5}">
+                    <!-- 총 페이지가 5 이하일 경우 모든 페이지 번호 표시 -->
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <li class="page-item ${page == i ? 'active' : ''}">
+                            <a class="page-link" href="?page=${i}&bb_bm_id=${bb_bm_id}">${i}</a>
+                        </li>
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <tr>
-                        <td colspan="5">게시글이 없습니다.</td>
-                    </tr>
-                </c:otherwise>
-            </c:choose>
-        </tbody>
-        </table>
-
-        <nav aria-label="Page navigation">
-            <ul class="pagination pagination-container">
-                <!-- Previous 버튼 -->
-                <c:if test="${page > 1}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page - 1}&bb_nickname=${bb_nickname}"><</a>
-                    </li>
-                </c:if>
-
-                <!-- 페이지 번호 표시 (1 ~ 5) -->
-                <c:choose>
-                    <c:when test="${totalPages <= 5}">
-                        <!-- 총 페이지가 5 이하일 경우 모든 페이지 번호 표시 -->
-                        <c:forEach var="i" begin="1" end="${totalPages}">
+                    <!-- 현재 페이지가 1~3 사이일 경우 -->
+                    <c:if test="${page <= 3}">
+                        <c:forEach var="i" begin="1" end="5">
                             <li class="page-item ${page == i ? 'active' : ''}">
-                                <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
+                                <a class="page-link" href="?page=${i}&bb_bm_id=${bb_bm_id}}">${i}</a>
                             </li>
                         </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- 현재 페이지가 1~3 사이일 경우 -->
-                        <c:if test="${page <= 3}">
-                            <c:forEach var="i" begin="1" end="5">
-                                <li class="page-item ${page == i ? 'active' : ''}">
-                                    <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-                        <!-- 현재 페이지가 4 이상일 경우 -->
-                        <c:if test="${page > 3}">
-                            <c:forEach var="i" begin="${page - 2}" end="${page + 2 > totalPages ? totalPages : page + 2}">
-                                <li class="page-item ${page == i ? 'active' : ''}">
-                                    <a class="page-link" href="?page=${i}&bb_nickname=${bb_nickname}">${i}</a>
-                                </li>
-                            </c:forEach>
-                        </c:if>
-                    </c:otherwise>
-                </c:choose>
+                    </c:if>
+                    <!-- 현재 페이지가 4 이상일 경우 -->
+                    <c:if test="${page > 3}">
+                        <c:forEach var="i" begin="${page - 2}" end="${page + 2 > totalPages ? totalPages : page + 2}">
+                            <li class="page-item ${page == i ? 'active' : ''}">
+                                <a class="page-link" href="?page=${i}&bb_bm_id=${bb_bm_id}">${i}</a>
+                            </li>
+                        </c:forEach>
+                    </c:if>
+                </c:otherwise>
+            </c:choose>
 
-                <!-- Next 버튼 -->
-                <c:if test="${page < totalPages}">
-                    <li class="page-item">
-                        <a class="page-link" href="?page=${page + 1}&bb_nickname=${bb_nickname}">></a>
-                    </li>
-                </c:if>
-            </ul>
-        </nav>
+            <!-- Next 버튼 -->
+            <c:if test="${page < totalPages}">
+                <li class="page-item">
+                    <a class="page-link" href="?page=${page + 1}&bb_bm_id=${bb_bm_id}">></a>
+                </li>
+            </c:if>
+        </ul>
+    </nav>
 
-        <!-- 작성자명으로 게시글 조회 -->
-        <form action="${contextPath}/board/list" method="get" class="search-box">
-            <input type="text" name="bb_nickname" placeholder="작성자명 입력" value="${bb_nickname}">
-            <button type="submit">검색</button>
-        </form>
-    </div>
+    <!-- 작성자명으로 게시글 조회 -->
+    <form action="${contextPath}/board/list" method="get" class="search-box">
+        <input type="text" name="bb_bm_id" placeholder="작성자명 입력" value="${bb_bm_id}">
+        <button type="submit">검색</button>
+    </form>
+</div>
 </body>
 </html>

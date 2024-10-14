@@ -6,17 +6,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping
 public class CommentController {
 
     @Autowired
-    private com.flex.bizone.board.CommentDAO commentDAO;
+    private CommentDAO commentDAO;
 
     // 댓글 작성 처리 메서드
     @RequestMapping(value = "/comment/insert", method = RequestMethod.POST)
@@ -30,7 +34,7 @@ public class CommentController {
             }
 
             // 로그인 상태일 경우 댓글 작성 처리
-            comment.setBc_bm_nickname(loginMember.getBm_nickname()); // 로그인된 사용자의 닉네임 설정
+            comment.setBc_bm_id(loginMember.getBm_id()); // 로그인된 사용자의 ID 설정
             commentDAO.insertComment(comment, req);
             return "redirect:/board/detail?bb_no=" + comment.getBc_bb_no();
         } catch (Exception e) {
@@ -89,6 +93,26 @@ public class CommentController {
             return "redirect:/board/detail?bb_no=" + bc_bb_no;
         }
     }
+
+    // 댓글 좋아요 토글
+    @RequestMapping(value = "/comment/toggleLike", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> toggleCommentLike(@RequestParam("bc_no") int bc_no, HttpSession session, HttpServletRequest req) {
+        Map<String, Object> response = new HashMap<>();
+        Bizone_member loginMember = (Bizone_member) session.getAttribute("loginMember");
+
+        // 로그인 체크 및 세션 저장 확인
+        if (loginMember == null) {
+            response.put("success", false);
+            response.put("message", "로그인이 필요합니다. 로그인 후 다시 시도해주세요.");
+            return response;
+        }
+
+        String bb_bm_id = loginMember.getBm_id();
+        commentDAO.toggleLike(bc_no, bb_bm_id, req);
+        response.put("success", true);
+        response.put("isLiked", commentDAO.checkUserLikedComment(bc_no, bb_bm_id, req) > 0);
+        response.put("likeCount", commentDAO.getCommentLikeCount(bc_no));
+        return response;
+    }
 }
-
-
