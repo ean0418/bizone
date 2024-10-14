@@ -1149,45 +1149,6 @@
 <%--        });--%>
 <%--    }--%>
 
-<%--    function loadSiDoData() {--%>
-<%--        $.ajax({--%>
-<%--            url: "/resources/data/SiDo.geojson",  // 시도 경계 데이터--%>
-<%--            dataType: "json",--%>
-<%--            success: function (data) {--%>
-<%--                kkoMap.loadGeoJson(data, "시도");--%>
-<%--            },--%>
-<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
-<%--                console.error("Error loading SiDo GeoJSON data:", textStatus, errorThrown);--%>
-<%--            }--%>
-<%--        });--%>
-<%--    }--%>
-
-<%--    function loadSiGunGuData() {--%>
-<%--        $.ajax({--%>
-<%--            url: "/resources/data/SiGunGuDataFinal.geojson",  // 시군구 경계 데이터--%>
-<%--            dataType: "json",--%>
-<%--            success: function (data) {--%>
-<%--                kkoMap.loadGeoJson(data, "시군구");--%>
-<%--            },--%>
-<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
-<%--                console.error("Error loading SiGunGu GeoJSON data:", textStatus, errorThrown);--%>
-<%--            }--%>
-<%--        });--%>
-<%--    }--%>
-
-<%--    function loadEupMyeonDongData() {--%>
-<%--        $.ajax({--%>
-<%--            url: "/resources/data/EupMyeonDong.geojson",  // 읍면동 경계 데이터--%>
-<%--            dataType: "json",--%>
-<%--            success: function (data) {--%>
-<%--                kkoMap.loadGeoJson(data, "읍면동");--%>
-<%--            },--%>
-<%--            error: function (jqXHR, textStatus, errorThrown) {--%>
-<%--                console.error("Error loading EupMyeonDong GeoJSON data:", textStatus, errorThrown);--%>
-<%--            }--%>
-<%--        });--%>
-<%--    }--%>
-
 <%--    function removePolygons() {--%>
 <%--        polygons.forEach(function (polygon) {--%>
 <%--            polygon.setMap(null);--%>
