@@ -235,6 +235,7 @@
 
             <tr>
                 <td colspan="2">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                     <input name="bm_pw" placeholder="PASSWORD" autocomplete="off"
                            maxlength="10" class="i1" type="password">
                 </td>
@@ -378,7 +379,7 @@
                 }
             }
         };
-        xhr.open("POST", '/email.send', true);
+        xhr.open("POST", '/api/email.send', true);
         xhr.responseType = "json";
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify(reqJson));

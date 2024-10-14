@@ -532,9 +532,6 @@
             success: function (data) {
                 console.log('Received Data for Chart:', data);
 
-                if (data.startsWith("<")) {
-                    location.href = "/member/login"
-                }
 
                 // 모달 창 업데이트 코드
                 $('#regionName').text(regionName + " 상권분석");

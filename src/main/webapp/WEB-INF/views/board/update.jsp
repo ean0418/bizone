@@ -54,6 +54,7 @@
     <h2 style="text-align: center">게시글 수정하기</h2>
 
     <form action="${contextPath}/board/update" method="post">
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
       <input type="hidden" name="bb_no" value="${board.bb_no}">
       <div class="form-group">
         <label for="bb_title">제목</label>

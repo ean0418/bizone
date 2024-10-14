@@ -110,19 +110,19 @@
 <body>
 <div class="mypage-container">
     <div class="login-container">
-        <form action="${contextPath}/member/login.do" name="loginForm" method="post" onsubmit="return loginCheck();">
+        <form action="<c:url value='/member/login'/>" name="loginForm" id="loginForm" method="post" onsubmit="return loginCheck();">
             <input type="hidden" name="login_ok" value="1"/>
-
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
             <h2>로그인</h2>
 
             <div class="form-group">
                 <label class="id">아이디</label>
-                <input type="text" class="form-control" name="bm_id" autofocus="autofocus" autocomplete="off" placeholder="ID 입력..." required="required">
+                <input type="text" class="form-control" name="username" autofocus="autofocus" autocomplete="off" placeholder="ID 입력..." required="required">
             </div>
 
             <div class="form-group mt-3">
                 <label class="bm_pw">비밀번호</label>
-                <input type="password" class="form-control" name="bm_pw" autocomplete="off" placeholder="Password 입력..." required="required">
+                <input type="password" class="form-control" name="password" autocomplete="off" placeholder="Password 입력..." required="required">
             </div>
             <br>
             <div class="form-group loginbtn">
@@ -146,5 +146,37 @@
         <div class="text-center mt-2">아직 회원이 아니십니까? <a href="${contextPath}/member/signup">회원가입</a></div>
     </div>
 </div>
+<%--<script language="JavaScript">--%>
+<%--    document.getElementById('loginForm').addEventListener('submit', async function(event) {--%>
+<%--        event.preventDefault();--%>
+
+<%--        const formData = new FormData(event.target);--%>
+<%--        const data = {--%>
+<%--            username: formData.get('username'),--%>
+<%--            password: formData.get('password')--%>
+<%--        };--%>
+
+<%--        const response = await fetch('/member/login', {--%>
+<%--            method: 'POST',--%>
+<%--            headers: {--%>
+<%--                'Content-Type': 'application/json'--%>
+<%--            },--%>
+<%--            body: JSON.stringify(data)--%>
+<%--        });--%>
+
+<%--        if (response.ok) {--%>
+<%--            const responseData = await response.json();--%>
+<%--            const token = responseData.jwt;--%>
+
+<%--            // 로컬 스토리지에 JWT 저장--%>
+<%--            localStorage.setItem('token', token);--%>
+
+<%--            // 로그인 성공 후 원하는 페이지로 리다이렉트--%>
+<%--            window.location.href = '/';--%>
+<%--        } else {--%>
+<%--            alert('로그인 실패');--%>
+<%--        }--%>
+<%--    });--%>
+<%--</script>--%>
 </body>
 </html>

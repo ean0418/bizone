@@ -39,7 +39,7 @@
                         }
                     }
                 }
-                xhr.open("POST", '/idExist.do', true);
+                xhr.open("POST", '/api/idExist.do', true);
                 xhr.responseType = "json";
                 xhr.setRequestHeader('Content-Type', 'application/json');
                 xhr.send(JSON.stringify(reqJson));

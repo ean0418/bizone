@@ -80,6 +80,7 @@
             <input type="button" class="btn btn-default" value="목록" onclick="location.href='${contextPath}/board/list'">
             <input type="button" class="btn btn-primary" value="수정" onclick="location.href='${contextPath}/board/update.go?bb_no=${board.bb_no}'">
             <form action="${contextPath}/board/delete" method="post" style="display:inline;">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <input type="hidden" name="bb_no" value="${board.bb_no}">
                 <input type="submit" class="btn btn-danger" value="삭제">
             </form>

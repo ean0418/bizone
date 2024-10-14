@@ -9,12 +9,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
+    <meta name="_csrf" content="${_csrf.token}">
+    <meta name="_csrf_header" content="${_csrf.headerName}">
     <title>Title</title>
     <script language="JavaScript">
         window.addEventListener('load', () => {
             const idFind = document.querySelector("#idFindBtn")
             const codeInput = document.querySelector("#codeInput")
             const xhr = new XMLHttpRequest()
+            const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content")
+            const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content")
+
             let code = 0
             let id;
             idFind.addEventListener("click", () => {
@@ -44,6 +49,7 @@
                 xhr.open("POST", '/idFind.send', true);
                 xhr.responseType = "json";
                 xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader(csrfHeader, csrfToken);
                 xhr.send(JSON.stringify(reqJson));
             })
 
@@ -79,7 +85,7 @@
             border: lawngreen solid 1px;
             background-color: forestgreen;
         }
-        #idFindBtn: {
+        #idFindBtn:hover {
             border: forestgreen solid 1px;
             background-color: darkgreen;
         }

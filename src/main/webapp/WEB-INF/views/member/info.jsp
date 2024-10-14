@@ -146,6 +146,7 @@
                 <tr>
                     <th>아이디</th>
                     <td>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                         <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10" readonly>
                     </td>
                 </tr>

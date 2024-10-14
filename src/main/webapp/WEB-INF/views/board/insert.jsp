@@ -54,6 +54,7 @@
     <h2 style="text-align: center">게시글 작성하기</h2>
 
     <form action="${contextPath}/board/insert" name="insertForm" method="post" style="gap: 1rem" onsubmit="">
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
       <div class="form-group">
         <label for="title">제목</label>
         <input type="text" class="form-control" id="title" name="bb_title"

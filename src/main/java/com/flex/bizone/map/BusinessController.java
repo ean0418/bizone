@@ -17,7 +17,7 @@ import java.util.Map;
 public class BusinessController {
 
     @Autowired
-    private SqlSession ss;  // MyBatis DAO(Mapper) 주입
+    private SqlSession ss;
 
     @GetMapping("/services/all")
     public List<Bizone_business> getAllServices() {

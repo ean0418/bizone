@@ -1,5 +1,6 @@
 package com.flex.bizone.member;
 
+import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,20 +25,15 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("username : " + username);
-        Bizone_member m = memberDAO.findByUsername(username);
-        System.out.println("Role : " + m.getBm_role());
-        if (m.getBm_role().equals("ADMIN")){
-            return User.withUsername(m.getBm_id())
-                    .password(m.getBm_pw())
-                    .roles(m.getBm_role())
-                    .build();
-        } else if (m.getBm_role().equals("USER")) {
-            return User.withUsername(m.getBm_id())
-                    .password(m.getBm_pw())
-                    .roles(m.getBm_role())
-                    .build();
-        } else {
-            throw new UsernameNotFoundException("해당 사용자를 찾을 수 없습니다: " + username);
+        try {
+            Bizone_member m = memberDAO.findByUsername(username);
+            System.out.println("Role : " + m.getBm_role());
+            return User.withUsername(m.getBm_id()).password(m.getBm_pw()).roles(m.getBm_role()).build();
+        } catch (NullPointerException ignored) {
+            System.out.println("존재하지 않는 유저");
+            throw new RuntimeException("존재하지 않는 유저");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }
