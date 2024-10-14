@@ -10,11 +10,11 @@ public class Bizone_board {
     private String bb_content;
     private Timestamp bb_date;
     private int bb_readCount;
-
+    private String bb_bm_id;
     public Bizone_board() {
     }
 
-    public Bizone_board(int bb_no, int bb_postNum, String bb_bm_nickname, String bb_title, String bb_content, Timestamp bb_date, int bb_readCount) {
+    public Bizone_board(int bb_no, int bb_postNum, String bb_bm_nickname, String bb_title, String bb_content, Timestamp bb_date, int bb_readCount,String bb_bm_id) {
         this.bb_no = bb_no;
         this.bb_postNum = bb_postNum;
         this.bb_bm_nickname = bb_bm_nickname;
@@ -22,6 +22,7 @@ public class Bizone_board {
         this.bb_content = bb_content;
         this.bb_date = bb_date;
         this.bb_readCount = bb_readCount;
+        this.bb_bm_id = bb_bm_id;
     }
 
     public int getBb_no() {
@@ -46,6 +47,14 @@ public class Bizone_board {
 
     public void setBb_bm_nickname(String bb_bm_nickname) {
         this.bb_bm_nickname = bb_bm_nickname;
+    }
+
+    public String getBb_bm_id() {
+        return bb_bm_id;
+    }
+
+    public void setBb_bm_id(String bb_bm_id) {
+        this.bb_bm_id = bb_bm_id;
     }
 
     public String getBb_title() {

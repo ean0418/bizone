@@ -64,7 +64,13 @@
                     <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/memberManagement" style="text-align: left">마이대출</a>
+                    <a class="nav-link ms-4" href="${contextPath}/admin/memberManagement" style="text-align: left">회원관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/admin/boardManagement" style="text-align: left">게시판관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/admin/ommentManagement" style="text-align: left">댓글관리</a>
                 </li>
             </ul>
         </div>
