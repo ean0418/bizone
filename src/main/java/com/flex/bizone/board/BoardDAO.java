@@ -17,7 +17,7 @@ public class BoardDAO {
     @Autowired
     private SqlSession ss;
 
-    public void getAllBoards(int page, String bb_nickname, HttpServletRequest req) {
+    public void getAllBoards(int page, String bb_bm_id, HttpServletRequest req) {
         try {
             int limit = 10;
             int offset = (page -1) * limit;
@@ -25,12 +25,10 @@ public class BoardDAO {
             Map<String, Object> params = new HashMap<>();
             params.put("offset", offset);
             params.put("limit", limit);
-            params.put("bb_nickname", bb_nickname);
+            params.put("bb_bm_id", bb_bm_id);
             List<Bizone_board> boardList = ss.getMapper(BoardMapper.class).getBoardsWithPaging(params);
-//            List<Bizone_board> boardList = ss.getMapper(BoardMapper.class)
-//                    .getBoardsWithPaging(offset, limit, bb_nickname);
 
-            int totalCount = ss.getMapper(BoardMapper.class).getBoardCount(bb_nickname);
+            int totalCount = ss.getMapper(BoardMapper.class).getBoardCount(bb_bm_id);
             int totalPages = (int) Math.ceil((double) totalCount / limit);
 
             // 로그 추가
@@ -130,4 +128,48 @@ public class BoardDAO {
         }
     }
 
+    // 좋아요 토글
+    public void toggleLike(int bb_no, String bb_bm_id, HttpServletRequest req) {
+        try {
+            BoardMapper mapper = ss.getMapper(BoardMapper.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("bb_no", bb_no);
+            params.put("bb_bm_id", bb_bm_id);
+
+            // 사용자가 이미 좋아요를 눌렀는지 확인
+            int likeCheck = mapper.checkUserLikedBoard(params);
+
+            if (likeCheck > 0) {
+                // 이미 좋아요를 눌렀다면 좋아요 취소
+                mapper.unlikeBoard(params);  // 좋아요 취소
+                mapper.decreaseBoardLikeCount(bb_no);  // 좋아요 수 감소
+            } else {
+                // 좋아요 추가
+                mapper.likeBoard(params);  // 좋아요 추가
+                mapper.increaseBoardLikeCount(bb_no);  // 좋아요 수 증가
+            }
+
+            // 갱신된 좋아요 수 조회
+            int updatedLikeCount = mapper.getBoardLikeCount(bb_no);
+            req.setAttribute("updatedLikeCount", updatedLikeCount);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("errorMsg", "게시글 좋아요 처리 중 오류가 발생했습니다.");
+        }
+    }
+
+    // 게시글 좋아요 수 가져오기
+    public int getBoardLikeCount(int bb_no) {
+        return ss.getMapper(BoardMapper.class).getBoardLikeCount(bb_no);
+    }
+
+    // 게시글 좋아요 체크 메소드 추가
+    public int checkUserLikedBoard(int bb_no, String bb_bm_id, HttpServletRequest req) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("bb_no", bb_no);
+        params.put("bm_id", bb_bm_id);
+
+        return ss.getMapper(BoardMapper.class).checkUserLikedBoard(params);
+    }
 }

@@ -4,14 +4,14 @@
 
     <!-- 게시글 목록 조회 -->
     <select id="getAllBoards" resultType="com.flex.bizone.board.Bizone_board">
-        SELECT bb_no, bb_postNum, bb_bm_nickname, bb_title, bb_content, bb_date, bb_readCount
+        SELECT bb_no, bb_postNum, bb_bm_id, bb_title, bb_content, bb_date, bb_readCount
         FROM bizone_board
         ORDER BY bb_postNum DESC
     </select>
 
     <!-- 게시글 조회 -->
     <select id="getBoardByNo" parameterType="int" resultType="com.flex.bizone.board.Bizone_board">
-        SELECT bb_no, bb_postNum, bb_bm_nickname, bb_title, bb_content, bb_date, bb_readCount
+        SELECT bb_no, bb_postNum, bb_bm_id, bb_title, bb_content, bb_date, bb_readCount, bb_likeCount
         FROM bizone_board
         WHERE bb_no = #{bb_no}
     </select>
@@ -46,10 +46,9 @@
 
     <!-- 게시글 작성 -->
     <insert id="insertBoard" parameterType="com.flex.bizone.board.Bizone_board">
-        INSERT INTO bizone_board (bb_postNum, bb_bm_nickname, bb_title, bb_content)
-        VALUES (#{bb_postNum}, #{bb_bm_nickname}, #{bb_title}, #{bb_content})
+        INSERT INTO bizone_board (bb_postNum, bb_bm_id, bb_title, bb_content)
+        VALUES (#{bb_postNum}, #{bb_bm_id}, #{bb_title}, #{bb_content})
     </insert>
-
 
     <!-- 게시글 수정 -->
     <update id="updateBoard" parameterType="com.flex.bizone.board.Bizone_board">
@@ -72,7 +71,54 @@
     <update id="reorderBoardNumbers">
         UPDATE bizone_board
         SET bb_postNum = (@rownum := @rownum + 1)
-            ORDER BY bb_no;
+        ORDER BY bb_no;
     </update>
 
+    <!-- 상단 고정 게시글 목록 조회 -->
+    <select id="getPinnedBoards" resultType="com.flex.bizone.board.Bizone_board">
+        SELECT * FROM bizone_board
+        WHERE bb_bm_id = 'admin'
+        ORDER BY bb_no DESC
+        LIMIT 3
+    </select>
+
+    <!-- 좋아요 수 증가 -->
+    <update id="increaseBoardLikeCount" parameterType="int">
+        UPDATE bizone_board
+        SET bb_likeCount = bb_likeCount + 1
+        WHERE bb_no = #{bb_no}
+    </update>
+
+    <!-- 좋아요 수 감소 -->
+    <update id="decreaseBoardLikeCount" parameterType="int">
+        UPDATE bizone_board
+        SET bb_likeCount = bb_likeCount - 1
+        WHERE bb_no = #{bb_no}
+    </update>
+
+    <!-- 게시글의 좋아요 수 조회 -->
+    <select id="getBoardLikeCount" parameterType="int" resultType="int">
+        SELECT bb_likeCount
+        FROM bizone_board
+        WHERE bb_no = #{bb_no}
+    </select>
+
+    <!-- 사용자가 게시글에 좋아요 했는지 확인 -->
+    <select id="checkUserLikedBoard" resultType="int" parameterType="Map">
+        SELECT COUNT(*)
+        FROM bizone_like
+        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id}
+    </select>
+
+    <!-- 게시글에 좋아요 추가 -->
+    <insert id="likeBoard" parameterType="Map">
+        INSERT INTO bizone_like (bl_bb_no, bl_bm_id)
+        VALUES (#{bb_no}, #{bb_bm_id})
+    </insert>
+
+    <!-- 게시글에 좋아요 취소 -->
+    <delete id="unlikeBoard" parameterType="Map">
+        DELETE FROM bizone_like
+        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id}
+    </delete>
 </mapper>

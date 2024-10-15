@@ -22,6 +22,14 @@
         display: flex;
         align-items: center;
     }
+    @font-face {
+        font-family: 'DotumMidum';
+        src: url('${pageContext.request.contextPath}/resources/ttf/DotumMidum.ttf') format('truetype');
+    }
+
+    body {
+        font-family: 'DotumMidum', sans-serif;
+    }
 </style>
 <body>
 <nav class="navbar navbar-dark" style="background-color: #101E4E;">
@@ -55,7 +63,7 @@
                     <a class="nav-link ms-4" href="${contextPath}/main" style="text-align: left">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">공지사항</a>
+                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link ms-4" href="${contextPath}/info" style="text-align: left">마이페이지</a>

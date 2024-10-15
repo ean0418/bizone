@@ -12,7 +12,6 @@
 <html>
 <head>
     <title>Delete Page</title>
-    <title>Delete Page</title>
     <style>
         .container {
             margin-top: 50px;
@@ -58,21 +57,28 @@
     <div class="container">
         <h2 style="text-align: center">게시글 삭제</h2>
 
-        <p>정말로 이 게시글을 삭제하시겠습니까?</p>
+        <c:choose>
+            <c:when test="${not empty board}">
+                <!-- 게시글 정보 표시 -->
+                <div class="form-group">
+                    <label for="bb_title">제목</label>
+                    <input type="text" class="form-control" id="bb_title" name="bb_title" value="${board.bb_title}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bb_bm_id">작성자</label>
+                    <input type="text" class="form-control" id="bb_bm_id" name="bb_bm_id" value="${board.bb_bm_id}" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="bb_content">내용</label>
+                    <textarea class="form-control" id="bb_content" name="bb_content" rows="3" readonly>${board.bb_content}</textarea>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div>게시글을 찾을 수 없습니다.</div>
+            </c:otherwise>
+        </c:choose>
 
-        <!-- 게시글 정보 표시 -->
-        <div class="form-group">
-            <label for="bb_title">제목</label>
-            <input type="text" class="form-control" id="bb_title" name="bb_title" value="${board.bb_title}" readonly>
-        </div>
-        <div class="form-group">
-            <label for="bb_bm_nickname">작성자</label>
-            <input type="text" class="form-control" id="bb_bm_nickname" name="bb_bm_nickname" value="${board.bb_bm_nickname}" readonly>
-        </div>
-        <div class="form-group">
-            <label for="bb_content">내용</label>
-            <textarea class="form-control" id="bb_content" name="bb_content" rows="3" readonly>${board.bb_content}</textarea>
-        </div>
+        <p align="center">게시글을 삭제하시겠습니까?</p>
 
         <!-- 삭제 확인 폼 -->
         <div class="btn-container">
