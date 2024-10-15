@@ -19,7 +19,6 @@ public class MemberService implements UserDetailsService {
     // 생성자를 통한 의존성 주입
     public MemberService(MemberDAO memberDAO) {
         this.memberDAO = memberDAO;
-        System.out.println("### MemberService 생성자 호출됨. memberDAO: " + memberDAO);
     }
 
     @Override

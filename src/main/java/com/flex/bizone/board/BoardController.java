@@ -3,6 +3,8 @@ package com.flex.bizone.board;
 import com.flex.bizone.member.Bizone_member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.net.Authenticator;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,14 +51,6 @@ public class BoardController {
     // 게시글 작성 페이지 이동
     @RequestMapping(value = "/board/insert.go", method = RequestMethod.GET)
     public String goInsert(HttpServletRequest req, RedirectAttributes rdAttr) {
-        if (req.getSession().getAttribute("loginMember") == null) {
-            rdAttr.addFlashAttribute("errorMsg", "로그인 후 이용 가능합니다.");
-            // req.setAttribute("errorMsg", "로그인 후 이용 가능합니다.");
-            // 리다이렉트시 attribute 값은 날아감
-            // 날아가지 않게 리다이렉트 하는 방법?
-            // => RedirectAttributes
-            return "redirect:/board/list";
-        }
         req.setAttribute("contentPage", "board/insert.jsp");
         return "index";
     }
@@ -63,10 +59,6 @@ public class BoardController {
     @RequestMapping(value = "/board/insert", method = RequestMethod.POST)
     public String insertBoard(Bizone_board board, HttpServletRequest req, RedirectAttributes rdAttr) {
         try {
-            if (req.getSession().getAttribute("loginMember") == null) {
-                rdAttr.addFlashAttribute("errorMsg", "로그인 후 이용 가능합니다.");
-                return "redirect:/board/list";
-            }
             boardDAO.insertBoard(board, req);
             boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
             rdAttr.addFlashAttribute("successMsg", "게시글이 작성되었습니다.");
@@ -80,19 +72,23 @@ public class BoardController {
 
     // 게시글 상세 보기 (조회 수 증가 포함)
     @RequestMapping(value = "/board/detail", method = RequestMethod.GET)
-    public String boardDetail(@RequestParam("bb_no") int bb_no, HttpServletRequest req) {
+    public String boardDetail(@RequestParam("bb_no") int bb_no, HttpServletRequest req, Principal principal, Authentication auth) {
         boardDAO.increaseReadCount(bb_no, req);
         boardDAO.getBoardByNo(bb_no, req);
-        commentDAO.getAllComments(bb_no, req);
+        String bb_bm_id = "";
+        if (auth != null) {
+            bb_bm_id = principal.getName();
+        }
+        req.setAttribute("isUserLikedBoard", boardDAO.isUserLikedBoard(bb_no, bb_bm_id));
+        commentDAO.getAllComments(bb_no, req, bb_bm_id);
         req.setAttribute("contentPage", "board/detail.jsp");
         return "index";
     }
 
     // 게시글 수정 페이지 이동
     @RequestMapping(value = "/board/update.go", method = RequestMethod.GET)
-    public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
-        Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-        String userId = loginUser.getBm_id();
+    public String goUpdate(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr, Principal principal) {
+        String userId = principal.getName();;
         Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
         if (board == null || !board.getBb_bm_id().equals(userId)) {
@@ -107,10 +103,6 @@ public class BoardController {
     // 게시글 수정 처리
     @RequestMapping(value = "/board/update", method = RequestMethod.POST)
     public String updateBoard(Bizone_board board, HttpServletRequest req, RedirectAttributes rdAttr) {
-        if (req.getSession().getAttribute("loginMember") == null) {
-            rdAttr.addFlashAttribute("errorMsg", "로그인 후 이용 가능합니다.");
-            return "redirect:/board/list";
-        }
         boardDAO.updateBoard(board, req);
         rdAttr.addFlashAttribute("successMsg", "게시글이 수정되었습니다.");
         return "redirect:/board/list";
@@ -118,9 +110,8 @@ public class BoardController {
 
     // 게시글 삭제 페이지 이동
     @RequestMapping(value = "/board/delete.go", method = RequestMethod.GET)
-    public String goDelete(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
-        Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-        String userId = loginUser.getBm_id();
+    public String goDelete(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr, Principal principal) {
+        String userId = principal.getName();
         Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
         if (board == null || !board.getBb_bm_id().equals(userId)) {
@@ -134,10 +125,9 @@ public class BoardController {
 
     // 게시글 삭제 처리
     @RequestMapping(value = "/board/delete", method = RequestMethod.POST)
-    public String deleteBoard(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr) {
+    public String deleteBoard(@RequestParam("bb_no") int bb_no, HttpServletRequest req, RedirectAttributes rdAttr, Principal principal) {
         try {
-            Bizone_member loginUser = (Bizone_member) req.getSession().getAttribute("loginMember");
-            String userId = loginUser.getBm_id();
+            String userId = principal.getName();
             Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
             if (board == null || !board.getBb_bm_id().equals(userId)) {
@@ -158,23 +148,17 @@ public class BoardController {
     // 게시글 좋아요 토글
     @RequestMapping(value = "/board/toggleLike", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> toggleLike(@RequestParam("bb_no") int bb_no, HttpSession session, HttpServletRequest req) {
+    public Map<String, Object> toggleLike(@RequestParam("bb_no") int bb_no, Principal principal, HttpServletRequest req) {
         Map<String, Object> response = new HashMap<>();
-        Bizone_member loginMember = (Bizone_member) session.getAttribute("loginMember");
 
-        // 로그인 체크
-        if (loginMember == null) {
-            response.put("success", false);
-            response.put("message", "로그인이 필요합니다. 로그인 후 다시 시도해주세요.");
-            return response;
-        }
-
-        String bm_id = loginMember.getBm_id();  // 변경된 부분
+        String bm_id = principal.getName();  // 변경된 부분
+        System.out.println(bm_id);
         boardDAO.toggleLike(bb_no, bm_id, req);
 
         int updatedLikeCount = (int) req.getAttribute("updatedLikeCount");
         response.put("success", true);
         response.put("isLiked", boardDAO.checkUserLikedBoard(bb_no, bm_id, req) > 0);
+        System.out.println(response.get("isLiked"));
         response.put("likeCount", updatedLikeCount);
 
         return response;

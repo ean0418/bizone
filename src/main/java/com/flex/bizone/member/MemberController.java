@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.security.Principal;
 import java.util.*;
 
 @RequestMapping("/member")
@@ -67,53 +69,26 @@ public class MemberController {
         return mDAO.memberIdCheck(m);
     }
 
-    @PostMapping("/login.do")
-    public String memberLogin(Bizone_member m, HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
-        req.setCharacterEncoding("UTF-8");
-        res.setCharacterEncoding("UTF-8");
-
-        // 로그인 처리
-        mDAO.login(m, req);
-
-        // 로그인 상태 확인 후 success.jsp로 이동 여부 결정
-        // 로그인 실패 시 로그인 페이지에 그대로 유지
-        if (mDAO.loginCheck(req)) {
-            req.setAttribute("contentPage", "map/map.jsp");
-        } else {
-            req.setAttribute("contentPage", "member/login.jsp");
-        }
-        return "index";  // 로그인 성공 시 메인 페이지로 이동
-    }
-
     @GetMapping("/info")
     public String goMemberInfo(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }
 
-//    @GetMapping("/logout")
-//    public String memberLogout(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
-//        req.setCharacterEncoding("UTF-8");
-//        res.setCharacterEncoding("UTF-8");
-//        mDAO.logout(req);
-//        req.setAttribute("contentPage", "map/map.jsp");
-//        return "index";
-//    }
-
     @GetMapping("/delete")
-    public String memberDelete(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
+    public String memberDelete(HttpServletRequest req, HttpServletResponse res, Principal principal, Authentication auth) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
-        mDAO.delete(req);
+        mDAO.delete(req, principal.getName(), res, auth);
         req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }
 
     @PostMapping("/update")
-    public String memberUpdate(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
+    public String memerUpdate(HttpServletRequest req, HttpServletResponse res, Principal principal) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
-        mDAO.update(req);
+        mDAO.update(req, principal.getName());
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }

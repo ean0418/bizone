@@ -3,8 +3,22 @@
 <mapper namespace="com.flex.bizone.board.CommentMapper">
 
     <!-- 댓글 목록 조회 -->
-    <select id="getCommentsByBoardNo" parameterType="int" resultMap="CommentResultMap">
-        SELECT * FROM bizone_comment WHERE bc_bb_no = #{bc_bb_no} ORDER BY bc_createdDate DESC
+    <select id="getCommentsByBoardNo" parameterType="Map" resultType="com.flex.bizone.board.CommentList">
+        SELECT outerBc.bc_no as bc_no,
+               outerBc.bc_bb_no as bc_bb_no,
+               outerBc.bc_content as bc_content,
+               outerBc.bc_createdDate as bc_createdDate,
+               outerBc.bc_updatedDate as bc_updatedDate,
+               outerBc.bc_likeCount as bc_likeCount,
+               outerBc.bc_bm_id as bc_bm_id,
+               bc_bl.bl_bc_no as likeComment
+        FROM bizone_comment as outerBc
+          LEFT JOIN bizone_like as bc_bl
+            ON outerBc.bc_no = bc_bl.bl_bc_no
+              AND bc_bl.bl_bb_no = #{bc_bb_no}
+              AND bc_bl.bl_bm_id = #{bm_id}
+        WHERE outerBc.bc_bb_no = #{bc_bb_no}
+        ORDER BY outerBc.bc_createdDate DESC;
     </select>
 
     <!-- 댓글 작성 -->

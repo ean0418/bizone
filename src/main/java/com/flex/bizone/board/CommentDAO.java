@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +20,12 @@ public class CommentDAO {
     private SqlSession ss;
 
     // 댓글 목록 조회
-    public void getAllComments(int bc_bb_no, HttpServletRequest req) {
+    public void getAllComments(int bc_bb_no, HttpServletRequest req, String bm_id) {
         try {
-            List<Bizone_comment> commentList = ss.getMapper(CommentMapper.class).getCommentsByBoardNo(bc_bb_no);
+            Map<String, Object> inputMap = new HashMap<>();
+            inputMap.put("bc_bb_no", bc_bb_no);
+            inputMap.put("bm_id", bm_id);
+            List<CommentList> commentList = ss.getMapper(CommentMapper.class).getCommentsByBoardNo(inputMap);
             if (commentList != null && !commentList.isEmpty()) {
                 System.out.println("댓글 수: " + commentList.size());
             } else {

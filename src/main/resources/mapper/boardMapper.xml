@@ -107,7 +107,7 @@
     <select id="checkUserLikedBoard" resultType="int" parameterType="Map">
         SELECT COUNT(*)
         FROM bizone_like
-        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id}
+        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id} and ISNULL(bl_bc_no) = 1
     </select>
 
     <!-- 게시글에 좋아요 추가 -->
@@ -119,6 +119,6 @@
     <!-- 게시글에 좋아요 취소 -->
     <delete id="unlikeBoard" parameterType="Map">
         DELETE FROM bizone_like
-        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id}
+        WHERE bl_bb_no = #{bb_no} AND bl_bm_id = #{bb_bm_id} and ISNULL(bl_bc_no) = 1
     </delete>
 </mapper>

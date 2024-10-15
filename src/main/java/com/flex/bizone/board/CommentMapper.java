@@ -10,7 +10,7 @@ import java.util.Map;
 public interface CommentMapper {
 
     // 게시글 번호로 댓글 조회
-    List<Bizone_comment> getCommentsByBoardNo(int bc_bb_no);
+    List<CommentList> getCommentsByBoardNo(Map<String, Object> inputMap);
 
     // 댓글 작성
     void insertComment(Bizone_comment comment);

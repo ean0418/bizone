@@ -8,10 +8,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%--<%@ include file="../board/style.jsp"%>--%>
 <html>
 <head>
     <title>게시글 상세조회</title>
+    <meta name="_csrf" content="${_csrf.token}">
+    <meta name="_csrf_header" content="${_csrf.headerName}">
     <style>
         @font-face {
             font-family: 'DotumLight';
@@ -211,6 +214,22 @@
         }
     </style>
     <script type="text/javascript">
+        let globalLoggedIn = false;
+
+        window.onload = () => {
+            $.ajax({
+                url:`/api/auth/status`,
+                method: 'GET',
+                credentials: 'include',
+                dataType: 'json',
+                success: (data) => {
+                    console.log("login check : " + data.loggedIn)
+                    globalLoggedIn = data.loggedIn;
+                }
+            })
+        }
+
+
         // 댓글 수정 모드로 전환하는 함수
         function editComment(bc_no) {
             const bb_no = ${board.bb_no}; // 게시글 번호 가져오기
@@ -222,26 +241,38 @@
             location.href = '${contextPath}/comment/cancelEdit?bb_no=' + ${board.bb_no};
         }
 
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+
         // 게시글 좋아요 토글
         function toggleLike(bb_no) {
+            if (!globalLoggedIn) {
+                alert("로그인 후 이용해주세요");
+                return
+            }
             $.ajax({
                 type: 'POST',
                 url: '/board/toggleLike',
                 data: { bb_no: bb_no },
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
                 success: function(response) {
+                    console.log(response)
                     if (response.success) {
-                        const likeBtn = document.getElementById('like-btn-' + bb_no);
-                        const likeCountSpan = document.getElementById('like-count-' + bb_no);
-                        let likeCount = parseInt(likeCountSpan.innerHTML);
-
-                        if (response.isLiked) {
+                        let likeBtn = document.getElementById('like-btn-' + ${board.bb_no});
+                        let likeCountSpan = document.getElementById('likeSpan');
+                        let likeCount = parseInt(response.likeCount);
+                        console.log(likeCount)
+                        let isUserLike = response.isLiked;
+                        console.log('isUserLike : ' + isUserLike)
+                        if (isUserLike) {
                             likeBtn.innerHTML = '❤️';
-                            likeCount++;
                         } else {
                             likeBtn.innerHTML = '🤍';
-                            likeCount--;
                         }
-                        likeCountSpan.innerHTML = likeCount;
+                        likeCountSpan.innerHTML = likeCount + '';
                     } else {
                         alert('오류가 발생했습니다. 다시 시도해주세요.');
                     }
@@ -255,10 +286,17 @@
 
         // 댓글 좋아요 토글
         function toggleCommentLike(bc_no) {
+            if (!globalLoggedIn) {
+                alert("로그인 후 이용해주세요");
+                return
+            }
             $.ajax({
                 type: 'POST',
                 url: '/comment/toggleLike',
                 data: { bc_no: bc_no },
+                headers: {
+                    [csrfHeader]: csrfToken
+                },
                 success: function(response) {
                     if (response.success) {
                         // 댓글 좋아요 상태 변경 및 카운트 업데이트
@@ -293,18 +331,20 @@
     <!-- 좋아요 버튼 HTML 구조 -->
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <h2>${board.bb_title}</h2> <!-- 게시글 제목 표시 -->
-        <button type="button" id="like-btn-${board.bb_no}" onclick="toggleLike(${board.bb_no})"
-                style="background: none; border: none; cursor: pointer; font-size: 24px;">
-            <c:choose>
-                <c:when test="${isUserLikedBoard}">
-                    ❤️
-                </c:when>
-                <c:otherwise>
-                    🤍
-                </c:otherwise>
-            </c:choose>
-            <span id="like-count-${board.bb_no}">${board.bb_likeCount}</span>
-        </button>
+        <div style="display: inline">
+            <button type="button" id="like-btn-${board.bb_no}" onclick="toggleLike(${board.bb_no})"
+                    style="background: none; border: none; cursor: pointer; font-size: 24px;">
+                <c:choose>
+                    <c:when test="${isUserLikedBoard}">
+                        ❤️
+                    </c:when>
+                    <c:otherwise>
+                        🤍
+                    </c:otherwise>
+                </c:choose>
+            </button>
+            <span class="like-count-${board.bb_no}" id="likeSpan">${board.bb_likeCount}</span>
+        </div>
     </div>
 
     <div class="board-info">
@@ -319,14 +359,14 @@
     </div>
     <div class="btn-container">
         <a href="${contextPath}/board/list" class="btn">목록보기</a>
-<%--        TODO : <security:aut>--%>
+        <security:authorize access="isAuthenticated()">
             <a href="${contextPath}/board/update.go?bb_no=${board.bb_no}" class="btn">수정</a>
             <form action="${contextPath}/board/delete.go" method="post" style="display:inline;">
                 <input type="hidden" name="bb_no" value="${board.bb_no}">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <button type="submit" class="btn" onclick="return confirm('게시글을 삭제하시겠습니까?')">삭제</button>
             </form>
-<%--        </c:if>--%>
+        </security:authorize>>
     </div>
 
     <!-- 댓글 목록 섹션 -->
@@ -335,17 +375,16 @@
 
         <!-- 댓글 작성 폼 -->
         <form class="comment-form" action="${contextPath}/comment/insert" method="post">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
             <input type="hidden" name="bc_bb_no" value="${board.bb_no}">
-            <c:choose>
-                <c:when test="${sessionScope.loginMember != null}">
-                    <textarea name="bc_content" placeholder="댓글을 입력하세요." required></textarea>
-                    <button type="submit" class="btn">댓글 작성</button>
-                </c:when>
-                <c:otherwise>
-                    <textarea name="bc_content" placeholder="로그인 후 이용 가능합니다." disabled></textarea>
-                    <button type="button" class="btn" onclick="alert('로그인 후 이용 가능합니다.');">댓글 작성</button>
-                </c:otherwise>
-            </c:choose>
+            <security:authorize access="isAuthenticated()">
+                <textarea name="bc_content" placeholder="댓글을 입력하세요." required></textarea>
+                <button type="submit" class="btn">댓글 작성</button>
+            </security:authorize>
+            <security:authorize access="isAnonymous()">
+                <textarea name="bc_content" placeholder="로그인 후 이용 가능합니다." disabled></textarea>
+                <button type="button" class="btn" onclick="alert('로그인 후 이용 가능합니다.');">댓글 작성</button>
+            </security:authorize>
         </form>
 
         <!-- 댓글 목록 출력 -->
@@ -366,7 +405,7 @@
                                         style="background: none; border: none; cursor: pointer; font-size: 18px;">
                                     <!-- 좋아요 상태에 따른 하트 표시 -->
                                     <c:choose>
-                                        <c:when test="${commentLikedMap[comment.bc_no] != null && commentLikedMap[comment.bc_no]}">
+                                        <c:when test="${comment.likeComment == comment.bc_no}">
                                             ❤️ ${comment.bc_likeCount} <!-- 이미 좋아요를 누른 상태 -->
                                         </c:when>
                                         <c:otherwise>
@@ -391,7 +430,7 @@
                                 <c:otherwise>
                                     <!-- 기본 모드 -->
                                     <p>${comment.bc_content}</p>
-                                    <c:if test="${sessionScope.loginMember.bm_id == comment.bc_bm_id}">
+                                    <c:if test="${pageContext.request.userPrincipal.name == comment.bc_bm_id}">
                                         <div class="btn-container">
                                             <button class="btn" onclick="editComment(${comment.bc_no})">수정</button>
                                             <form action="${contextPath}/comment/delete" method="post" style="display:inline;">

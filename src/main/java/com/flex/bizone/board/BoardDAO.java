@@ -139,6 +139,8 @@ public class BoardDAO {
             // 사용자가 이미 좋아요를 눌렀는지 확인
             int likeCheck = mapper.checkUserLikedBoard(params);
 
+            System.out.println("likeCheck :" + likeCheck);
+
             if (likeCheck > 0) {
                 // 이미 좋아요를 눌렀다면 좋아요 취소
                 mapper.unlikeBoard(params);  // 좋아요 취소
@@ -152,11 +154,19 @@ public class BoardDAO {
             // 갱신된 좋아요 수 조회
             int updatedLikeCount = mapper.getBoardLikeCount(bb_no);
             req.setAttribute("updatedLikeCount", updatedLikeCount);
+            System.out.println("updatedLikeCount : " + updatedLikeCount);
 
         } catch (Exception e) {
             e.printStackTrace();
             req.setAttribute("errorMsg", "게시글 좋아요 처리 중 오류가 발생했습니다.");
         }
+    }
+
+    public Boolean isUserLikedBoard(int bb_no, String bb_bm_id) {
+        Map<String, Object> inputMap = new HashMap<>();
+        inputMap.put("bb_no", bb_no);
+        inputMap.put("bb_bm_id", bb_bm_id);
+        return ss.getMapper(BoardMapper.class).checkUserLikedBoard(inputMap) != 0;
     }
 
     // 게시글 좋아요 수 가져오기
@@ -167,9 +177,15 @@ public class BoardDAO {
     // 게시글 좋아요 체크 메소드 추가
     public int checkUserLikedBoard(int bb_no, String bb_bm_id, HttpServletRequest req) {
         Map<String, Object> params = new HashMap<>();
+        System.out.println("checkUserLikedBoard");
+        System.out.println(bb_no);
+        System.out.println(bb_bm_id);
         params.put("bb_no", bb_no);
-        params.put("bm_id", bb_bm_id);
+        params.put("bb_bm_id", bb_bm_id);
 
-        return ss.getMapper(BoardMapper.class).checkUserLikedBoard(params);
+        int result = ss.getMapper(BoardMapper.class).checkUserLikedBoard(params);
+        System.out.println(result);
+
+        return result;
     }
 }

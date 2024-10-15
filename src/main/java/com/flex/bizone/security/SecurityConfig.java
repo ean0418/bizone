@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                    .ignoringAntMatchers("/api/**")
+                    .ignoringAntMatchers("/api/**", "https://business.juso.go.kr**")
                 .and()
                     .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
