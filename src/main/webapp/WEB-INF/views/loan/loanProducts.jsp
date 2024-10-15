@@ -289,6 +289,7 @@
                   </c:otherwise>
                 </c:choose>
                 <strong>자격 조건:</strong> ${product.qualification}
+                <button class="favorite-btn" onclick="addToFavorites('${loanProduct.id}')">찜하기</button>
               </p>
             </div>
           </div>
@@ -333,7 +334,23 @@
     </c:if>
   </ul>
 </nav>
-
+<script>
+  function addToFavorites(loanProductId) {
+    $.ajax({
+      url: '/addToFavorites',
+      type: 'POST',
+      data: {
+        loanProductId: loanProductId
+      },
+      success: function(response) {
+        alert('상품이 찜 목록에 추가되었습니다!');
+      },
+      error: function() {
+        alert('찜 목록 추가에 실패했습니다. 다시 시도해주세요.');
+      }
+    });
+  }
+</script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
