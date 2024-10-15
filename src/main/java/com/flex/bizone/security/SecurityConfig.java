@@ -43,22 +43,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                .ignoringAntMatchers("/api/**")
+                    .ignoringAntMatchers("/api/**")
                 .and()
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
-                .anyRequest().permitAll()
-                .and()
+                    .authorizeRequests()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
+                    .anyRequest().permitAll()
+                    .and()
                 .formLogin()
-                .loginPage("/member/login") // 사용자 정의 로그인 페이지
-                .defaultSuccessUrl("/", true) // 로그인 성공 후 리디렉션 경로
-                .permitAll()
-                .and()
+                    .loginPage("/member/login") // 사용자 정의 로그인 페이지
+                    .defaultSuccessUrl("/", true) // 로그인 성공 후 리디렉션 경로
+                    .permitAll()
+                    .and()
                 .logout()
-                .logoutUrl("/member/logout")
-                .logoutSuccessUrl("/") // 로그아웃 성공 후 경로
-                .permitAll();
+                    .logoutUrl("/member/logout")
+                    .logoutSuccessHandler(new CustomLogoutSuccessHandler())
+                    .logoutSuccessUrl("/") // 로그아웃 성공 후 경로
+                    .invalidateHttpSession(true)  // Invalidate session on logout
+                    .deleteCookies("JSESSIONID")
+                    .permitAll();
 
     }
 

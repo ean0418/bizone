@@ -36,7 +36,12 @@
             <!-- Login and Signup links -->
             <security:authorize access="isAuthenticated()">
                 <a class="nav-link text-light ms-3" style="white-space: nowrap;" href="<c:url value='/member/info'/>">내 정보</a>
-                <a class="nav-link text-light ms-3" style="white-space: nowrap;" href="<c:url value='/member/logout' />">로그아웃</a>
+                <form method="post" action="/member/logout">
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                    <button class="nav-link text-light ms-3" style="white-space: nowrap;">
+                        로그아웃
+                    </button>
+                </form>
             </security:authorize>
             <security:authorize access="isAnonymous()">
                 <a class="nav-link text-light ms-3" href="<c:url value='/member/login' />" style="white-space: nowrap;">로그인</a>

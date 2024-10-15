@@ -91,14 +91,14 @@ public class MemberController {
         return "index";
     }
 
-    @GetMapping("/logout")
-    public String memberLogout(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
-        req.setCharacterEncoding("UTF-8");
-        res.setCharacterEncoding("UTF-8");
-        mDAO.logout(req);
-        req.setAttribute("contentPage", "map/map.jsp");
-        return "index";
-    }
+//    @GetMapping("/logout")
+//    public String memberLogout(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
+//        req.setCharacterEncoding("UTF-8");
+//        res.setCharacterEncoding("UTF-8");
+//        mDAO.logout(req);
+//        req.setAttribute("contentPage", "map/map.jsp");
+//        return "index";
+//    }
 
     @GetMapping("/delete")
     public String memberDelete(HttpServletRequest req, HttpServletResponse res) throws UnsupportedEncodingException {
