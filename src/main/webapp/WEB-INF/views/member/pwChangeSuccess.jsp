@@ -13,6 +13,6 @@
 <body>
     <h3>비밀번호가 성공적으로 변경되었습니다</h3>
     <h4>로그인 페이지로 이동하시겠습니까?</h4>
-    <a href="${contextPath}/member.login.go"><button>이동하기</button></a>
+    <a href="${contextPath}/member/login"><button>이동하기</button></a>
 </body>
 </html>

@@ -422,6 +422,20 @@
 
     let globalRegionName = '';  // 전역 변수 선언
     let globalSearchedRegion = "";
+    let globalLoggedIn = false;
+
+    window.onload = () => {
+        $.ajax({
+            url:`/api/auth/status`,
+            method: 'GET',
+            credentials: 'include',
+            dataType: 'json',
+            success: (data) => {
+                console.log("login check : " + data.loggedIn)
+                globalLoggedIn = data.loggedIn;
+            }
+        })
+    }
 
     function initKakaoMap() {
         var container = document.getElementById('map');
@@ -806,6 +820,13 @@
                 }
 
                 console.log('Polygon Clicked:', area.name); // 클릭된 폴리곤 정보 확인
+
+                console.log('globalLoggedIn' + globalLoggedIn)
+                if (!globalLoggedIn) {
+                    alert("로그인이 필요한 기능입니다.")
+                    window.location.href = "/member/login"
+                    return;
+                }
 
                 if (!selectedBusiness || !selectedBusiness.bb_code) {
                     console.log('alert확인용 코드'); // 로그 추가

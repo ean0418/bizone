@@ -94,6 +94,7 @@
 <div class="container">
   <div class="page-title">게시글 작성</div>
   <form action="${contextPath}/board/insert" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <div class="form-group">
       <label for="bb_title">제목</label>
       <input type="text" id="bb_title" name="bb_title" placeholder="제목을 입력하세요." required>
@@ -114,4 +115,3 @@
 </div>
 </body>
 </html>
-

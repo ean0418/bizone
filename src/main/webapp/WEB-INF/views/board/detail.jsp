@@ -319,13 +319,14 @@
     </div>
     <div class="btn-container">
         <a href="${contextPath}/board/list" class="btn">목록보기</a>
-        <c:if test="${sessionScope.loginMember.bm_id == board.bb_bm_id}">
+<%--        TODO : <security:aut>--%>
             <a href="${contextPath}/board/update.go?bb_no=${board.bb_no}" class="btn">수정</a>
             <form action="${contextPath}/board/delete.go" method="post" style="display:inline;">
                 <input type="hidden" name="bb_no" value="${board.bb_no}">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <button type="submit" class="btn" onclick="return confirm('게시글을 삭제하시겠습니까?')">삭제</button>
             </form>
-        </c:if>
+<%--        </c:if>--%>
     </div>
 
     <!-- 댓글 목록 섹션 -->

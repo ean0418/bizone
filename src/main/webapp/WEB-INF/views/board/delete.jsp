@@ -83,6 +83,7 @@
         <!-- 삭제 확인 폼 -->
         <div class="btn-container">
             <form action="${contextPath}/board/delete" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <input type="hidden" name="bb_no" value="${board.bb_no}">
                 <input type="submit" class="btn btn-danger" value="삭제">
                 <input type="button" class="btn btn-default" value="취소" onclick="location.href='${contextPath}/board/list'">

@@ -47,7 +47,7 @@
                         }
                     }
                 }
-                xhr.open('POST', '/getCurrentPW.do', true)
+                xhr.open('POST', '/api/getCurrentPW.do', true)
                 xhr.responseType = "json"
                 xhr.setRequestHeader('Content-Type', 'application/json')
                 xhr.send(JSON.stringify(reqJson))
@@ -60,8 +60,9 @@
 <div>
     <c:choose>
         <c:when test="${status}">
-            <form action="${contextPath}/pwChange.do" onsubmit="return checkPwBox();" method="post">
+            <form action="${contextPath}/member/changePW.do" onsubmit="return checkPwBox();" method="post">
                 <h3>비밀번호 변경</h3>
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <input id="bm_pw" name="bm_pw" placeholder="비밀번호">
                 <div id="pwMessage"></div>
                 <button id="changePwForm">변경하기</button>

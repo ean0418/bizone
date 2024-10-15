@@ -19,7 +19,7 @@ public class EmailController {
     @Autowired
     private EmailService eServices;
 
-    @RequestMapping(value = "/email.send", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/email.send", method = RequestMethod.POST)
     public Map<String,Object> sendEmail(HttpServletRequest req, HttpServletResponse res, @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
         req.setCharacterEncoding("utf-8");
         res.setCharacterEncoding("utf-8");
@@ -37,7 +37,7 @@ public class EmailController {
         return eServices.idFind(bm);
     }
 
-    @RequestMapping(value = "/idExist.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/idExist.do", method = RequestMethod.POST)
     public Map<String, Object> checkIdExist(HttpServletRequest req, HttpServletResponse res,
                                             @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
         req.setCharacterEncoding("utf-8");
@@ -48,7 +48,7 @@ public class EmailController {
         return eServices.checkIdExist(bm, req);
     }
 
-    @RequestMapping(value = "/getCurrentPW.do", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/getCurrentPW.do", method = RequestMethod.POST)
     public Map<String, Object> getCurrentPW(HttpServletRequest req, HttpServletResponse res,
                                             @RequestBody Map<String, Object> inputMap) throws UnsupportedEncodingException {
         req.setCharacterEncoding("utf-8");

@@ -17,12 +17,14 @@ public class Bizone_member {
     private Date bm_birthday;
     private String bm_mail;
     private Date bm_signupDate;
+    private String bm_kakao_id;
+    private String bm_role;
 
     public Bizone_member() {
 
     }
 
-    public Bizone_member(String bm_id, String bm_pw, String bm_name, String bm_nickname, String bm_address, String bm_phoneNum, Date bm_birthday, String bm_mail, Date bm_signupDate) {
+    public Bizone_member(String bm_id, String bm_pw, String bm_name, String bm_nickname, String bm_address, String bm_phoneNum, Date bm_birthday, String bm_mail, Date bm_signupDate, String bm_kakao_id, String bm_role) {
         this.bm_id = bm_id;
         this.bm_pw = bm_pw;
         this.bm_name = bm_name;
@@ -32,6 +34,8 @@ public class Bizone_member {
         this.bm_birthday = bm_birthday;
         this.bm_mail = bm_mail;
         this.bm_signupDate = bm_signupDate;
+        this.bm_kakao_id = bm_kakao_id;
+        this.bm_role = bm_role;
     }
 
 }

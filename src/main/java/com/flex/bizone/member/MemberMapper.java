@@ -17,4 +17,8 @@ public interface MemberMapper {
     int checkIfIdExists(Bizone_member m);
     public abstract List<Bizone_member> searchMembers(Bizone_member m);
     public abstract List<Bizone_member> getAllMembers(Bizone_member m);
+
+    /** for Kakao Login */
+    public abstract List<Bizone_member> getMemberByKakaoID(Bizone_member m);
+    public abstract int connectKakao(Bizone_member m);
 }

@@ -71,7 +71,7 @@ public class EmailService {
         String scheme = req.getScheme();
         int serverPort = req.getServerPort();
         String serverName = req.getServerName();
-        String contextPath = "/pwChange.go?token=" + token;
+        String contextPath = "/member/changePW?token=" + token;
         String baseUrl;
         if ((scheme.equals("http") && serverPort == 80) || (scheme.equals("https") && serverPort == 443)) {
             baseUrl = scheme + "://" + serverName + contextPath;

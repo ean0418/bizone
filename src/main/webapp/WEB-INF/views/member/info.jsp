@@ -116,7 +116,7 @@
 <body>
 <div class="mypage-container">
     <!-- 프로필 섹션 -->
-    <form action="${contextPath}/member.delete" name="deleteForm" method="get"
+    <form action="${contextPath}/member/delete" name="deleteForm" method="get"
           enctype="multipart/form-data" onsubmit="return deleteCheck();">
     <div class="profile-section">
         <button class="delete-btn">계정 삭제</button>
@@ -140,12 +140,13 @@
     <!-- 회원 정보 섹션 -->
     <div class="info-section">
         <h2 class="section-title">회원 정보</h2>
-        <form action="${contextPath}/member.update" name="updateForm" method="post"
+        <form action="${contextPath}/member/update" name="updateForm" method="post"
               enctype="multipart/form-data" onsubmit="return updateCheck();">
             <table class="info-table">
                 <tr>
                     <th>아이디</th>
                     <td>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                         <input value="${sessionScope.loginMember.bm_id}" name="bm_id" placeholder="ID" autocomplete="off" maxlength="10" readonly>
                     </td>
                 </tr>

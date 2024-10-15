@@ -1,38 +1,28 @@
 package com.flex.bizone.member;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
-import com.fasterxml.jackson.core.JsonParseException;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.Charsets;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class Kakao {
@@ -43,12 +33,6 @@ public class Kakao {
 
     @Autowired
     private SqlSession ss;
-
-    @PostConstruct
-    public void init() {
-        // SqlSession이 초기화된 후 사용
-        System.out.println("SqlSession is initialized: " + (ss != null));
-    }
 
     public static String getCode() {
         String getcode = keyHost + "/oauth/authorize?response_type=code&client_id=" + RestApiKey;
@@ -257,40 +241,17 @@ public class Kakao {
                 return null; // 200 응답이 아닌 경우 null 반환
             }
 
+            return userInfo;
+
         } catch (IOException e) {
             e.printStackTrace();
             return null; // 예외 발생 시 null 반환
         }
-        // 카카오 사용자 정보가 DB에 존재하는지 확인
-        try {
-            List<KakaoVO> result = ss.getMapper(KakaoMapper.class).findKakao(userInfo);
-            if (ss == null) {
-                System.out.println("MemberRepository is null");
-            }
-            System.out.println("User Info from DB: " + result);
-            return result.get(0);
-        } catch (IndexOutOfBoundsException e) {
-            if (ss == null) {
-                System.out.println("MemberRepository is null");
-            }
-
-//            e.printStackTrace();
-            System.out.println("User Info: " + userInfo);
-            try {
-                ss.getMapper(KakaoMapper.class).kakaoInsert(userInfo);
-                return ss.getMapper(KakaoMapper.class).findKakao(userInfo).get(0);
-            } catch (IndexOutOfBoundsException iooe) {
-//                iooe.printStackTrace();
-            }
-            return null;
-        }
-
-
-//        if (result == null) {
-//            // 저장되지 않은 사용자 정보인 경우 DB에 저장
-//; // 저장된 사용자 정보 반환
-//        } else {
-//            return result; // 기존 사용자 정보 반환
-//        }
     }
+
+    /** 해당 카카오 id를 사용하는 유저 정보 리턴 */
+    public Bizone_member isKakaoUser(Bizone_member m) throws IndexOutOfBoundsException {
+        return ss.getMapper(MemberMapper.class).getMemberByKakaoID(m).get(0);
+    }
+
 }

@@ -117,7 +117,7 @@
       <span class="active">1</span> → <span  class="active">2</span> → <span  class="active2">3</span>
     </div>
     <p>회원가입이 완료되었습니다. 로그인하여 다양한 서비스를 이용해보세요.</p>
-    <a href="${contextPath}/member.login.go" class="btn">로그인</a>
+    <a href="${contextPath}/member/login" class="btn">로그인</a>
   </div>
     </form>
   </body>

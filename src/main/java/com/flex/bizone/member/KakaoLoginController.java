@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -22,12 +23,12 @@ public class KakaoLoginController {
     @RequestMapping(value = "/kakaoGetCode", method = RequestMethod.GET)
     public String kakao() {
 
-        System.out.println("kakao.getCode() : " + kakao.getCode());
-        return "redirect:" + kakao.getCode();
+        System.out.println("kakao.getCode() : " + Kakao.getCode());
+        return "redirect:" + Kakao.getCode();
     }
 
     @RequestMapping(value = "/kakaologin", method = RequestMethod.GET)
-    public String kakaoLogin(@RequestParam("code") String code, HttpSession session) throws Exception {
+    public String kakaoLogin(@RequestParam("code") String code, HttpServletRequest req) throws Exception {
         System.out.println("code : " + code);
 
         // 액세스 토큰 가져오기
@@ -47,12 +48,21 @@ public class KakaoLoginController {
             return "member/success"; // 사용자 정보를 가져오지 못하면 에러 페이지로 리턴
         }
 
-        // 사용자 정보를 세션에 저장
-        session.setAttribute("bk_nickname", userInfo.getBk_nickname());
-        session.setAttribute("bk_profile_image_url", userInfo.getBk_profile_image_url());
+        Bizone_member m = new Bizone_member();
+        m.setBm_kakao_id(userInfo.getBk_id());
 
+        try {
+            Bizone_member bm = kakao.isKakaoUser(m);
+            req.getSession().setAttribute("loginMember", bm);
+            req.getSession().setMaxInactiveInterval(600);
+        } catch (IndexOutOfBoundsException ignored) {
+            req.getSession().setAttribute("kakaoID", m.getBm_kakao_id());
+            req.setAttribute("contentPage", "member/route.jsp");
+            return "index";
+        }
 
-        return "member/signup";
+        req.setAttribute("contentPage", "main/main.jsp");
+        return "index";
     }
 
 }
