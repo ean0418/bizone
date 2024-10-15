@@ -28,4 +28,9 @@ public class MainController {
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }
+    @RequestMapping("/rank")
+    public String rank(HttpServletRequest req) {
+        req.setAttribute("contentPage", "rank/rank.jsp");
+        return "index";
+    }
 }

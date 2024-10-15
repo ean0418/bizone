@@ -45,6 +45,8 @@ public interface BusinessMapper {
     float getAvgRentFee(@Param("admin_code") String adminCode);
 
     // 행정동명 가져오기
-   String getBaNameByCode(String baCode);
+    Bizone_admin getBaNameByCode(Bizone_admin ba);
 
+    // 차트순위가져오기
+    List<RankResponse> getRankByServiceCode(@Param("service_code") String serviceCode);
 }

@@ -43,6 +43,10 @@
             position: relative; /* content를 상대 위치로 설정 */
         }
 
+        #regionModal {
+            overflow-y: scroll;
+        }
+
         #sidebar {
             width: 350px; /* 사이드바 너비 설정 */
             background-color: rgba(255, 255, 255, 0); /* 사이드바를 완전히 투명하게 설정 */
@@ -121,24 +125,6 @@
             background-color: rgba(255, 255, 255, 0.2); /* 드롭다운 배경 투명하게 설정 */
             color: #333;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        #boundaryToggleButton {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background-color: rgba(255, 165, 0, 0.8); /* 오렌지색을 80% 투명하게 설정 */
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        #boundaryToggleButton:hover {
-            background-color: rgba(230, 149, 0, 0.9); /* 마우스 오버 시 배경 덜 투명하게 */
         }
 
         #mapContainer {
@@ -267,12 +253,12 @@
                             </div>
                         </div>
 
-                        <!-- 성공 확률 평가 -->
+                        <!-- 파워랭킹 -->
                         <div class="col-md-6">
                             <div class="card mb-4">
                                 <div class="card-body">
-                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 성공 확률 평가:</h6>
-                                    <span id="successEvaluation" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
+                                    <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
                                 </div>
                             </div>
                         </div>
@@ -281,18 +267,16 @@
             </div>
             <!-- 모달 바디 끝 -->
 
-
             <!-- 모달 푸터 (닫기 버튼 없음) -->
             <div class="modal-footer">
                 <button id="detailbtn" class="btn btn-primary btn-lg w-100"><i class="fas fa-info-circle"></i> 데이터 자세히 보기</button>
             </div>
-                <!-- 첫 번째 모달의 확인 버튼 -->
-                <button id="closeRegionModal" class="btn btn-primary"><i class="fas fa-check-circle"></i> 확인</button>
-            </div>
+
+            <!-- 첫 번째 모달의 확인 버튼 -->
+            <button id="closeRegionModal" class="btn btn-primary"><i class="fas fa-check-circle"></i> 확인</button>
         </div>
     </div>
-
-
+</div>
 
 <!-- 두 번째 모달 창 (detailedModal) -->
 <div class="modal fade" id="detailedModal" tabindex="-1" role="dialog" aria-labelledby="detailedModalLabel" aria-hidden="true">
@@ -323,16 +307,16 @@
                             <i class="fas fa-building"> 총 직장 인구: <span id="totalWorkplacePopulation"></span></i>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <i class="fas fa-dollar-sign"> 평균 월 소득: <span id="avgMonthlyIncome"></span></i>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <i class="fas fa-coins"> 총 지출 금액: <span id="totalExpenditure"></span></i>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
                             <i class="fas fa-chart-line"> 총 유동 인구: <span id="totalFloatingPopulation"></span></i>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <i class="fas fa-hotel"> 집객시설 수: <span id="attractionCount"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-dollar-sign"> 평균 월 소득: <span id="avgMonthlyIncome"></span></i>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <i class="fas fa-coins"> 총 지출 금액: <span id="totalExpenditure"></span></i>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <i class="fas fa-home"> 평균 임대료: <span id="avgRentFee"></span></i>
@@ -360,10 +344,10 @@
     });
 
     $(document).ready(function () {
-    // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
-    $('#closeDetailedModal').on('click', function () {
-        $('#detailedModal').modal('hide'); // detailedModal 닫기
-    });
+        // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+        $('#closeDetailedModal').on('click', function () {
+            $('#detailedModal').modal('hide'); // detailedModal 닫기
+        });
 
     });
 
@@ -416,13 +400,13 @@
 
     });
 
-        $(document).ready(function () {
-            // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
-            $('#closePopupModal').on('click', function () {
-                $('#popupModal').modal('hide'); // detailedModal 닫기
-            });
-
+    $(document).ready(function () {
+        // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+        $('#closePopupModal').on('click', function () {
+            $('#popupModal').modal('hide'); // detailedModal 닫기
         });
+
+    });
 </script>
 
 <script>
@@ -436,7 +420,8 @@
     var isSiGunGuLoaded = false;  // 시군구 경계 데이터 로드 여부
     var isSiDoLoaded = false;   // 시도 경계 데이터 로드 여부
 
-    var globalRegionName = '';  // 전역 변수 선언
+    let globalRegionName = '';  // 전역 변수 선언
+    let globalSearchedRegion = "";
 
     function initKakaoMap() {
         var container = document.getElementById('map');
@@ -472,12 +457,8 @@
         });
 
         // 확대/축소 레벨 제한
-        kakao.maps.event.addListener(map, 'zoom_changed', function () {
-            var level = map.getLevel();
-            if (level > 10) { // 최대 축소 레벨을 10으로 제한
-                map.setLevel(10); // 축소 레벨이 10을 넘으면 다시 10으로 되돌림
-            }
-        });
+        map.setMinLevel(3);
+        map.setMaxLevel(10);
 
         // 서울시 구 선택 시 해당 구로 지도 이동
         $("#locationSelect").on("change", function () {
@@ -518,7 +499,6 @@
 
     // 지역 및 업종을 클릭했을 때 호출되는 함수
     function showRegionInfo(regionName, adminCode, serviceCode) {
-        globalRegionName = regionName;  // 지역명을 전역 변수에 저장
         updateSelectedData({ bb_code: serviceCode }, adminCode); // 추가
         $.ajax({
             url: `/api/bizone/getChartDataForDetail`,
@@ -566,21 +546,19 @@
                     options: {
                         scales: {
                             y: {
-                                beginAtZero: true
+                                beginAtZero: true,
+                                max: 8  // y값 최대치 정하기
                             }
                         }
                     }
                 });
 
                 const successProbability = parseFloat(data.successProbability).toFixed(2);
-                $('#successProbability').text(successProbability + '%');
-                const evaluation = getEvaluation(successProbability);
-                $('#successEvaluation').text(evaluation);
-
+                $('#successProbability').text(successProbability + "%");
                 $('#regionModal').modal('show');
             },
             error: function () {
-                alert("지역 및 업종 데이터를 불러오는 중 오류가 발생했습니다.");
+                alert("정보가 없는 지역입니다. 다시 선택해주세요.");
             }
         });
     }
@@ -608,7 +586,9 @@
                 method: 'GET',
                 data: { admin_code: selectedAdminCode },
                 success: function (regionName) {
-                    $('#detailedRegionName').text(regionName || selectedAdminCode); // 지역명 업데이트
+                    console.log("in getRegionName")
+                    console.log(regionName)
+                    $('#detailedRegionName').text(globalRegionName); // 지역명 업데이트
                 },
                 error: function () {
                     $('#detailedRegionName').text(selectedAdminCode); // 오류 발생 시 코드 표시
@@ -627,13 +607,13 @@
 
                     // 모달 창에 데이터를 표시하는 로직
                     $('#detailedBusinessName').text(selectedBusiness.bb_name || selectedServiceCode);
-                    $('#totalResidentPopulation').text(data.totalResidentPopulation);
-                    $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation);
-                    $('#avgMonthlyIncome').text(data.avgMonthlyIncome);
-                    $('#totalExpenditure').text(data.totalExpenditure);
-                    $('#totalFloatingPopulation').text(data.totalFloatingPopulation);
-                    $('#attractionCount').text(data.attractionCount);
-                    $('#avgRentFee').text(data.avgRentFee);
+                    $('#totalResidentPopulation').text(data.totalResidentPopulation.toLocaleString() + "명");
+                    $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation.toLocaleString() + "명");
+                    $('#totalFloatingPopulation').text(data.totalFloatingPopulation.toLocaleString() + "명");
+                    $('#attractionCount').text(data.attractionCount.toLocaleString() + "개");
+                    $('#avgMonthlyIncome').text(data.avgMonthlyIncome.toLocaleString() + "원");
+                    $('#totalExpenditure').text(data.totalExpenditure.toLocaleString() + "원");
+                    $('#avgRentFee').text(data.avgRentFee.toLocaleString() + "원");
                     $('#detailedModal').modal('show');
                 },
                 error: function (xhr, status, error) {
@@ -646,66 +626,6 @@
             alert("업종과 지역을 선택해주세요.");
         }
     });
-
-
-    // // 업종과 지역 선택 시 데이터를 설정하는 함수
-    // function updateSelectedData(business, areaCode) {
-    //     selectedServiceCode = business ? business.bb_code : null;
-    //     selectedAdminCode = areaCode;
-    //     console.log('Selected data updated:', selectedServiceCode, selectedAdminCode);
-    // }
-
-    // // 자세히 보기 버튼 클릭 이벤트 핸들러
-    // $('#detailbtn').on('click', function () {
-    //     console.log('Before sending request, selectedServiceCode:', selectedServiceCode, 'selectedAdminCode:', selectedAdminCode);
-    //
-    //     if (selectedServiceCode && selectedAdminCode) {
-    //         $.ajax({
-    //             url: `/api/bizone/getDetailData`,
-    //             method: 'GET',
-    //             data: {
-    //                 admin_code: selectedAdminCode,
-    //                 service_code: selectedServiceCode
-    //             },
-    //             success: function (data) {
-    //                 console.log('Detailed data received:', data);
-    //                 // 모달 창에 데이터를 표시하는 로직
-    //                 $('#detailedBusinessName').text(data.businessName || selectedServiceCode);
-    //                 $('#detailedRegionName').text(data.regionName || selectedAdminCode);
-    //                 $('#totalResidentPopulation').text(data.totalResidentPopulation);
-    //                 $('#totalWorkplacePopulation').text(data.totalWorkplacePopulation);
-    //                 $('#avgMonthlyIncome').text(data.avgMonthlyIncome);
-    //                 $('#totalExpenditure').text(data.totalExpenditure);
-    //                 $('#totalFloatingPopulation').text(data.totalFloatingPopulation);
-    //                 $('#attractionCount').text(data.attractionCount);
-    //                 $('#avgRentFee').text(data.avgRentFee);
-    //                 $('#detailedModal').modal('show');
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error('Error fetching detailed data:', error);
-    //                 alert('자세한 데이터를 불러오는 중 오류가 발생했습니다.');
-    //             }
-    //         });
-    //     } else {
-    //         console.warn("업종과 지역 정보가 누락되었습니다.");
-    //         alert("업종과 지역을 선택해주세요.");
-    //     }
-    // });
-
-    // 성공 확률 평가 함수
-    function getEvaluation(score) {
-        if (score >= 90) {
-            return '매우 높음';
-        } else if (score >= 70) {
-            return '높음';
-        } else if (score >= 50) {
-            return '중간';
-        } else if (score >= 30) {
-            return '낮음';
-        } else {
-            return '매우 낮음';
-        }
-    }
 
     // GeoJSON 데이터를 불러와 경계선을 그리는 함수
     function loadGeoJson(url, type) {
@@ -801,8 +721,23 @@
             }
 
             geoJsonData.features.forEach(function (feature) {
-                kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                if (type !== "시도") {
+
+                    if (feature.properties.adm_nm?.split(" ").includes(globalSearchedRegion)) {
+                        kkoMap.setPolygon(kkoMap.getPolygonData(feature), "pink", strokeColor, type);
+                    } else {
+                        if (feature.properties.sggnm.split(" ").includes(globalSearchedRegion)) {
+                            kkoMap.setPolygon(kkoMap.getPolygonData(feature), "hotpink", strokeColor, type)
+                        } else {
+                            kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                        }
+                    }
+                } else {
+                    kkoMap.setPolygon(kkoMap.getPolygonData(feature), fillColor, strokeColor, type);
+                }
             });
+
+
         },
 
         getPolygonData: function (feature) {
@@ -828,7 +763,7 @@
                 strokeColor: strokeColor,
                 strokeOpacity: 0.8,
                 fillColor: fillColor,
-                fillOpacity: 0.3,
+                fillOpacity: fillColor === "hotpink" ? 0.7 : 0.3,
             });
 
             let isMouseOver = false;
@@ -865,6 +800,11 @@
 
             // 지역(폴리곤)을 클릭할 때 updateSelectedData 호출
             kakao.maps.event.addListener(polygon, "click", function () {
+                if (map.getLevel() >= 8) {
+                    // 구나 도 단위에서는 클릭 이벤트 발생하지 않도록 무시
+                    return;
+                }
+
                 console.log('Polygon Clicked:', area.name); // 클릭된 폴리곤 정보 확인
 
                 if (!selectedBusiness || !selectedBusiness.bb_code) {
@@ -875,6 +815,7 @@
 
                 previousZoomLevel = map.getLevel(); // 클릭 시 현재 지도 레벨 저장
                 selectedAdminCode = area.code; // 클릭한 지역의 행정동 코드 업데이트
+                globalRegionName = area.name;
 
                 console.log('Clicked Area Code:', selectedAdminCode);  // 행정동 코드 확인
                 console.log('Selected Business Code:', selectedBusiness ? selectedBusiness.bb_code : null);  // 선택된 업종 코드 확인
@@ -936,6 +877,10 @@
             alert("지역명을 입력하세요.");
             return;
         }
+
+        globalSearchedRegion = searchQuery;
+        removePolygons();
+        loadEupMyeonDongData();
 
         // Kakao Geocoder를 사용하여 지역 검색
         var geocoder = new kakao.maps.services.Geocoder();
