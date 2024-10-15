@@ -20,7 +20,7 @@
     <select id="getBoardsWithPaging" parameterType="Map" resultType="com.flex.bizone.board.Bizone_board">
         SELECT *
         FROM bizone_board
-        WHERE bb_bm_nickname LIKE CONCAT('%', #{bb_nickname}, '%')
+        WHERE bb_bm_id LIKE CONCAT('%', #{bb_bm_id}, '%')
         ORDER BY bb_postNum DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
@@ -29,7 +29,7 @@
     <select id="getBoardCount" resultType="int">
         SELECT COUNT(*)
         FROM bizone_board
-        WHERE bb_bm_nickname LIKE CONCAT('%', #{bb_nickname}, '%')
+        WHERE bb_bm_id LIKE CONCAT('%', #{bb_bm_id}, '%')
     </select>
 
     <!-- 게시글 조회 시 조회수 증가 -->
