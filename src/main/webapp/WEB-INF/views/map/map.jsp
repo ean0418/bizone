@@ -243,22 +243,26 @@
                             </div>
                         </div>
 
-                        <!-- 성공 확률 정보 -->
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
-                                    <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                        <div class="row align-items-stretch">
+                            <!-- 성공 확률 정보 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
+                                        <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                                        <p></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- 파워랭킹 -->
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
-                                    <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
+                            <!-- 파워랭킹 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
+                                        <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                        <div id="rankDescription" class="text-muted" style="font-size: 12px;">() 안은 총 지역 수</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -566,6 +570,36 @@
                     const successProbability = parseFloat(data.successProbability).toFixed(2);
                     $('#successProbability').text(successProbability + "%");
 
+                    // 추가: 파워랭킹 데이터를 가져오기 위한 API 호출
+                    $.ajax({
+                        url: `/api/bizone/rank`,  // 순위 API
+                        type: 'GET',
+                        data: { serviceCode: selectedServiceCode, adminCode: selectedAdminCode},
+                        success: function (rankData) {
+                            if (rankData && rankData.rankList) {
+                                // rankList가 정상적으로 정의된 후 처리
+                                const totalRankCount = rankData.rankList.length;
+                                console.log("Rank List Count Loaded:", totalRankCount);  // totalRankCount가 올바르게 로드되었는지 확인
+                                console.log("Rank List Loaded:", rankData.rankList);  // rankList가 올바르게 로드되었는지 확인
+
+                                const currentRank = rankData.rankList.find(rank => rank.ba_code === selectedAdminCode);
+                                console.log("Current Rank:", currentRank); // 현재 행정동의 랭킹을 확인
+
+                                if (currentRank) {
+                                    $('#rank').text(currentRank.rank_index + '위' + '(' + totalRankCount + ')');
+                                } else {
+                                    $('#rank').text(`랭크 정보 없음1`);
+                                }
+                            } else {
+                                $('#rank').text('랭크 정보 없음2');
+                            }
+                        },
+                        error: function () {
+                            console.error("Error fetching rank data"); // API 에러 발생 시 콘솔에 출력
+                            $('#rank').text('랭크 정보 없음3');
+                        }
+                    });
+
                     // 데이터가 있을 때 버튼을 활성화
                     $('#detailbtn').prop('disabled', false).show();
 
@@ -605,6 +639,7 @@
 
                     // 데이터가 없을 때 버튼을 비활성화 또는 숨기기
                     $('#detailbtn').prop('disabled', true).hide();
+                    $('#rank').text('정보 없음'); // 파워랭킹도 정보 없음으로 표시
                 }
 
                 $('#regionModal').modal('show');  // 모달을 띄움
@@ -645,6 +680,7 @@
 
                 // 에러 발생 시에도 버튼 비활성화 또는 숨기기
                 $('#detailbtn').prop('disabled', true).hide();
+                $('#rank').text('정보 없음'); // 파워랭킹도 정보 없음으로 표시
 
                 $('#regionModal').modal('show');  // 모달을 띄움
             }
