@@ -15,6 +15,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.memberService = memberService;
     }
 
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
@@ -38,17 +46,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(memberService).passwordEncoder(passwordEncoder());
     }
 
-// Without JWT
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                    .ignoringAntMatchers("/api/**", "https://business.juso.go.kr**")
-                .disable()  // 전체적으로 CSRF 비활성화 (API 호출에서만 필요한 경우 조정 가능)
+                    .disable()
+//                    .ignoringAntMatchers("/api/**", "/loan-products")
+//                    .and()
                 .authorizeRequests()
-                .antMatchers("/api/loan-products/**").permitAll()
-                .and()
-                    .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
                     .anyRequest().permitAll()
@@ -66,31 +71,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .deleteCookies("JSESSIONID")
                     .permitAll();
 
-
-    }
-
-
-//// With JWT
-//    @Override
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeRequests()
-//                    .antMatchers("/admin/**").hasRole("ADMIN")
-//                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
-//                    .antMatchers("/member/login").permitAll()
-//                    .anyRequest().permitAll()
-//                    .and()
-//                .sessionManagement()
-//                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-//
-//        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
-//    }
-
-    @Override
-    @Bean
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
     }
 
     // PasswordEncoder 설정 (Spring Security 5 이상에서는 필수)
