@@ -77,9 +77,9 @@
     <!-- 상단 고정 게시글 목록 조회 -->
     <select id="getPinnedBoards" resultType="com.flex.bizone.board.Bizone_board">
         SELECT * FROM bizone_board
-        WHERE bb_bm_id = 'admin'
+        WHERE bb_bm_id = 'minju'
         ORDER BY bb_no DESC
-        LIMIT 3
+        LIMIT 5
     </select>
 
     <!-- 좋아요 수 증가 -->

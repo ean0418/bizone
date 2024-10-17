@@ -70,7 +70,7 @@
                     <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
+                    <a class="nav-link ms-4" href="${contextPath}/api/loan-products" style="text-align: left">마이대출</a>
                 </li>
                 <security:authorize access="isAuthenticated()">
                     <li class="nav-item">

@@ -26,7 +26,7 @@ import java.util.Map;
 @Controller
 public class LoanProductController {
 
-    @GetMapping("/loan-products")
+    @GetMapping("/api/loan-products")
     public String getLoanProducts(
             @RequestParam(value = "IRT_CTG", required = false) String irtCtg,
             @RequestParam(value = "USGE", required = false) String usge,

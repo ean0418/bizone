@@ -44,6 +44,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf()
                     .ignoringAntMatchers("/api/**", "https://business.juso.go.kr**")
+                .disable()  // 전체적으로 CSRF 비활성화 (API 호출에서만 필요한 경우 조정 가능)
+                .authorizeRequests()
+                .antMatchers("/api/loan-products/**").permitAll()
                 .and()
                     .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
@@ -62,6 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)  // Invalidate session on logout
                     .deleteCookies("JSESSIONID")
                     .permitAll();
+
 
     }
 
