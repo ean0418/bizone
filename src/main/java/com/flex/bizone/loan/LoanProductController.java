@@ -1,12 +1,9 @@
 package com.flex.bizone.loan;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -16,7 +13,13 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
 import java.io.StringReader;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,7 +28,6 @@ import java.util.Map;
 
 @Controller
 public class LoanProductController {
-
     @GetMapping("/loan-products")
     public String getLoanProducts(
             @RequestParam(value = "IRT_CTG", required = false) String irtCtg,
@@ -40,22 +42,34 @@ public class LoanProductController {
         // API 호출 URL 구성
         String apiUrl = "https://apis.data.go.kr/B553701/LoanProductSearchingInfo/LoanProductSearchingInfo/getLoanProductSearchingInfo";
         String serviceKey = "KXIrRVbtDNFBWxGmRv9lOsyI1M6sliCnAzV8GtqYLdn+kWmu0mtjpRtqWyRdKM27O/zbuY27RYOSXbgAtii7fw==";
+        String encodedServiceKey = "";
+        encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
 
-        StringBuilder urlBuilder = new StringBuilder(apiUrl + "?serviceKey=" + serviceKey + "&pageNo=1&numOfRows=500");
+        // 요청 URL 구성
+        String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=500";
+        if (irtCtg != null && !irtCtg.isEmpty()) url += "&IRT_CTG=" + String.join(", ", irtCtg);
+        if (usge != null && !usge.isEmpty()) url += String.join(", ", usge);
+        if (instCtg != null && !instCtg.isEmpty()) url += "&INST_CTG=" + String.join(", ", instCtg);
+        if (rsdAreaPamtEqltIstm != null && !rsdAreaPamtEqltIstm.isEmpty()) url += "&RSD_AREA_PAMT_EQLT_ISTM=" + String.join(", ", rsdAreaPamtEqltIstm);
+        if (tgtFltr != null && !tgtFltr.isEmpty()) url += "&TGT_FLTR=" + String.join(", ", tgtFltr);
 
-        // 다중 선택된 값들을 ','로 구분해서 API에 전달
-        if (irtCtg != null && !irtCtg.isEmpty()) urlBuilder.append("&IRT_CTG=").append(String.join(", ", irtCtg));
-        if (usge != null && !usge.isEmpty()) urlBuilder.append("&USGE=").append(String.join(", ", usge));
-        if (instCtg != null && !instCtg.isEmpty()) urlBuilder.append("&INST_CTG=").append(String.join(", ", instCtg));
-        if (rsdAreaPamtEqltIstm != null && !rsdAreaPamtEqltIstm.isEmpty()) urlBuilder.append("&RSD_AREA_PAMT_EQLT_ISTM=").append(String.join(", ", rsdAreaPamtEqltIstm));
-        if (tgtFltr != null && !tgtFltr.isEmpty()) urlBuilder.append("&TGT_FLTR=").append(String.join(", ", tgtFltr));
-        // RestTemplate 생성 및 UTF-8 설정 추가
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.getMessageConverters().add(0, new StringHttpMessageConverter(StandardCharsets.UTF_8));
+        // HttpClient 생성
+        HttpClient client = HttpClient.newHttpClient();
 
-        // API 호출 및 응답 받기
-        ResponseEntity<String> response = restTemplate.getForEntity(urlBuilder.toString(), String.class);
-        String xmlData = response.getBody();
+        // HttpRequest 생성
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .GET()
+                .build();
+
+        // 요청 보내기 및 응답 받기
+        String xmlData = "";
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            xmlData = response.body();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
 
         List<Map<String, String>> loanProducts = new ArrayList<>();
 

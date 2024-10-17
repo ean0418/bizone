@@ -119,7 +119,7 @@
 
   <!-- 조회 조건 입력 폼 -->
   <form action="${contextPath}/loan-products" method="get" class="mb-4">
-
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <!-- 금리구분 -->
     <div class="form-group">
       <label>금리구분:</label><br/>
