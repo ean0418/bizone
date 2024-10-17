@@ -31,6 +31,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.memberService = memberService;
     }
 
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
@@ -49,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                    .and()
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-//                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
+                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()

@@ -101,7 +101,7 @@
     </div>
     <div class="form-group">
       <label for="bb_bm_id">작성자</label>
-      <input type="text" id="bb_bm_id" name="bb_bm_id" value="${sessionScope.loginMember.bm_id}" readonly>
+      <input type="text" id="bb_bm_id" name="bb_bm_id" value="${pageContext.request.userPrincipal.name}" readonly>
     </div>
     <div class="form-group">
       <label for="bb_content">내용</label>
