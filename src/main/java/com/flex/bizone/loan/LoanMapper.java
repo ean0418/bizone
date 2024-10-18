@@ -1,7 +1,9 @@
 package com.flex.bizone.loan;
 
-
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -17,5 +19,4 @@ public interface LoanMapper {
     void deleteFavoriteById(int bf_id);
 
     int isFavorite(Bizone_favorites favorite);
-
 }

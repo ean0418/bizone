@@ -117,7 +117,9 @@
 <body>
 <div class="container mt-5">
   <h1>대출상품 조회</h1>
-
+  <div class="text-right mb-3">
+    <a href="${contextPath}/favorite" class="btn btn-secondary">찜한 상품 보기</a>
+  </div>
   <!-- 조회 조건 입력 폼 -->
   <form action="${contextPath}/loan-products" method="get" class="mb-4">
     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
