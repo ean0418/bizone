@@ -1,9 +1,11 @@
 package com.flex.bizone.board;
 
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -12,10 +14,22 @@ import java.util.Map;
 
 @Service
 @Repository
+
 public class BoardDAO {
 
     @Autowired
     private SqlSession ss;
+
+    // 상단 고정 게시글 목록 조회
+    public void getPinnedBoards(HttpServletRequest req) {
+        try {
+            List<Bizone_board> pinnedBoards = ss.getMapper(BoardMapper.class).getPinnedBoards();
+            req.setAttribute("pinnedBoards", pinnedBoards);  // 고정 게시글 목록을 JSP로 전달
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("r", "상단 고정 게시글을 불러오는 데 실패했습니다.");
+        }
+    }
 
     public void getAllBoards(int page, String bb_bm_id, HttpServletRequest req) {
         try {

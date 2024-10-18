@@ -70,7 +70,9 @@
                     <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/loan-products" style="text-align: left">마이대출</a>
+                    <form method="get" action="<c:url value="/loan-products"/>">
+                        <button class="nav-link ms-4" style="text-align: left">마이대출</button>
+                    </form>
                 </li>
                 <security:authorize access="isAuthenticated()">
                     <li class="nav-item">

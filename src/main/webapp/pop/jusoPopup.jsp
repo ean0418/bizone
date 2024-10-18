@@ -26,6 +26,17 @@
       var resultType = "4"; // 도로명+지번+상세건물명 결과 화면 출력 유형
       var inputYn = "<%=inputYn%>";
 
+      // 부모 창에서 CSRF 토큰 가져오기
+      var csrfToken = window.opener.document.querySelector('meta[name="_csrf"]').getAttribute('content');
+      var csrfHeader = window.opener.document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+      // CSRF 토큰을 hidden input 필드로 추가
+      var csrfInput = document.createElement("input");
+      csrfInput.type = "hidden";
+      csrfInput.name = "_csrf";
+      csrfInput.value = csrfToken;
+      document.getElementById("form").appendChild(csrfInput);
+
       if (inputYn != "Y") {
         document.getElementById("confmKey").value = confmKey;
         document.getElementById("returnUrl").value = url;

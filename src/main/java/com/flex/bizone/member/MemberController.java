@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,6 +33,7 @@ public class MemberController {
     @Autowired
     private MemberDAO mDAO;
 
+
     @GetMapping("/step1")
     public String showStep1(HttpServletRequest req) {
         req.setAttribute("contentPage", "member/joinStep1.jsp");
@@ -46,8 +49,6 @@ public class MemberController {
             m.setBm_kakao_id(kakao_id);
             req.getSession().setAttribute("kakaoID", null);
         } catch (Exception ignored) {}
-        m.setBm_role("USER");
-        m.setBm_signupDate(new Date(System.currentTimeMillis()));
         mDAO.signupMember(req, m);
         req.setAttribute("contentPage", "member/joinStep3.jsp");
         return "index";
@@ -72,7 +73,20 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    public String goMemberInfo(HttpServletRequest req) {
+    public String goMemberInfo(HttpServletRequest req,Model model,Principal principal) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = principal.getName(); // Get the logged-in user's ID
+
+        // Fetch user info from the database using DAO
+        Bizone_member loggedInMember = mDAO.findByUsername(username);
+
+        // Add user info to the model
+        if (loggedInMember != null) {
+            model.addAttribute("member", loggedInMember);
+        } else {
+            model.addAttribute("error", "User not found.");
+        }
+
         req.setAttribute("contentPage", "member/info.jsp");
         return "index";
     }

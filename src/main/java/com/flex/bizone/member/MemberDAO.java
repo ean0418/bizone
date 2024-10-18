@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -71,13 +72,21 @@ public class MemberDAO {
 
     public void signupMember(HttpServletRequest req, Bizone_member m) {
         try {
+
+            req.setCharacterEncoding("utf-8");
             String bm_addr1 = req.getParameter("bm_addr1");
             String bm_addr2 = req.getParameter("bm_addr2");
             String bm_addr3 = req.getParameter("bm_addr3");
             String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
             m.setBm_address(bm_address);
-            String hashedPW = passwordEncoder.encode(m.getBm_pw());
-            m.setBm_pw(hashedPW);
+            // 현재 날짜를 bm_signupDate에 설정
+            m.setBm_signupDate(new Date(System.currentTimeMillis()));
+
+            // 회원 역할 설정
+            m.setBm_role("USER");
+
+            String hashedPw = passwordEncoder.encode(m.getBm_pw());
+            m.setBm_pw(hashedPw);
             ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,7 +146,7 @@ public class MemberDAO {
             Bizone_member m = ss.getMapper(MemberMapper.class).getMemberById(inputM).get(0);
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
-            m.setBm_name(req.getParameter("bm_nickname"));
+            m.setBm_nickname(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
 
