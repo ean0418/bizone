@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.flex.bizone.map.InterestAreaMapper">
+    <!-- 찜 추가 -->
+    <insert id="insertFavorite" parameterType="com.flex.bizone.map.InterestAreaData">
+        INSERT INTO bizone_interest_area (bm_id, ba_code, bb_code, bia_rank_index, bia_date)
+        VALUES (#{bm_id}, #{ba_code}, #{bb_code}, #{rank_index}, NOW())
+    </insert>
+
+    <!-- 찜 조회 -->
+    <select id="selectFavoritesByMemberId" resultType="com.flex.bizone.map.InterestAreaData">
+        SELECT
+            ia.bm_id,
+            ia.bia_id,
+            ia.ba_code,
+            ia.bb_code,
+            ba.ba_name,
+            bb.bb_name,
+            bs.bs_success_probability,
+            ia.bia_rank_index,
+            ia.bia_date
+        FROM bizone_interest_area ia
+                 JOIN bizone_admin ba ON ia.ba_code = ba.ba_code
+                 JOIN bizone_business bb ON ia.bb_code = bb.bb_code
+                 LEFT JOIN bizone_score bs ON ia.ba_code = bs.ba_code AND ia.bb_code = bs.bb_code
+        WHERE ia.bm_id = #{bm_id}
+        ORDER BY ia.bia_date DESC;
+    </select>
+
+    <!-- 찜 삭제 -->
+    <delete id="deleteFavorite">
+        DELETE FROM bizone_interest_area
+        WHERE bm_id = #{bm_id}
+          AND ba_code = #{ba_code}
+          AND bb_code = #{bb_code}
+    </delete>
+
+    <!--    &lt;!&ndash; 찜 추가 &ndash;&gt;-->
+<!--    <insert id="insertFavorite">-->
+<!--        INSERT INTO bizone_interest_area (bm_id, ba_code, bb_code, bia_date)-->
+<!--        VALUES (#{bm_id}, #{ba_code}, #{bb_code}, NOW())-->
+<!--    </insert>-->
+
+<!--    &lt;!&ndash; 관심 지역 목록 조회 &ndash;&gt;-->
+<!--    <select id="selectFavoritesByMemberId" resultType="com.flex.bizone.map.InterestAreaData">-->
+<!--        SELECT-->
+<!--            ia.bm_id,-->
+<!--            ia.bia_id,-->
+<!--            ia.ba_code,-->
+<!--            ia.bb_code,-->
+<!--            ba.ba_name,-->
+<!--            bb.bb_name,-->
+<!--            bs.bs_success_probability,-->
+<!--            ia.bia_date-->
+<!--        FROM bizone_interest_area ia-->
+<!--                 JOIN bizone_admin ba ON ia.ba_code = ba.ba_code-->
+<!--                 JOIN bizone_business bb ON ia.bb_code = bb.bb_code-->
+<!--                 LEFT JOIN bizone_score bs ON ia.ba_code = bs.ba_code AND ia.bb_code = bs.bb_code-->
+<!--        WHERE ia.bm_id = #{bm_id}-->
+<!--        ORDER BY ia.bia_date DESC-->
+<!--    </select>-->
+
+<!--    &lt;!&ndash; 찜 삭제 &ndash;&gt;-->
+<!--    <delete id="deleteFavorite">-->
+<!--        DELETE FROM bizone_interest_area-->
+<!--        WHERE bm_id = #{bm_id}-->
+<!--          AND ba_code = #{ba_code}-->
+<!--          AND bb_code = #{bb_code}-->
+<!--    </delete>-->
+
+    <!--    &lt;!&ndash; 찜 목록 조회 &ndash;&gt;-->
+    <!--    <select id="selectFavoritesByMemberId" resultType="com.flex.bizone.map.InterestAreaData">-->
+    <!--        SELECT-->
+    <!--            ia.bm_id,-->
+    <!--            ia.bia_id,-->
+    <!--            ia.ba_code,-->
+    <!--            ia.bb_code,-->
+    <!--            ba.ba_name,-->
+    <!--            bb.bb_name,-->
+    <!--            ia.bia_date-->
+    <!--        FROM bizone_interest_area ia-->
+    <!--                 JOIN bizone_admin ba ON ia.ba_code = ba.ba_code-->
+    <!--                 JOIN bizone_business bb ON ia.bb_code = bb.bb_code-->
+    <!--        WHERE ia.bm_id = #{bm_id}-->
+    <!--        ORDER BY ia.bia_date DESC-->
+    <!--    </select>-->
+
+</mapper>
