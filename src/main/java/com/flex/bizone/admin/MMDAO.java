@@ -4,6 +4,7 @@ import com.flex.bizone.member.Bizone_member;
 import com.flex.bizone.member.MemberMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public class MMDAO {
 
     @Autowired
     private SqlSession ss;
+
 
     public List<Bizone_member> searchMember(Bizone_member m) {
         // 데이터베이스에서 ID로 회원 조회

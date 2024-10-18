@@ -33,6 +33,12 @@ public class MemberController {
     @Autowired
     private MemberDAO mDAO;
 
+    // 설명 버튼을 클릭하면 first.jsp로 이동
+    @GetMapping("/first")
+    public String showFirstPage(HttpServletRequest req) {
+        req.setAttribute("contentPage", "member/first.jsp");
+        return "index";
+    }
 
     @GetMapping("/step1")
     public String showStep1(HttpServletRequest req) {
@@ -101,11 +107,11 @@ public class MemberController {
     }
 
     @PostMapping("/update")
-    public String memerUpdate(HttpServletRequest req, HttpServletResponse res, Principal principal) throws UnsupportedEncodingException {
+    public String memberUpdate(HttpServletRequest req, HttpServletResponse res, Principal principal) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
         mDAO.update(req, principal.getName());
-        req.setAttribute("contentPage", "member/info.jsp");
+        req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }
 

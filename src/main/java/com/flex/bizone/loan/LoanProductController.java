@@ -46,7 +46,7 @@ public class LoanProductController {
         encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
 
         // 요청 URL 구성
-        String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=500";
+        String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=100";
         if (irtCtg != null && !irtCtg.isEmpty()) url += "&IRT_CTG=" + String.join(", ", irtCtg);
         if (usge != null && !usge.isEmpty()) url += String.join(", ", usge);
         if (instCtg != null && !instCtg.isEmpty()) url += "&INST_CTG=" + String.join(", ", instCtg);

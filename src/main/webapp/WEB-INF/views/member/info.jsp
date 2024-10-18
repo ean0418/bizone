@@ -152,12 +152,6 @@
                     </td>
                 </tr>
                 <tr>
-                    <th>비밀번호</th>
-                    <td>
-                        <input value="${member.bm_pw}" name="bm_pw" placeholder="PASSWORD" autocomplete="off" maxlength="10" type="password">
-                    </td>
-                </tr>
-                <tr>
                     <th>닉네임</th>
                     <td>
                         <input value="${member.bm_nickname}" name="bm_nickname" placeholder="닉네임" autocomplete="off" maxlength="10">

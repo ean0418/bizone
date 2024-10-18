@@ -3,6 +3,7 @@
 <html>
 <head>
   <title>대출상품 조회</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
@@ -290,6 +291,27 @@
                 </c:choose>
                 <strong>자격 조건:</strong> ${product.qualification}
               </p>
+
+              <!-- 찜하기 하트 아이콘 -->
+              <form action="${contextPath}/addFavorite" method="post" class="favorite-form">
+                <input type="hidden" name="productName" value="${product.productName}">
+                <input type="hidden" name="loanLimit" value="${product.loanLimit}">
+                <input type="hidden" name="interestRate" value="${product.interestRate}">
+                <input type="hidden" name="qualification" value="${product.qualification}">
+
+                <button type="submit" class="btn btn-link">
+                  <c:choose>
+                    <c:when test="${product.isFavorite}">
+                      <!-- 찜한 상태 (채워진 하트) -->
+                      <i class="fas fa-heart" style="color: red;"></i>
+                    </c:when>
+                    <c:otherwise>
+                      <!-- 찜하지 않은 상태 (빈 하트) -->
+                      <i class="far fa-heart" style="color: grey;"></i>
+                    </c:otherwise>
+                  </c:choose>
+                </button>
+              </form>
             </div>
           </div>
         </div>
