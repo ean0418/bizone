@@ -73,6 +73,8 @@ public class MemberDAO {
 
     public void signupMember(HttpServletRequest req, Bizone_member m) {
         try {
+
+            req.setCharacterEncoding("utf-8");
             String bm_addr1 = req.getParameter("bm_addr1");
             String bm_addr2 = req.getParameter("bm_addr2");
             String bm_addr3 = req.getParameter("bm_addr3");
@@ -142,7 +144,7 @@ public class MemberDAO {
             Bizone_member m = ss.getMapper(MemberMapper.class).getMemberById(inputM).get(0);
             m.setBm_pw(req.getParameter("bm_pw"));
             m.setBm_name(req.getParameter("bm_name"));
-            m.setBm_name(req.getParameter("bm_nickname"));
+            m.setBm_nickname(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
 

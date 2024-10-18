@@ -172,6 +172,9 @@
                 <input type="text" id="businessCategorySearch" placeholder="업종 검색">
                 <input type="button" id="businessCategorySearchButton" value="업종 검색">
             </div>
+            <div class="input-container">
+                <input type="button" id="bizoneSearchButton" value="상권분석">
+            </div>
 
             <ul id="searchResults"></ul>
             <div id="pagination" style="text-align: center; margin-top: 20px;"></div>
@@ -243,22 +246,26 @@
                             </div>
                         </div>
 
-                        <!-- 성공 확률 정보 -->
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
-                                    <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                        <div class="row align-items-stretch">
+                            <!-- 성공 확률 정보 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
+                                        <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                                        <p></p>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- 파워랭킹 -->
-                        <div class="col-md-6">
-                            <div class="card mb-4">
-                                <div class="card-body">
-                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
-                                    <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
+                            <!-- 파워랭킹 -->
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
+                                        <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                        <div id="rankDescription" class="text-muted" style="font-size: 12px;">() 안은 총 지역 수</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -522,33 +529,131 @@
                 service_code: serviceCode  // 서비스 코드
             },
             success: function (data) {
-                console.log('Received Data for Chart:', data);
+                if (data) {
+                    // 정상적인 데이터가 있을 때 처리 로직
+                    $('#regionName').text(regionName + " 상권분석");
+                    $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
 
-                // 모달 창 업데이트 코드
+                    const chartData = {
+                        labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
+                        datasets: [{
+                            label: '상권분석 데이터',
+                            data: [
+                                data.avgRentFeeScore.toFixed(2),
+                                data.totalWorkplacePopulationScore.toFixed(2),
+                                data.totalExpenditureScore.toFixed(2),
+                                data.attractionCountScore.toFixed(2),
+                                data.avgMonthlySalesScore.toFixed(2),
+                                data.otherScoresTotal.toFixed(2)
+                            ],
+                            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    };
+
+                    if (chartInstance) {
+                        chartInstance.destroy();
+                    }
+
+                    const ctx = document.getElementById('regionChart').getContext('2d');
+                    chartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: chartData,
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 8  // y값 최대치 설정
+                                }
+                            }
+                        }
+                    });
+
+                    const successProbability = parseFloat(data.successProbability).toFixed(2);
+                    $('#successProbability').text(successProbability + "%");
+
+                    // 추가: 파워랭킹 데이터를 가져오기 위한 API 호출
+                    $.ajax({
+                        url: `/api/bizone/rank`,  // 순위 API
+                        type: 'GET',
+                        data: { serviceCode: selectedServiceCode, adminCode: selectedAdminCode},
+                        success: function (rankData) {
+                            if (rankData && rankData.rankList) {
+                                // rankList가 정상적으로 정의된 후 처리
+                                const totalRankCount = rankData.rankList.length;
+                                console.log("Rank List Count Loaded:", totalRankCount);  // totalRankCount가 올바르게 로드되었는지 확인
+                                console.log("Rank List Loaded:", rankData.rankList);  // rankList가 올바르게 로드되었는지 확인
+
+                                const currentRank = rankData.rankList.find(rank => rank.ba_code === selectedAdminCode);
+                                console.log("Current Rank:", currentRank); // 현재 행정동의 랭킹을 확인
+
+                                if (currentRank) {
+                                    $('#rank').text(currentRank.rank_index + '위' + '(' + totalRankCount + ')');
+                                } else {
+                                    $('#rank').text(`랭크 정보 없음1`);
+                                }
+                            } else {
+                                $('#rank').text('랭크 정보 없음2');
+                            }
+                        },
+                        error: function () {
+                            console.error("Error fetching rank data"); // API 에러 발생 시 콘솔에 출력
+                            $('#rank').text('랭크 정보 없음3');
+                        }
+                    });
+
+                    // 데이터가 있을 때 버튼을 활성화
+                    $('#detailbtn').prop('disabled', false).show();
+
+                } else {
+                    // 데이터가 없을 때 처리
+                    $('#regionName').text(regionName + " 상권분석");
+                    $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
+                    $('#successProbability').text("정보 없음");
+
+                    // 차트 데이터가 없다는 내용으로 업데이트
+                    if (chartInstance) {
+                        chartInstance.destroy();
+                    }
+
+                    const ctx = document.getElementById('regionChart').getContext('2d');
+                    chartInstance = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['정보 없음'],
+                            datasets: [{
+                                label: '정보 없음',
+                                data: [0], // 정보 없음
+                                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 1  // y값 최대치
+                                }
+                            }
+                        }
+                    });
+
+                    // 데이터가 없을 때 버튼을 비활성화 또는 숨기기
+                    $('#detailbtn').prop('disabled', true).hide();
+                    $('#rank').text('정보 없음'); // 파워랭킹도 정보 없음으로 표시
+                }
+
+                $('#regionModal').modal('show');  // 모달을 띄움
+            },
+            error: function () {
+                // 에러 발생 시 모달 내부에 데이터 없음 표시
                 $('#regionName').text(regionName + " 상권분석");
                 $('#selectedBusinessModal').text(selectedBusiness ? selectedBusiness.bb_name : '정보 없음');
+                $('#successProbability').text("정보 없음");
 
-                // 두 번째 모달 창 업데이트 코드 추가
-                $('#detailedRegionName').text(globalRegionName || adminCode);  // 전역 변수 사용
-
-                const chartData = {
-                    labels: ['평균 임대료', '총 직장인구수', '총 지출 금액', '집객시설 수', '평균 월 매출', '기타'],
-                    datasets: [{
-                        label: '상권분석 데이터',
-                        data: [
-                            data.avgRentFeeScore.toFixed(2),
-                            data.totalWorkplacePopulationScore.toFixed(2),
-                            data.totalExpenditureScore.toFixed(2),
-                            data.attractionCountScore.toFixed(2),
-                            data.avgMonthlySalesScore.toFixed(2),
-                            data.otherScoresTotal.toFixed(2)
-                        ],
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
-                    }]
-                };
-
+                // 차트가 없다는 내용을 차트로 표시
                 if (chartInstance) {
                     chartInstance.destroy();
                 }
@@ -556,23 +661,31 @@
                 const ctx = document.getElementById('regionChart').getContext('2d');
                 chartInstance = new Chart(ctx, {
                     type: 'bar',
-                    data: chartData,
+                    data: {
+                        labels: ['정보 없음'],
+                        datasets: [{
+                            label: '정보 없음',
+                            data: [0], // 정보 없음
+                            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1
+                        }]
+                    },
                     options: {
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                max: 8  // y값 최대치 정하기
+                                max: 1  // y값 최대치
                             }
                         }
                     }
                 });
 
-                const successProbability = parseFloat(data.successProbability).toFixed(2);
-                $('#successProbability').text(successProbability + "%");
-                $('#regionModal').modal('show');
-            },
-            error: function () {
-                alert("정보가 없는 지역입니다. 다시 선택해주세요.");
+                // 에러 발생 시에도 버튼 비활성화 또는 숨기기
+                $('#detailbtn').prop('disabled', true).hide();
+                $('#rank').text('정보 없음'); // 파워랭킹도 정보 없음으로 표시
+
+                $('#regionModal').modal('show');  // 모달을 띄움
             }
         });
     }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.flex.bizone.member.MemberMapper">
+
+
+    <insert id="insertFavoriteLoanProduct" parameterType="map">
+        INSERT INTO bizone_favorites (bf_bm_id, bf_product_name, bf_loan_limit, bf_interest_rate, bf_qualification)
+        VALUES (#{bm_id}, #{productName}, #{loanLimit}, #{interestRate}, #{qualification})
+    </insert>
+
+    <select id="getFavoritesByMemberId" parameterType="string" resultType="hashmap">
+        SELECT bf_product_name AS productName, bf_loan_limit AS loanLimit, bf_interest_rate AS interestRate, bf_qualification AS qualification
+        FROM bizone_favorites
+        WHERE bf_bm_id = #{bm_id}
+    </select>
+
+    <delete id="deleteFavoriteLoanProduct" parameterType="map">
+        DELETE FROM bizone_favorites
+        WHERE bf_bm_id = #{bm_id} AND bf_product_name = #{productName}
+    </delete>
+
+    <select id="isFavoriteLoanProduct" parameterType="map" resultType="int">
+        SELECT COUNT(*)
+        FROM bizone_favorites
+        WHERE bf_bm_id = #{bm_id} AND bf_product_name = #{productName}
+    </select>
+
+</mapper>

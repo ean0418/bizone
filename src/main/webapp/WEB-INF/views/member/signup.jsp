@@ -14,21 +14,34 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>회원가입</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <script language="javascript">
-        function goPopup() {
-            // 팝업 창 열기 (주소 검색 팝업 페이지로 연결)
-            var pop = window.open("/pop/jusoPopup.jsp", "pop", "width=570,height=420, scrollbars=yes, resizable=yes");
+    <script>
+        function searchAddress() {
+            const keyword = document.getElementById('searchKeyword').value;
+
+            fetch('/searchAddress?keyword=' + encodeURIComponent(keyword))
+                .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+                .then(data => {
+                    const jusoList = data.results.juso;
+                    if (jusoList && jusoList.length > 0) {
+                        const firstJuso = jusoList[0];
+                        document.getElementById('bm_addr1').value = firstJuso.zipNo; // 우편번호
+                        document.getElementById('bm_addr2').value = firstJuso.roadAddrPart1; // 도로명 주소
+                        document.getElementById('bm_addr3').value = firstJuso.addrDetail || ''; // 상세 주소
+                        document.getElementById('bm_address').value = firstJuso.zipNo + ' ' + firstJuso.roadAddrPart1 + ' ' + (firstJuso.addrDetail || ''); // 전체 주소
+                    } else {
+                        alert('검색 결과가 없습니다.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('주소 검색 중 오류가 발생했습니다.');
+                });
         }
-
-        // 팝업 창에서 반환된 주소 정보를 메인 폼 필드에 채우는 함수
-        function jusoCallBack(zipNo, roadAddrPart1, addrDetail) {
-            document.getElementById('bm_addr1').value = zipNo;          // 우편번호
-            document.getElementById('bm_addr2').value = roadAddrPart1;   // 도로명 주소
-            document.getElementById('bm_addr3').value = addrDetail;     // 상세 주소
-            document.getElementById('bm_address').value = zipNo + ' ' + roadAddrPart1 + ' ' + addrDetail; // 전체 주소
-        }
-
-
     </script>
 
     <style>
@@ -224,18 +237,12 @@
             <tr>
                 <td colspan="2">
                     <label style="text-align: center; font-size: 16pt;">회원가입</label>
-                    <div class="step-indicator">
-                        <span class="inactive">1</span> → <span class="active">2</span> → <span class="inactive">3</span>
-                    </div>
                     <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
                            autocomplete="off" maxlength="10" class="i1">
-                    <!-- ID 중복 체크 버튼 -->
                     <input type="button" id="confirmId" name="confirmId" class="address-btn" value="ID중복체크">
-                    <!-- 중복 체크 결과 메시지 -->
                     <div id="msg"></div>
                 </td>
             </tr>
-
             <tr>
                 <td colspan="2">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
@@ -260,23 +267,24 @@
                     <input name="bm_nickname" placeholder="NICKNAME" autocomplete="off" maxlength="20" class="i1">
                 </td>
             </tr>
+
+            <!-- 주소 검색 -->
             <tr>
                 <td colspan="2">
-                    <!-- 주소 검색 버튼 -->
-                    <button class="address-btn" type="button" onclick="goPopup()">주소 검색</button><br>
+                    <input type="text" id="searchKeyword" placeholder="주소를 입력하세요" class="i1">
+                    <button class="address-btn" type="button" onclick="searchAddress()">주소 검색</button><br>
 
                     <!-- 주소 입력 필드 -->
-
-                    <input type="text" id="bm_addr1" name="bm_addr1" placeholder="Zip Code" readonly="readonly" class="i1">
-                    <input type="text" id="bm_addr2" name="bm_addr2" placeholder="Address" readonly="readonly" class="i1">
-                    <input type="text" id="bm_addr3" name="bm_addr3" placeholder="Detail Address" autocomplete="off" class="i1">
-                    <input type="hidden" id="bm_address" name="bm_address">
+                    <input type="text" id="bm_addr1" name="bm_addr1" placeholder="우편번호" readonly="readonly" class="i1">
+                    <input type="text" id="bm_addr2" name="bm_addr2" placeholder="도로명 주소" readonly="readonly" class="i1">
+                    <input type="text" id="bm_addr3" name="bm_addr3" placeholder="상세 주소" autocomplete="off" class="i1">
+                    <input type="hidden" id="bm_address" name="bm_address"> <!-- 전체 주소 저장 -->
                 </td>
             </tr>
+
             <tr>
                 <td colspan="2">
                     <input name="bm_phoneNum" placeholder="Phone Number" autocomplete="off" maxlength="20" class="i1">
-                    <input type="hidden" id="bm_phoneNum"><br>
                 </td>
             </tr>
             <tr>

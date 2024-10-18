@@ -35,8 +35,8 @@ public class LoanProductController {
             @RequestParam(value = "INST_CTG", required = false) String instCtg,
             @RequestParam(value = "RSD_AREA_PAMT_EQLT_ISTM", required = false) String rsdAreaPamtEqltIstm,
             @RequestParam(value = "TGT_FLTR", required = false) String tgtFltr,
-            @RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
-            @RequestParam(value = "numOfRows", defaultValue = "10") int numOfRows,
+            @RequestParam(value = "pageNo", defaultValue = "1") Integer pageNo,
+            @RequestParam(value = "numOfRows", defaultValue = "10") Integer numOfRows,
             Model model, HttpServletRequest req) {
 
         // API 호출 URL 구성
@@ -54,7 +54,6 @@ public class LoanProductController {
 
         // HttpClient 생성
         HttpClient client = HttpClient.newHttpClient();
-
         // HttpRequest 생성
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
@@ -117,7 +116,7 @@ public class LoanProductController {
                 model.addAttribute("noDataMessage", "조건에 해당하는 대출 상품이 없습니다.");
             }
             // 총 페이지 수 계산 (10개씩 보여줌)
-            int totalPages = (int) Math.ceil((double) totalCount / numOfRows);
+            Integer totalPages = (int) Math.ceil((double) totalCount / numOfRows);
 
             // 현재 페이지에서 보여줄 데이터 범위 계산
             int startIndex = (pageNo - 1) * numOfRows;

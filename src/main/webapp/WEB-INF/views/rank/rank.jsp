@@ -9,9 +9,6 @@
     <title>파워랭킹</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
         .rank-table {
             margin-top: 30px;
         }
@@ -34,15 +31,22 @@
             font-weight: bold;
             padding: 10px;
         }
+        .input-group input {
+            flex: 1; /* 입력창이 가능한 넓게 차지하게 설정 */
+        }
+        .input-group button {
+            flex: 0 0 auto; /* 버튼은 기본 크기로 유지 */
+        }
         #searchResults {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 0;
             position: absolute;
             width: 100%;
+            max-width: 600px; /* 검색창 너비와 맞춤 */
+            overflow-y: auto;
+            border: 1px solid #ddd;
             background: white;
             z-index: 1000;
+            left: 50%; /* 가운데 정렬 */
+            transform: translateX(-50%); /* 가운데 정렬을 위한 X축 이동 */
         }
         .search-result-item {
             padding: 10px;
@@ -51,9 +55,14 @@
         .search-result-item:hover {
             background-color: #f0f0f0;
         }
+        .container.rank-table {
+            text-align: center; /* 부모 요소에 대해 가운데 정렬 */
+        }
+
         .input-group {
-            max-width: 500px;
-            margin: 0 auto;
+            display: inline-flex; /* inline-block에서 inline-flex로 변경 */
+            width: 100%;
+            max-width: 600px; /* 원하는 최대 너비로 설정 */
         }
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
@@ -98,6 +107,10 @@
             function filterFunc(item) {
                 const searchQuery = $('#serviceSearch').val().toLowerCase();
 
+                if (searchQuery.length < 2) {
+                    return false; // 두 글자 미만일 때는 검색하지 않음
+                }
+
                 if (isChosungInput(searchQuery)) {
                     // 초성 검색 처리
                     const searchQueryChosung = getChosung(searchQuery);
@@ -111,6 +124,18 @@
                 }
             }
 
+            // 검색어 입력 시 자동완성 결과 표시
+            $('#serviceSearch').on('input', function () {
+                const searchQuery = $(this).val().toLowerCase();
+
+                if (searchQuery.length >= 2) {
+                    const filteredResults = businessData.filter(filterFunc);
+                    displayResults(filteredResults);
+                } else {
+                    $('#searchResults').empty();  // 두 글자 미만일 때는 검색 결과를 비움
+                }
+            });
+
             // 검색 결과를 화면에 표시
             function displayResults(filteredResults) {
                 $('#searchResults').empty();
@@ -121,6 +146,12 @@
 
                 filteredResults.forEach(function (item) {
                     const listItem = $('<div class="search-result-item" data-code="' + item.bb_code + '">' + item.bb_name + ' (' + item.bb_code + ')</div>');
+
+                    listItem.on('click', function () {
+                        $('#serviceSearch').val(item.bb_name + ' (' + item.bb_code + ')');
+                        $('#searchResults').empty(); // 결과 창 닫기
+                    });
+
                     $('#searchResults').append(listItem);
                 });
             }

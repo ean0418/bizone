@@ -39,6 +39,7 @@ public class BoardController {
     public String boardList(@RequestParam(defaultValue = "1") int page,
                             @RequestParam(defaultValue = "") String bb_bm_id,
                             HttpServletRequest req, Model model) {
+        boardDAO.getPinnedBoards(req);
         boardDAO.getAllBoards(page, bb_bm_id, req); // 게시글 목록을 요청
         model.addAttribute("boardList", req.getAttribute("boardList")); // boardList를 JSP로 전달
         model.addAttribute("page", req.getAttribute("page"));

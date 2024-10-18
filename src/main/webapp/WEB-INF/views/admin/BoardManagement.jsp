@@ -173,6 +173,7 @@
 
         <td>
           <form action="${contextPath}/admin/deleteBoard" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
             <input type="hidden" name="bb_no" value="${board.bb_no}">
             <button type="submit" class="btn btn-sm btn-danger">삭제</button>
           </form>
