@@ -362,57 +362,53 @@
 
 <!-- 페이지 첫 접속 시 보여줄 안내 팝업 -->
 <div class="modal fade" id="popupModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <!-- 팝업 헤더 -->
-            <div class="modal-header bg-info text-white">
-                <h5 class="modal-title" id="welcomeModalLabel"><i class="fas fa-info-circle"></i> 상권 분석 시스템 안내</h5>
-            </div>
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content" style="background-color: transparent; border: none; position: relative;">
 
-            <!-- 팝업 바디 -->
-            <div class="modal-body">
-                <div class="container-fluid">
-                    <!-- 안내 내용 구성 -->
-                    <div class="card mb-4">
-                        <div class="card-body bg-light">
-                            <h6 class="font-weight-bold"><i class="fas fa-lightbulb"></i> 상권 분석 시스템에 오신 것을 환영합니다!</h6>
-                            <p>
-                                이 시스템을 통해 지역별 상권 분석, 업종 선택 및 분석, 상세 데이터를 확인할 수 있습니다.
-                                <br><br>
-                                <strong>간단 분석 방법 안내:</strong>
-                            <ol>
-                                <li>분석할 지역 및 업종을 선택합니다.</li>
-                                <li>분석하기 버튼을 클릭하여 결과를 확인합니다.</li>
-                                <li>결과를 확인 후, 상세 데이터 보기 버튼을 통해 더 많은 정보를 얻을 수 있습니다.</li>
-                            </ol>
-                            </p>
-                        </div>
-                    </div>
+            <!-- X 버튼을 상단 오른쪽 끝에 배치 -->
+            <button id="closePopupModal" class="btn btn-primary"
+                    style="position: absolute; top: 10px; right: 10px; background-color: transparent; border: none; color: white; font-size: 30px;">
+                &times;
+            </button>
+
+            <!-- 팝업 바디에 이미지 추가 -->
+            <div class="modal-body p-0">
+                <div class="container-fluid p-0">
+                    <!-- 큰 이미지 (비율 유지하며 크기를 맞춤) -->
+                    <img src="${pageContext.request.contextPath}/resources/image/주소검색.gif" alt="주소 검색 안내" class="img-fluid"
+                         style="max-height: 90vh; max-width: 100%; object-fit: contain; margin: auto; display: block;">
                 </div>
             </div>
 
-            <!-- 팝업 푸터 (닫기 버튼) -->
-            <div class="modal-footer">
-                <button id="closePopupModal" class="btn btn-primary">확인</button> <!-- 확인 버튼을 눌렀을 때 모달 닫기 -->
+            <!-- 두번 다시 보지 않기 기능 추가 -->
+            <div class="modal-footer justify-content-center" style="background-color: transparent;">
+                <input type="checkbox" id="dontShowAgain">
+                <label for="dontShowAgain" style="color: white;">두 번 다시 보지 않기</label>
             </div>
         </div>
     </div>
 </div>
 
-<!-- 메인홈페이지에서 설명 팝업창 -->
+<!-- 메인 홈페이지에서 설명 팝업창 -->
 <script>
     $(document).ready(function () {
-        // 페이지가 로드되면 자동으로 팝업을 띄우는 함수
-        $('#popupModal').modal('show');  // Bootstrap 모달 표시
+        // 두번 다시 보지 않기 기능 체크
+        if (!localStorage.getItem('dontShowPopup')) {
+            $('#popupModal').modal('show');  // Bootstrap 모달 표시
+        }
 
-    });
-
-    $(document).ready(function () {
-        // 두 번째 모달의 확인 버튼 클릭 시 모달 닫기
+        // X 버튼 클릭 시 모달 닫기
         $('#closePopupModal').on('click', function () {
-            $('#popupModal').modal('hide'); // detailedModal 닫기
+            $('#popupModal').modal('hide');  // 모달 숨기기
         });
 
+        // 두번 다시 보지 않기 체크박스 클릭 시
+        $('#dontShowAgain').on('change', function () {
+            if ($(this).is(':checked')) {
+                localStorage.setItem('dontShowPopup', 'true');  // 체크 시 localStorage에 값 저장
+                $('#popupModal').modal('hide');  // 모달 닫기
+            }
+        });
     });
 </script>
 
