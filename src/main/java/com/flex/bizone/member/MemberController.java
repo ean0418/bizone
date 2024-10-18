@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.sql.Date;
 import java.util.*;
 
 @RequestMapping("/member")
@@ -46,6 +47,7 @@ public class MemberController {
             req.getSession().setAttribute("kakaoID", null);
         } catch (Exception ignored) {}
         m.setBm_role("USER");
+        m.setBm_signupDate(new Date(System.currentTimeMillis()));
         mDAO.signupMember(req, m);
         req.setAttribute("contentPage", "member/joinStep3.jsp");
         return "index";

@@ -76,7 +76,8 @@ public class MemberDAO {
             String bm_addr3 = req.getParameter("bm_addr3");
             String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
             m.setBm_address(bm_address);
-
+            String hashedPW = passwordEncoder.encode(m.getBm_pw());
+            m.setBm_pw(hashedPW);
             ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
