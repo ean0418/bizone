@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Repository;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -76,7 +78,11 @@ public class MemberDAO {
             String bm_addr3 = req.getParameter("bm_addr3");
             String bm_address = bm_addr1 + " " + bm_addr2 + " " + bm_addr3;
             m.setBm_address(bm_address);
+            m.setBm_signupDate(new Date(System.currentTimeMillis()));
 
+            String hashedPW = passwordEncoder.encode(m.getBm_pw());
+            System.out.println(hashedPW);
+            m.setBm_pw(hashedPW);
             ss.getMapper(MemberMapper.class).signupMember(m);
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,6 +180,29 @@ public class MemberDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean checkKakao(Bizone_member m) {
+        try {
+            ss.getMapper(MemberMapper.class).getMemberByKakaoID(m).get(0);
+            return true;
+        } catch (IndexOutOfBoundsException e) {
+            return false;
+        }
+    }
+
+    public void fillInKakaoUser(Bizone_member m, Authentication auth) {
+        String hashedPW = passwordEncoder.encode(m.getBm_pw());
+        m.setBm_pw(hashedPW);
+        StringBuilder roles = new StringBuilder();
+        for (GrantedAuthority authority : auth.getAuthorities()) {
+            roles.append(authority.getAuthority()).append(" ");
+        }
+        m.setBm_role(roles.toString());
+        m.setBm_signupDate(new Date(System.currentTimeMillis()));
+        m.setBm_kakao_id(auth.getName());
+        System.out.println(m.getBm_nickname());
+        ss.getMapper(MemberMapper.class).signupMember(m);
     }
 
 }

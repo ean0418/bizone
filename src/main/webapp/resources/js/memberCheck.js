@@ -93,11 +93,11 @@ function updateCheck() {
         return false;
     } else if (isEmpty(bm_nickname)) {
         document.getElementById('bm_nickname').value = bm_id;
-    } else if (isEmpty(bm_address)) {
-        alert("Please Fill in Address Properly.");
-        bm_address.value = "";
-        bm_address.focus();
-        return false;
+    // } else if (isEmpty(bm_address)) {
+    //     alert("Please Fill in Address Properly.");
+    //     bm_address.value = "";
+    //     bm_address.focus();
+    //     return false;
     } else if (isEmpty(bm_phoneNum) || isNotNumber(bm_phoneNum)) {
         alert("Please Fill in Phone Number Properly.");
         bm_phoneNum.value = "";

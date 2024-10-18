@@ -8,6 +8,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.security.Principal;
+import java.sql.Date;
 import java.util.*;
 
 @RequestMapping("/member")
@@ -45,7 +48,6 @@ public class MemberController {
             m.setBm_kakao_id(kakao_id);
             req.getSession().setAttribute("kakaoID", null);
         } catch (Exception ignored) {}
-        m.setBm_role("USER");
         mDAO.signupMember(req, m);
         req.setAttribute("contentPage", "member/joinStep3.jsp");
         return "index";
@@ -119,7 +121,7 @@ public class MemberController {
 
         LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", "412e7727ffd0b8900060854044814879");
-        String redirect_url = "http://localhost/member/kakao.login";
+        String redirect_url = "http://localhost/oauth/authorize";
         map.add("redirect_uri", redirect_url);
         map.add("grant_type", "JGu5TGA6vgs4o_623UC0EKUkFgzabCH8WBHPwEm-l0_1fOKcLa3m5wAAAAQKKcleAAABkg3I7-QFVMIyByjmyg");
         map.add("code", dto.get("code")); // 인가 코드 추가
@@ -179,6 +181,25 @@ public class MemberController {
         return "index";
     }
 
+    @GetMapping("/fillIn")
+    public String FillUserInfo(HttpServletRequest req, Bizone_member m, Principal principal) {
+        m.setBm_kakao_id(principal.getName());
+        if (mDAO.checkKakao(m)) {
+            return "redirect:/";
+        } else {
+            req.setAttribute("contentPage", "member/fillIn.jsp");
+        }
+        return "index";
+    }
 
-
+    @PostMapping("/fillIn.do")
+    public String FillInKakaoUser(@RequestParam("bm_nickname") String name, HttpServletRequest req, HttpServletResponse res, Bizone_member m, Authentication auth) throws UnsupportedEncodingException {
+        System.out.println("Received name: " + name);
+        res.setContentType("text/html; charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
+        res.setCharacterEncoding("UTF-8");
+        System.out.println("Received name: " + req.getParameter("bm_nickname"));
+        mDAO.fillInKakaoUser(m, auth);
+        return "redirect:/";
+    }
 }

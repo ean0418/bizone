@@ -1,18 +1,16 @@
-<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%--
   Created by IntelliJ IDEA.
   User: sdedu
-  Date: 24. 9. 11.
-  Time: 오전 10:40
+  Date: 24. 10. 18.
+  Time: 오후 2:53
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8"%>
 <html>
 <head>
-    <meta name="_csrf" content="${_csrf.token}">
-    <meta name="_csrf_header" content="${_csrf.headerName}">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>회원가입</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script language="javascript">
         function goPopup() {
@@ -126,7 +124,7 @@
             border: 1px solid #101E4E;
             border-radius: 8px;
             background-color: white;
-            color: #d3d7da;
+            color: black;
             box-sizing: border-box;
             font-size: 13px; /* 입력 필드의 폰트 크기를 줄여줌 */
             transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
@@ -217,97 +215,93 @@
         }
     </style>
 </head>
-<body>
 <div id="signupContainer">
-    <form action="${contextPath}/member/signup.do" METHOD="post" name="signupForm" onsubmit="return signupCheck();">
-        <table id="signupTbl">
-            <tr>
-                <td colspan="2">
-                    <label style="text-align: center; font-size: 16pt;">회원가입</label>
-                    <div class="step-indicator">
-                        <span class="inactive">1</span> → <span class="active">2</span> → <span class="inactive">3</span>
-                    </div>
-                    <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
-                           autocomplete="off" maxlength="10" class="i1">
-                    <!-- ID 중복 체크 버튼 -->
-                    <input type="button" id="confirmId" name="confirmId" class="address-btn" value="ID중복체크">
-                    <!-- 중복 체크 결과 메시지 -->
-                    <div id="msg"></div>
-                </td>
-            </tr>
+<form action="${contextPath}/member/fillIn.do" METHOD="post" name="fillInForm" onsubmit="return signupCheck();" accept-charset="UTF-8">
+    <table id="signupTbl">
+        <tr>
+            <td colspan="2">
+                <label style="text-align: center; font-size: 16pt;">새로운 Bizone 계정과 연동하기</label>
+                <div style="text-decoration: underline; text-align: center" onclick="window.location.href = '${contextPath}/member/connectKakao';">이미 계정이 있으십니까?<br>로그인해 기존 계정과 연동하러 가기</div>
+                <input id="bm_id" name="bm_id" placeholder="ID" autofocus="autofocus"
+                       autocomplete="off" maxlength="10" class="i1">
+                <!-- ID 중복 체크 버튼 -->
+                <input type="button" id="confirmId" name="confirmId" class="address-btn" value="ID중복체크">
+                <!-- 중복 체크 결과 메시지 -->
+                <div id="msg"></div>
+            </td>
+        </tr>
 
-            <tr>
-                <td colspan="2">
-                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                    <input type="hidden" name="bm_role" value="USER">
-                    <input name="bm_pw" placeholder="PASSWORD" autocomplete="off"
-                           maxlength="10" class="i1" type="password">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input id="bm_pw_confirm" placeholder="PASSWORD CHECK" autocomplete="off"
-                           maxlength="10" class="i1" type="password">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input name="bm_name" placeholder="NAME" autocomplete="off" maxlength="10" class="i1">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input name="bm_nickname" placeholder="NICKNAME" autocomplete="off" maxlength="20" class="i1">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <!-- 주소 검색 버튼 -->
-                    <button class="address-btn" type="button" onclick="goPopup()">주소 검색</button><br>
+        <tr>
+            <td colspan="2">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                <input name="bm_pw" placeholder="PASSWORD" autocomplete="off"
+                       maxlength="10" class="i1" type="password">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input id="bm_pw_confirm" placeholder="PASSWORD CHECK" autocomplete="off"
+                       maxlength="10" class="i1" type="password">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input name="bm_name" placeholder="NAME" autocomplete="off" maxlength="10" class="i1">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input name="bm_nickname" placeholder="NICKNAME" autocomplete="off" maxlength="20" class="i1" value="<sec:authentication property="principal.attributes['nickname']"/>">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <!-- 주소 검색 버튼 -->
+                <button class="address-btn" type="button" onclick="goPopup()">주소 검색</button><br>
 
-                    <!-- 주소 입력 필드 -->
+                <!-- 주소 입력 필드 -->
 
-                    <input type="text" id="bm_addr1" name="bm_addr1" placeholder="Zip Code" readonly="readonly" class="i1">
-                    <input type="text" id="bm_addr2" name="bm_addr2" placeholder="Address" readonly="readonly" class="i1">
-                    <input type="text" id="bm_addr3" name="bm_addr3" placeholder="Detail Address" autocomplete="off" class="i1">
-                    <input type="hidden" id="bm_address" name="bm_address">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input name="bm_phoneNum" placeholder="Phone Number" autocomplete="off" maxlength="20" class="i1">
-                    <input type="hidden" id="bm_phoneNum"><br>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input name="bm_birthday" placeholder="Birthday (YYYY-MM-DD)" pattern="\d{4}-\d{2}-\d{2}"
-                           autocomplete="off" maxlength="20" class="i1" required>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input name="bm_mail" id="bm_mail" placeholder="Email" autocomplete="off" maxlength="50" class="i1">
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button id="email-btn" type="button">이메일 인증</button>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input id="checkMailAuth" placeholder="인증번호 입력" disabled="disabled" class="i1"><br>
-                    <div id="warnMailAuth"></div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button class="submit-btn" type="submit">Sign Up</button>
-                </td>
-            </tr>
-        </table>
-    </form>
+                <input type="text" id="bm_addr1" name="bm_addr1" placeholder="Zip Code" readonly="readonly" class="i1">
+                <input type="text" id="bm_addr2" name="bm_addr2" placeholder="Address" readonly="readonly" class="i1">
+                <input type="text" id="bm_addr3" name="bm_addr3" placeholder="Detail Address" autocomplete="off" class="i1">
+                <input type="hidden" id="bm_address" name="bm_address">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input name="bm_phoneNum" placeholder="Phone Number" autocomplete="off" maxlength="20" class="i1">
+                <input type="hidden" id="bm_phoneNum"><br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input name="bm_birthday" placeholder="Birthday (YYYY-MM-DD)" pattern="\d{4}-\d{2}-\d{2}"
+                       autocomplete="off" maxlength="20" class="i1" required>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input name="bm_mail" id="bm_mail" placeholder="Email" autocomplete="off" maxlength="50" class="i1">
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="email-btn" type="button">이메일 인증</button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input id="checkMailAuth" placeholder="인증번호 입력" disabled="disabled" class="i1"><br>
+                <div id="warnMailAuth"></div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button class="submit-btn" type="submit">Sign Up</button>
+            </td>
+        </tr>
+    </table>
+</form>
 </div>
 <script>
     $(document).ready(function(){

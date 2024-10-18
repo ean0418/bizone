@@ -42,8 +42,7 @@ public class LoanProductController {
         // API 호출 URL 구성
         String apiUrl = "https://apis.data.go.kr/B553701/LoanProductSearchingInfo/LoanProductSearchingInfo/getLoanProductSearchingInfo";
         String serviceKey = "KXIrRVbtDNFBWxGmRv9lOsyI1M6sliCnAzV8GtqYLdn+kWmu0mtjpRtqWyRdKM27O/zbuY27RYOSXbgAtii7fw==";
-        String encodedServiceKey = "";
-        encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
+        String encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
 
         // 요청 URL 구성
         String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=500";
@@ -70,6 +69,7 @@ public class LoanProductController {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+
 
         List<Map<String, String>> loanProducts = new ArrayList<>();
 
@@ -105,8 +105,8 @@ public class LoanProductController {
             }
 
             // 디버깅을 위한 출력
-            System.out.println("Parsed loan products: " + loanProducts);
-            System.out.println(xmlData);
+//            System.out.println("Parsed loan products: " + loanProducts);
+//            System.out.println(xmlData);
 
 
             // 총 데이터 수
