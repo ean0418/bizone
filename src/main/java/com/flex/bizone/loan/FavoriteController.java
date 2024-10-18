@@ -11,35 +11,68 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class FavoriteController {
 
     @Autowired
     private LoanDAO loanDAO;
-    // 찜한 상품 추가 요청
+
     @PostMapping("/addFavorite")
-    public String addFavorite(@RequestParam String productName, @RequestParam String loanLimit,
-                              @RequestParam String interestRate, @RequestParam String qualification,
+    public String addFavorite(@RequestParam String productName,
+                              @RequestParam String loanLimit,
+                              @RequestParam String interestRate,
+                              @RequestParam String qualification,
+                              @RequestParam(value = "IRT_CTG", required = false) String irtCtg,
+                              @RequestParam(value = "USGE", required = false) String usge,
+                              @RequestParam(value = "INST_CTG", required = false) String instCtg,
+                              @RequestParam(value = "RSD_AREA_PAMT_EQLT_ISTM", required = false) String rsdAreaPamtEqltIstm,
+                              @RequestParam(value = "TGT_FLTR", required = false) String tgtFltr,
                               Principal principal, HttpServletRequest req) throws UnsupportedEncodingException {
 
-        // Principal을 통해 로그인된 사용자의 ID 가져오기
-        String bm_id = principal.getName();  // Spring Security에서 기본적으로 사용자 이름을 가져옴
+        String bm_id = principal.getName(); // 현재 로그인된 사용자 ID 가져오기
 
-        // Bizone_favorites 객체 생성 및 필드 설정
+        // Bizone_favorites 객체 생성 후 찜한 상품 정보 설정
         Bizone_favorites favorite = new Bizone_favorites();
-        favorite.setBf_bm_id(bm_id);  // 로그인된 사용자의 ID 설정
+        favorite.setBf_bm_id(bm_id);
         favorite.setBf_product_name(productName);
         favorite.setBf_loan_limit(loanLimit);
         favorite.setBf_interest_rate(interestRate);
         favorite.setBf_qualification(qualification);
 
-        // 찜 추가
+        // DAO를 통해 찜한 상품 저장
         loanDAO.addFavorite(favorite, req);
 
-        return "redirect:/loan-products";  // 추가 후 다시 목록으로 이동
+        // 파라미터들을 맵에 저장
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("IRT_CTG", irtCtg);
+        queryParams.put("USGE", usge);
+        queryParams.put("INST_CTG", instCtg);
+        queryParams.put("RSD_AREA_PAMT_EQLT_ISTM", rsdAreaPamtEqltIstm);
+        queryParams.put("TGT_FLTR", tgtFltr);
+
+        // 조회 파라미터들을 포함하여 리다이렉트 URL 생성
+        StringBuilder redirectUrl = new StringBuilder("redirect:/loan-products?pageNo=1&numOfRows=10");
+
+        // Map을 순회하면서 null 또는 빈 값이 아닌 파라미터를 URL에 추가
+        queryParams.forEach((key, value) -> {
+            if (value != null && !value.isEmpty()) {
+                try {
+                    redirectUrl.append("&").append(key).append("=").append(URLEncoder.encode(value, StandardCharsets.UTF_8.toString()));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        // 생성된 URL로 리다이렉트
+        return redirectUrl.toString();
     }
 
     // 찜한 대출상품 삭제 요청

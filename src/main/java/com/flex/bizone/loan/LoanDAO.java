@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Service
@@ -19,6 +20,8 @@ public class LoanDAO {
     public LoanDAO(SqlSession ss) {
         this.ss = ss;
     }
+
+
 
     // 찜한 대출상품 추가
     public void addFavorite(Bizone_favorites favorite, HttpServletRequest req) throws UnsupportedEncodingException {
@@ -38,9 +41,15 @@ public class LoanDAO {
 
     // 특정 사용자가 해당 상품을 찜했는지 확인
     public boolean isFavorite(String bm_id, String productName) {
-        int count = ss.getMapper(LoanMapper.class).isFavorite(
-                new Bizone_favorites(bm_id, productName, null, null, null)
-        );
+        // Bizone_favorites 객체에 필요한 필드만 설정하여 생성
+        Bizone_favorites favorite = new Bizone_favorites();
+        favorite.setBf_bm_id(bm_id);
+        favorite.setBf_product_name(productName);
+
+        // LoanMapper를 통해 해당 상품이 찜된 상태인지 확인
+        int count = ss.getMapper(LoanMapper.class).isFavorite(favorite);
+
+        // count가 0보다 크면 true, 그렇지 않으면 false를 반환
         return count > 0;
     }
 
