@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -50,9 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
-                    .disable()
-//                    .ignoringAntMatchers("/api/**", "/loan-products")
-//                    .and()
+//                    .disable()
+                    .ignoringAntMatchers("/api/**", "/loan-products")
+                    .and()
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info").authenticated()
@@ -76,10 +77,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     // PasswordEncoder 설정 (Spring Security 5 이상에서는 필수)
     @SuppressWarnings("deprecation")
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return NoOpPasswordEncoder.getInstance(); // 인코딩 없음 사용
-    }
 //    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder(); // BCryptPasswordEncoder 사용
+//        return NoOpPasswordEncoder.getInstance(); // 인코딩 없음 사용
 //    }
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); // BCryptPasswordEncoder 사용
+    }
 }
