@@ -109,11 +109,11 @@
     <tbody>
     <c:forEach var="pinnedBoard" items="${pinnedBoards}">
         <tr>
-            <td>${pinnedBoard.bb_postNum}</td>
-            <td><a href="${contextPath}/board/detail?bb_no=${pinnedBoard.bb_no}" style="color: black;">${pinnedBoard.bb_title}</a></td>
-            <td>${pinnedBoard.bb_bm_id}</td>
-            <td><fmt:formatDate value="${pinnedBoard.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
-            <td>${pinnedBoard.bb_readCount}</td>
+            <td></td>
+            <td><a href="${contextPath}/board/detail?bb_no=${pinnedBoard.bb_no}" style="color: red;">${pinnedBoard.bb_title}</a></td>
+            <td style="color: red;">${pinnedBoard.bb_bm_id}</td>
+            <td style="color: red;"><fmt:formatDate value="${pinnedBoard.bb_date}" pattern="yyyy-MM-dd HH:mm"/></td>
+            <td style="color: red;">${pinnedBoard.bb_readCount}</td>
         </tr>
     </c:forEach>
     <c:if test="${empty pinnedBoards}">
