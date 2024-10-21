@@ -375,7 +375,7 @@
             <div class="modal-body p-0">
                 <div class="container-fluid p-0">
                     <!-- 큰 이미지 (비율 유지하며 크기를 맞춤) -->
-                    <img src="${pageContext.request.contextPath}/resources/image/주소검색.gif" alt="주소 검색 안내" class="img-fluid"
+                    <img src="${pageContext.request.contextPath}/resources/image/주소검색2.gif" alt="주소 검색 안내" class="img-fluid"
                          style="max-height: 90vh; max-width: 100%; object-fit: contain; margin: auto; display: block;">
                 </div>
             </div>
