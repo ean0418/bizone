@@ -2,24 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 
+    <!-- 컴포넌트 스캔 (서비스, 리포지토리 등 검색) -->
     <context:component-scan base-package="com.flex.bizone" />
-    <!-- DB 설정파일 로딩 -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:properties/jdbc.properties</value>
-            </list>
-        </property>
-    </bean>
 
-    <!-- DBMS 설정 (db서버 대기시간 최대 3초) -->
+
+    <!-- 데이터베이스 연결 설정 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
-        <property name="url" value="${spring.datasource.url}"/>
-        <property name="username" value="${spring.datasource.username}"/>
-        <property name="password" value="${spring.datasource.password}"/>
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://192.168.0.119:3306/bizone"/>
+        <property name="username" value="test"/>
+        <property name="password" value="a12345678!"/>
         <property name="maxWaitMillis" value="3000"/>
         <property name="poolPreparedStatements" value="true"/>
         <property name="maxOpenPreparedStatements" value="50"/>
@@ -32,25 +30,22 @@
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
     </bean>
 
-    <!-- sqlSession 취득 (생성자에 인자 넣기) -->
     <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
         <constructor-arg index="0" ref="sqlSessionFactory"/>
-        <constructor-arg index="1" value="SIMPLE"/>
     </bean>
 
-    <!-- jdbc 설정 -->
+    <!-- 트랜잭션 매니저 설정 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
-    <!-- Root Context: defines shared resources visible to all other web components -->
+    <!-- 이메일 발송 설정 -->
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
         <property name="host" value="smtp.gmail.com" />
         <property name="port" value="587" />
         <property name="username" value="minjulv06101@gmail.com" />
         <property name="password" value="ovti wsau xnon cqlk" />
         <property name="defaultEncoding" value="utf-8" />
-
         <property name="javaMailProperties">
             <props>
                 <prop key="mail.smtp.starttls.enable">true</prop>
@@ -62,6 +57,5 @@
             </props>
         </property>
     </bean>
-
 
 </beans>
