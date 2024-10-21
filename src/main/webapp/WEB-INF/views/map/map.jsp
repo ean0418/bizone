@@ -153,6 +153,14 @@
         #welcomeModal .modal-body h6 {
             color: #0056b3; /* 안내 텍스트 색상 */
         }
+        .row.align-items-stretch .col-md-6 {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-lg-custom {
+            max-width: 90%;
+        }
     </style>
 </head>
 <body>
@@ -161,8 +169,8 @@
         <div id="sidebar-content">
             <h1>상권분석</h1>
             <div class="input-container">
-                <input type="text" id="sample5_address" placeholder="주소 찾기" readonly>
-                <input type="button" id="search_button" onclick="sample5_execDaumPostcode()" value="주소 찾기">
+                <input type="text" id="daum_address" placeholder="주소 찾기" readonly>
+                <input type="button" id="search_button" onclick="execDaumPostcode()" value="주소 찾기">
             </div>
             <div class="input-container">
                 <input type="text" id="eupMyeonDongSearch" placeholder="지역 검색">
@@ -172,15 +180,13 @@
                 <input type="text" id="businessCategorySearch" placeholder="업종 검색">
                 <input type="button" id="businessCategorySearchButton" value="업종 검색">
             </div>
-            <div class="input-container">
-                <input type="button" id="bizoneSearchButton" value="상권분석">
-            </div>
 
             <ul id="searchResults"></ul>
             <div id="pagination" style="text-align: center; margin-top: 20px;"></div>
             <div id="selectedBusiness" style="margin-top: 20px;">
                 <!-- 선택된 업종이 여기에 표시됩니다. -->
             </div>
+
             <div class="select-container">
                 <select id="locationSelect">
                     <option selected disabled>서울시 구 바로가기</option>
@@ -211,6 +217,9 @@
                     <option value="37.6063241,127.092728">중랑구</option>
                 </select>
             </div>
+            <button id=interestAreaBtn class="btn btn-primary" data-toggle="modal" data-target="#favoriteModal">
+                관심 지역
+            </button>
         </div>
     </div>
     <div id="mapContainer">
@@ -225,6 +234,7 @@
             <!-- 모달 헤더 (닫기 버튼 없음) -->
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="regionModalLabel"><i class="fas fa-chart-area"></i> 지역 상권 분석</h5>
+                <button id="favoriteBtn" class="btn btn-primary btn-lg w-25">❤️</button>
             </div>
 
             <!-- 모달 바디 시작 -->
@@ -246,29 +256,28 @@
                             </div>
                         </div>
 
-                        <div class="row align-items-stretch">
-                            <!-- 성공 확률 정보 -->
-                            <div class="col-md-6">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
-                                        <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
-                                        <p></p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- 파워랭킹 -->
-                            <div class="col-md-6">
-                                <div class="card mb-4">
-                                    <div class="card-body">
-                                        <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
-                                        <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
-                                        <div id="rankDescription" class="text-muted" style="font-size: 12px;">() 안은 총 지역 수</div>
-                                    </div>
+                        <!-- 성공 확률 정보 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-percentage"></i> 성공 확률:</h6>
+                                    <span id="successProbability" class="display-4 text-success font-weight-bold">정보 없음</span>
+                                    <p></p>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- 파워랭킹 -->
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h6 class="font-weight-bold"><i class="fas fa-check-circle"></i> 파워랭킹:</h6>
+                                    <span id="rank" class="display-4 text-info font-weight-bold">정보 없음</span>
+                                    <div id="rankDescription" class="text-muted" style="font-size: 12px;">() 안은 총 지역 수</div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -340,6 +349,40 @@
     </div>
 </div>
 
+<!-- 찜 목록 모달창 -->
+<div class="modal fade" id="favoriteModal" tabindex="-1" role="dialog" aria-labelledby="favoriteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg-custom" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-white">
+                <h5 class="modal-title" id="favoriteModalLabel">관심 지역</h5>
+            </div>
+            <div class="modal-body">
+                <div class="modal-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>번호</th>
+                            <th>선택 지역</th>
+                            <th>선택 업종</th>
+                            <th>성공 확률</th>
+                            <th>파워 랭킹</th>
+                            <th>찜한 시간</th>
+                            <th>삭제</th>
+                        </tr>
+                        </thead>
+                        <tbody id="favoriteList">
+                        <!-- 데이터가 여기에 동적으로 추가됩니다 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="closeFavoriteModal" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- JavaScript -->
 <script>
     $(document).ready(function () {
@@ -357,7 +400,6 @@
         });
 
     });
-
 </script>
 
 <!-- 페이지 첫 접속 시 보여줄 안내 팝업 -->
@@ -436,6 +478,22 @@
             success: (data) => {
                 console.log("login check : " + data.loggedIn)
                 globalLoggedIn = data.loggedIn;
+
+                // 로그인 상태일 경우 사용자 ID를 설정
+                if (data.loggedIn) {
+                    globalLoggedInUserId = data.username;// userId는 서버에서 로그인한 사용자 ID
+                    console.log('로그인된 사용자 ID:', globalLoggedInUserId);
+                    globalLoggedIn = true;
+                    $('#interestAreaBtn').show();
+                } else {
+                    globalLoggedInUserId = null;
+                    console.log('로그인안됨');
+                    globalLoggedIn = false;
+                    $('#interestAreaBtn').hide();
+                }
+            },
+            error: function(error) {
+                console.error("로그인 상태를 확인하는 중 오류 발생: ", error);
             }
         })
     }
@@ -860,7 +918,6 @@
                 }
             });
 
-
         },
 
         getPolygonData: function (feature) {
@@ -1205,12 +1262,145 @@
         }
     });
 
-    function sample5_execDaumPostcode() {
+    $('#favoriteBtn').on('click', function () {
+        if (!globalLoggedIn) {
+            alert("로그인이 필요한 기능입니다.");
+            window.location.href = "/member/login";  // 로그인 페이지로 이동
+            return;
+        }
+
+        if (selectedAdminCode && selectedServiceCode) {
+            const successProbability = $('#successProbability').text().replace("%", "");  // 성공확률
+            const rankIndex = $('#rank').text().split("위")[0];  // 파워랭킹에서 순위만 추출
+            const totalRankCount = $('#rank').text().split("(")[1].split(")")[0]; // 총 지역 개수 추출
+
+            $.ajax({
+                url: '/api/bizone/addFavorite',  // 찜하기 API
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    bm_id: globalLoggedInUserId,  // 로그인된 사용자 ID
+                    ba_code: selectedAdminCode,   // 선택된 행정동 코드
+                    bb_code: selectedServiceCode,  // 선택된 업종 코드
+                    bs_success_probability: successProbability, // 성공 확률
+                    bia_rank_index: rankIndex,  // 파워랭킹 순위
+                    bia_total_count: totalRankCount // 지역 총 개수
+                }),
+                dataType: "json",
+                success: function (response) {
+                    console.log('찜 목록 추가 성공:', response);  // 응답 로그 확인
+                    alert(response.message);
+                },
+                error: function (xhr, status, error) {
+                    console.error('찜 목록 추가 실패:', error);
+                    console.error('상태 코드:', xhr.status);
+                    console.error('응답 텍스트:', xhr.responseText);
+                    alert('찜 목록에 추가하는 중 오류가 발생했습니다.');
+                }
+            });
+        } else {
+            alert("업종과 지역을 먼저 선택해주세요.");
+        }
+    });
+
+    // 찜 목록 모달이 열릴 때 AJAX로 목록 가져오기
+    $('#favoriteModal').on('show.bs.modal', function () {
+        $.ajax({
+            url: '/api/bizone/getFavoriteList',
+            method: 'GET',
+            data: {
+                bm_id: globalLoggedInUserId  // 로그인된 사용자 ID
+            },
+            success: function (data) {
+                const favoriteList = $('#favoriteList');
+                favoriteList.empty();  // 기존 목록 초기화
+
+                if (data.length > 0) {
+                    console.log(data)
+                    data.forEach(function (item, itemIndex) {
+                        let successProbability = item.bs_success_probability !== undefined ? item.bs_success_probability + "%" : "정보 없음";
+                        let rankIndex = item.bia_rank_index !== undefined ? item.bia_rank_index : "정보 없음";
+                        let totalRankCount = item.bia_total_count !== undefined ? item.bia_total_count : "정보 없음";  // 총 개수 추가
+                        let formattedDate = new Date(item.bia_date).toLocaleString();  // 타임스탬프를 로컬 시간으로 변환
+
+                        let listItem = $("<tr class=itemNo" + itemIndex + "></tr>");
+                        // 번호 (index + 1)
+                        let tdIndex = $('<td></td>').text(itemIndex + 1);
+                        listItem.append(tdIndex);
+                        let ba_name = $('<td></td>').text(item.ba_name)
+                        listItem.append(ba_name)
+                        let bb_name = $('<td></td>').text(item.bb_name)
+                        listItem.append(bb_name)
+                        let successProbabilityTd = $('<td></td>').text(successProbability)
+                        listItem.append(successProbabilityTd)
+                        let rankIndexTd = $('<td></td>').text(rankIndex + " (" + totalRankCount + ")")
+                        listItem.append(rankIndexTd)
+                        let fomattedDateTd = $('<td></td>').text(formattedDate)
+                        listItem.append(fomattedDateTd)
+                        let deleteBtn = $('<button class="removeFavoriteBtn"></button>').html('<i class="fas fa-times"></i>');
+                        $(deleteBtn).attr("data-ba-code", item.ba_code).attr("data-bb-code", item.bb_code);
+                        let deleteBtnTd = $('<td></td>').append(deleteBtn);
+                        listItem.append(deleteBtnTd);
+                        $(favoriteList).append(listItem);
+                    });
+
+                } else {
+                    favoriteList.append('<tr><td colspan="7">찜한 항목이 없습니다.</td></tr>');
+                }
+            },
+            error: function (error) {
+                console.error('관심 지역 목록을 불러오는 중 오류가 발생했습니다.', error);
+                alert('관심 지역 목록을 불러오는 중 오류가 발생했습니다.');
+            }
+        });
+    });
+
+    // 찜 목록에서 삭제하기 버튼 클릭 이벤트 처리
+    $('#favoriteList').on('click', '.removeFavoriteBtn', function () {
+        const baCode = $(this).data('ba-code');
+        const bbCode = $(this).data('bb-code');
+
+        if (confirm('정말로 이 찜 목록을 삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/api/bizone/removeFavorite',
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    bm_id: globalLoggedInUserId,  // 로그인된 사용자 ID
+                    ba_code: baCode,
+                    bb_code: bbCode
+                }),
+                success: function () {
+                    alert('찜 목록에서 삭제되었습니다!');
+                    $('#favoriteModal').modal('hide');
+                    location.reload();
+                },
+                error: function (error) {
+                    console.error('찜 목록에서 삭제하는 중 오류가 발생했습니다.', error);
+                    alert('찜 목록에서 삭제하는 중 오류가 발생했습니다.');
+                }
+            });
+        }
+    });
+
+    // 찜 목록에서 항목 클릭 시 상권 분석 모달창 열기
+    $('#favoriteList').on('click', '.list-group-item', function () {
+        const baCode = $(this).data('ba-code');
+        const bbCode = $(this).data('bb-code');
+        const regionName = $(this).text().split('-')[0].trim();
+
+        // 선택된 업종과 지역을 업데이트하고, 모달을 띄우기
+        updateSelectedData({ bb_code: bbCode }, baCode, regionName);
+        showRegionInfo(regionName, baCode, bbCode);  // 모달창 띄우기
+    });
+
+    // 주소찾기
+    function execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function (data) {
                 var addr = data.address;
 
-                document.getElementById("sample5_address").value = addr;
+                document.getElementById("daum_address").value = addr;
 
                 var geocoder = new kakao.maps.services.Geocoder();
                 geocoder.addressSearch(addr, function (results, status) {

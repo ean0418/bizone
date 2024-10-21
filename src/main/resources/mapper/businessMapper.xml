@@ -130,6 +130,7 @@
         WHERE ba_code = #{ba_code}
     </select>
 
+    <!-- 파워랭킹 -->
     <select id="getRankByServiceCode" parameterType="string" resultType="com.flex.bizone.map.RankResponse">
         SELECT
             ROW_NUMBER() OVER (ORDER BY bs.bs_success_probability DESC) AS rank_index,
@@ -146,5 +147,4 @@
         ORDER BY
             bs.bs_success_probability DESC
     </select>
-
 </mapper>
