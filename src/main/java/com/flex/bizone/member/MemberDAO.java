@@ -142,8 +142,37 @@ public class MemberDAO {
         inputM.setBm_id(bm_id);
         try {
             Bizone_member m = ss.getMapper(MemberMapper.class).getMemberById(inputM).get(0);
+
             m.setBm_pw(req.getParameter("bm_pw"));
-            m.setBm_name(req.getParameter("bm_name"));
+            m.setBm_nickname(req.getParameter("bm_nickname"));
+            m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
+            m.setBm_mail(req.getParameter("bm_mail"));
+
+
+            m.setBm_address(req.getParameter("bm_address"));
+
+            if (ss.getMapper(MemberMapper.class).updateMember(m) == 1) {
+                req.setAttribute("r", "정보 수정 성공");
+            } else {
+                req.setAttribute("r", "정보 수정 실패");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            req.setAttribute("r", "정보 수정 실패");
+
+        }
+
+
+    }
+
+    public void updateKakao(HttpServletRequest req, String bm_kakaoID) {
+        Bizone_member inputM = new Bizone_member();
+        inputM.setBm_kakao_id(bm_kakaoID);
+        try {
+            Bizone_member m = ss.getMapper(MemberMapper.class).getMemberByKakaoID(inputM).get(0);
+
+            m.setBm_pw(req.getParameter("bm_pw"));
+//            m.setBm_name(req.getParameter("bm_name"));
             m.setBm_nickname(req.getParameter("bm_nickname"));
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
@@ -205,6 +234,16 @@ public class MemberDAO {
         m.setBm_kakao_id(auth.getName());
         System.out.println(m.getBm_nickname());
         ss.getMapper(MemberMapper.class).signupMember(m);
+    }
+
+    public Bizone_member findByKakaoID(Bizone_member m) {
+        try {
+            return ss.getMapper(MemberMapper.class).getMemberByKakaoID(m).get(0);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        } catch (Exception ee) {
+            throw new RuntimeException(ee);
+        }
     }
 
 }
