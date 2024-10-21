@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,9 +143,17 @@ public class MemberDAO {
         inputM.setBm_id(bm_id);
         try {
             Bizone_member m = ss.getMapper(MemberMapper.class).getMemberById(inputM).get(0);
-
-            m.setBm_pw(req.getParameter("bm_pw"));
+            m.setBm_name(req.getParameter("bm_name"));
             m.setBm_nickname(req.getParameter("bm_nickname"));
+            try {
+                String birthdayStr = req.getParameter("bm_birthday");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date parsedDate = dateFormat.parse(birthdayStr);
+                java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+                m.setBm_birthday(sqlDate);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
 
@@ -164,16 +173,24 @@ public class MemberDAO {
 
 
     }
-
     public void updateKakao(HttpServletRequest req, String bm_kakaoID) {
         Bizone_member inputM = new Bizone_member();
         inputM.setBm_kakao_id(bm_kakaoID);
         try {
             Bizone_member m = ss.getMapper(MemberMapper.class).getMemberByKakaoID(inputM).get(0);
 
-            m.setBm_pw(req.getParameter("bm_pw"));
-//            m.setBm_name(req.getParameter("bm_name"));
+            m.setBm_name(req.getParameter("bm_name"));
             m.setBm_nickname(req.getParameter("bm_nickname"));
+            try {
+                String birthdayStr = req.getParameter("bm_birthday");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date parsedDate = dateFormat.parse(birthdayStr);
+                java.sql.Date sqlDate = new java.sql.Date(parsedDate.getTime());
+                m.setBm_birthday(sqlDate);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             m.setBm_phoneNum(req.getParameter("bm_phoneNum"));
             m.setBm_mail(req.getParameter("bm_mail"));
 
