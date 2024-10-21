@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,13 +19,15 @@ public class InterestAreaController {
 
     // 찜 추가
     @PostMapping("/addFavorite")
-    public ResponseEntity<String> addFavorite(@RequestBody InterestAreaData rankData) {
+    public ResponseEntity<Map<String, Object>> addFavorite(@RequestBody InterestAreaData rankData) {
+        Map<String, Object> response = new HashMap<>();
         try {
             ss.getMapper(InterestAreaMapper.class).insertFavorite(rankData);
-            return ResponseEntity.ok("찜 목록에 추가되었습니다.");
+            response.put("message", "찜 목록에 추가되었습니다.");
+            return ResponseEntity.ok(response);  // JSON 응답
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("찜 목록 추가 중 오류가 발생했습니다.");
+            response.put("error", "찜 목록 추가 중 오류가 발생했습니다.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -43,7 +46,6 @@ public class InterestAreaController {
         }
     }
 
-
     // 찜 삭제
     @DeleteMapping("/removeFavorite")
     public ResponseEntity<String> removeFavorite(@RequestBody Map<String, String> data) {
@@ -57,4 +59,5 @@ public class InterestAreaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("찜 목록 삭제 중 오류가 발생했습니다.");
         }
     }
+
 }
