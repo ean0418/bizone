@@ -28,6 +28,8 @@ public class BoardController {
     @Autowired
     private CommentDAO commentDAO;
 
+
+
     // 게시판 기본 URL로 들어오면 /board/list로 리다이렉트
     @RequestMapping(value = "/board", method = RequestMethod.GET)
     public String redirectToBoardList() {
@@ -131,12 +133,22 @@ public class BoardController {
             String userId = principal.getName();
             Bizone_board board = boardDAO.getBoardByNo(bb_no, req);
 
-            if (board == null || !board.getBb_bm_id().equals(userId)) {
+            // 게시글이 없거나, 일반 사용자가 자기 글이 아닌 경우 권한 없음 처리
+            if (board == null) {
+                rdAttr.addFlashAttribute("errorMsg", "존재하지 않는 게시글입니다.");
+                return "redirect:/board/list";
+            }
+
+            // 관리자(admin)일 경우 모든 게시글 삭제 가능, 일반 사용자는 본인 게시글만 삭제 가능
+            if (!"admin".equals(userId) && !board.getBb_bm_id().equals(userId)) {
                 rdAttr.addFlashAttribute("errorMsg", "삭제 권한이 없습니다.");
                 return "redirect:/board/list";
             }
+
+            // 게시글 삭제
             boardDAO.deleteBoard(bb_no, req);
             boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
+
             rdAttr.addFlashAttribute("successMsg", "게시글이 삭제되었습니다.");
             return "redirect:/board/list";
         } catch (Exception e) {
