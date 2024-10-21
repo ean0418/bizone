@@ -27,14 +27,13 @@
         }
         /* 이미지 스타일 */
         .modal-body img {
-            width: 70%;
+            width: 80%;
             height: auto;
             object-fit: cover; /* 이미지 비율 유지하면서 채움 */
             transition: transform 0.3s ease-in-out;
-            margin-left: 340px;
+            margin-left: 250px;
             justify-content: center;
             align-items: center;
-            margin-top: 20px;
         }
 
         /* 마우스 오버 시 확대 효과 */
@@ -56,7 +55,7 @@
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
-            margin-top: 20px; /* 이미지와 버튼 사이 간격 */
+            margin-top: 10px; /* 이미지와 버튼 사이 간격 */
             margin-left: 850px;
         }
 
@@ -64,86 +63,157 @@
             background-color: #2980b9;
         }
 
-        /* FAQ 스타일 */
-        .faq {
-            position: absolute; /* 절대 위치 설정 */
-            top: 70%; /* 상단에서 10% 아래 */
-            right: 2%; /* 오른쪽에서 5% 떨어짐 */
-            width: 250px; /* 고정된 너비 */
-            text-align: left; /* 오른쪽 정렬 */
-        }
 
         .faq h2 {
-            font-size: 1.5rem;
-            color: #34495e;
-        }
-
-        .faq ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .faq ul li {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
             margin-bottom: 10px;
         }
 
-        .faq ul li a {
-            text-decoration: none;
-            color: #2980b9;
+        .btn-primary2 {
+            background-color: #3498db;
+            border-color: #2980b9;
+            color: white;
             font-size: 1.1rem;
+            margin: 10px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
         }
 
-        .faq ul li a:hover {
-            text-decoration: underline;
+        .btn-primary2:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
         }
 
-        /* 모달 크기 및 배경 스타일 */
-        .modal-lg {
-            max-width: 1500px;
+        .btn-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-link:hover {
+            color: #f1c40f;
+            text-decoration: none;
+        }
+
+        .container.mt-5 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 오른쪽 아래 고정된 FAQ 및 문의하기 버튼 */
+        .faq {
+            position: fixed;
+            bottom: 80px; /* 화면 하단에서 20px 위에 배치 */
+            right: 20px; /* 화면 오른쪽에서 20px 안쪽에 배치 */
+            z-index: 9999; /* 항상 위에 보이도록 z-index 설정 */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .btn-primary2 {
+            background-color: #3498db;
+            border-color: #2980b9;
+            color: white;
+            font-size: 1.1rem;
+            margin: 10px 0;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-primary2:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .btn-link {
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-link:hover {
+            color: #f1c40f;
+        }
+
+        .modal-header .close:hover {
+            color: #d3d3d3;
         }
 
         .modal-body {
             padding: 20px;
-            font-size: 1.1rem;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .modal-body h2 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        .modal-body p {
+            font-size: 1rem;
             line-height: 1.6;
+            color: #34495e;
+            margin-bottom: 20px;
         }
 
-        /* 모달 제목 스타일 */
-        .modal-title {
-            font-size: 1.75rem;
-            font-weight: bold;
-            color: #2c3e50;
+        .content-section {
+            margin-bottom: 20px;
         }
 
-        /* 리스트 스타일 */
-        .modal-body ul {
-            list-style-type: none;
-            padding: 0;
+        .modal-footer {
+            border-top: none;
+            padding: 15px;
+            justify-content: flex-end;
         }
 
-        .modal-body ul li {
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .btn-secondary {
+            background-color: #7f8c8d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
-        /* 항목 제목 */
-        .modal-body ul li strong {
-            font-weight: bold;
-            color: #2c3e50;
+        .btn-secondary:hover {
+            background-color: #6c7b8b;
+        }
+
+        /* 모달 푸터 */
+        .modal-footer {
+            border-top: none;
+            padding: 15px;
+            justify-content: flex-end;
         }
 
         /* 버튼 스타일 */
-        .modal-footer .btn-secondary {
-            background-color: #34495e;
-            border-color: #34495e;
+        .btn-primary {
+            background-color: #2980b9;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
         }
 
-        .modal-footer .btn-secondary:hover {
-            background-color: #2c3e50;
-            border-color: #2c3e50;
+        .btn-primary:hover {
+            background-color: #1f639a;
+        }
+
+        .btn-secondary {
+            background-color: #7f8c8d;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #6c7b8b;
         }
     </style>
 </head>
@@ -159,18 +229,17 @@
     </div>
 
     <!-- FAQ 및 추가 리소스 -->
-    <div class="faq">
+    <div class="faq text-center">
         <h2>자주 묻는 질문</h2>
-            <div class="container mt-5">
-                <button type="button" class="btn btn-primary2" data-toggle="modal" data-target="#faqModal">
-                    상권분석이란 무엇인가요?
-                </button>
-                <button type="button" class="btn btn-primary2">
-                    <a href="${contextPath}/board">문의하기</a>
-                </button>
-            </div>
+        <div class="container mt-5">
+            <button type="button" class="btn btn-primary2" data-toggle="modal" data-target="#faqModal">
+                상권분석이란 무엇인가요?
+            </button>
+            <button type="button" class="btn btn-primary2">
+                <a href="${contextPath}/board" class="btn-link">문의하기</a>
+            </button>
+        </div>
     </div>
-</table>
 
 
 <!-- 모달 창 -->
@@ -184,20 +253,21 @@
                 </button>
             </div>
             <div class="modal-body">
-                <tr>
-                    <th>
-                        상권분석 개요
-                    </th>
-                    <td>
-                            상권분석이란 특정 지역의 경제적, 인구적 요소를 분석하여 해당 지역에서 비즈니스가 얼마나 성공할 가능성이 있는지를 평가하는 과정입니다.
-                            상권분석은 예비 창업자나 기존 사업자가 새로운 사업 기회를 탐색하거나 기존 비즈니스의 성과를 극대화하기 위해 필수적인 정보를 제공합니다.
-                    </td>
-                </tr>
-                <h5>우리 상권분석 플랫폼의 기능</h5>
-                <p>
-                    우리 상권분석 플랫폼은 이러한 분석을 데이터 기반으로 제공하여, 예비 창업자들이 더 나은 결정을 내릴 수 있도록 돕습니다.
-                    사용자가 선택한 업종과 행정동을 기반으로 상권의 경쟁력과 잠재력을 평가하고, 맞춤형 성공률을 예측합니다.
-                </p>
+                <div class="content-section">
+                    <h2>상권분석 개요</h2>
+                    <p>
+                        상권분석이란 특정 지역의 경제적, 인구적 요소를 분석하여 해당 지역에서 비즈니스가 얼마나 성공할 가능성이 있는지를 평가하는 과정입니다.
+                        상권분석은 예비 창업자나 기존 사업자가 새로운 사업 기회를 탐색하거나 기존 비즈니스의 성과를 극대화하기 위해 필수적인 정보를 제공합니다.
+                    </p>
+                </div>
+
+                <div class="content-section">
+                    <h2>상권분석 기능</h2>
+                    <p>
+                        우리 상권분석 플랫폼은 이러한 분석을 데이터 기반으로 제공하여, 예비 창업자들이 더 나은 결정을 내릴 수 있도록 돕습니다.
+                        사용자가 선택한 업종과 행정동을 기반으로 상권의 경쟁력과 잠재력을 평가하고, 맞춤형 성공률을 예측합니다.
+                    </p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
