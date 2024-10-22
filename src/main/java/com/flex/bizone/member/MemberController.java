@@ -35,6 +35,8 @@ public class MemberController {
 
     @Autowired
     private MemberDAO mDAO;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // 설명 버튼을 클릭하면 first.jsp로 이동
     @GetMapping("/first")
@@ -207,11 +209,12 @@ public class MemberController {
         String bm_id = ((Bizone_member) req.getSession().getAttribute("biz_mem")).getBm_id();
         System.out.println(bm_id);
         bm.setBm_id(bm_id);
-        bm.setBm_pw(req.getParameter("bm_pw"));
+        String hashedPW = passwordEncoder.encode(req.getParameter("bm_pw"));
+        bm.setBm_pw(hashedPW);
         if (mDAO.pwChange(bm)) {
-            req.setAttribute("contentPage", "member/pwChangeSuccess.jsp");
-        } else {
             req.setAttribute("contentPage", "member/login.jsp");
+        } else {
+            return "redirect:/member/changePW";
         }
         return "index";
     }

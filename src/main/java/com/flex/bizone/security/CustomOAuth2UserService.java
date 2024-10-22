@@ -57,10 +57,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 권한 설정 (여러 권한 추가 가능)
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("USER"));
 
         // 추가 권한
-        authorities.add(new SimpleGrantedAuthority("ROLE_KAKAO"));
+        authorities.add(new SimpleGrantedAuthority("KAKAO"));
 
         return new DefaultOAuth2User(
                 authorities,

@@ -32,7 +32,7 @@
                             } else {
                                 idChk.innerHTML = `
                                 <div>존재하지 않는 ID입니다!</div>
-                                <div>회원가입 하시겠습니까?<a href="${contextPath}/member.step1">회원가입 하기</a></div>`
+                                <div>회원가입 하시겠습니까?<a href="${contextPath}/member/step1">회원가입 하기</a></div>`
                             }
                         } else {
                             alert('요청 방식에 뭔가 문제가 있어요.');
