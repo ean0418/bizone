@@ -5,6 +5,17 @@
   <title>대출상품 조회</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- 스크립트: 메시지가 있을 때 alert 표시 -->
+  <script type="text/javascript">
+    window.onload = function() {
+      // favoriteSuccess 메시지가 있으면 alert를 표시
+      <c:if test="${not empty favoriteSuccess}">
+      alert("${favoriteSuccess}");
+      </c:if>
+    }
+  </script>
+
   <style>
     body {
       background-color: #f5f7fa; /* 부드러운 회색 배경 */

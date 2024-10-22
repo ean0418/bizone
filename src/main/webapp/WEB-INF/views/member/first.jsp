@@ -113,6 +113,10 @@
             align-items: flex-end;
         }
 
+        h2 {
+
+        }
+
         .btn-primary2 {
             background-color: #3498db;
             border-color: #2980b9;
@@ -235,6 +239,7 @@
             <button type="button" class="btn btn-primary2" data-toggle="modal" data-target="#faqModal">
                 상권분석이란 무엇인가요?
             </button>
+            <br>
             <button type="button" class="btn btn-primary2">
                 <a href="${contextPath}/board" class="btn-link">문의하기</a>
             </button>

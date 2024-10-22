@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -34,7 +35,7 @@ public class FavoriteController {
                               @RequestParam(value = "INST_CTG", required = false) String instCtg,
                               @RequestParam(value = "RSD_AREA_PAMT_EQLT_ISTM", required = false) String rsdAreaPamtEqltIstm,
                               @RequestParam(value = "TGT_FLTR", required = false) String tgtFltr,
-                              Principal principal, HttpServletRequest req) throws UnsupportedEncodingException {
+                              Principal principal, HttpServletRequest req, RedirectAttributes redirectAttributes) throws UnsupportedEncodingException {
 
         String bm_id = principal.getName(); // 현재 로그인된 사용자 ID 가져오기
 
@@ -48,6 +49,9 @@ public class FavoriteController {
 
         // DAO를 통해 찜한 상품 저장
         loanDAO.addFavorite(favorite, req);
+
+        // 찜 완료 메시지를 RedirectAttributes에 추가
+        redirectAttributes.addFlashAttribute("favoriteSuccess", "찜한 상품이 성공적으로 추가되었습니다.");
 
         // 파라미터들을 맵에 저장
         Map<String, String> queryParams = new HashMap<>();
