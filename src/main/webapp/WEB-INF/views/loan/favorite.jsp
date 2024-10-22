@@ -32,6 +32,7 @@
                             </p>
                             <!-- 찜한 대출상품 삭제 버튼 -->
                             <form action="${contextPath}/deleteFavorite" method="post">
+                                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                                 <input type="hidden" name="bf_id" value="${favorite.bf_id}">
                                 <button type="submit" class="btn btn-danger">삭제</button>
                             </form>

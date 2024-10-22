@@ -307,6 +307,7 @@
 
               <!-- 찜하기 하트 아이콘 -->
               <form action="${contextPath}/addFavorite" method="post" class="favorite-form">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <input type="hidden" name="productName" value="${product.productName}">
                 <input type="hidden" name="loanLimit" value="${product.loanLimit}">
                 <input type="hidden" name="interestRate" value="${product.interestRate}">

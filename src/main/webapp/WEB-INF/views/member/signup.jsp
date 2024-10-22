@@ -163,7 +163,7 @@
         button.submit-btn, button.address-btn, button#email-btn, input.address-btn {
             width: 100%;
             padding: 12px; /* 버튼의 패딩을 줄여줌 */
-            background-color: #101E4E;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 8px;
@@ -175,7 +175,7 @@
             color:#101E4E;
         }
         button.submit-btn:hover button#email-btn {
-            background-color: #101E4E;
+            background-color:#3498db;
             transform: scale(1.02);
         }
 

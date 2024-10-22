@@ -190,9 +190,9 @@
             <div class="terms-group">
                 <div class="terms-item">
                     <input type="checkbox" id="terms1" class="checkbox individual" onclick="updateCheckAll()" required>
-                    <label for="terms1" class="checkbox-label">[필수] 네이버 이용약관</label>
+                    <label for="terms1" class="checkbox-label">[필수] Bizone 이용약관</label>
                     <button class="view-details" onclick="toggleDetails(this)">전체보기</button>
-                    <div class="terms-content">여러분을 환영합니다. 네이버 서비스 및 제품을 이용해 주셔서 감사합니다...</div>
+                    <div class="terms-content">여러분을 환영합니다. Bizone 서비스 및 제품을 이용해 주셔서 감사합니다...</div>
                 </div>
 
                 <div class="terms-item">

@@ -209,7 +209,7 @@ public class MemberController {
         bm.setBm_id(bm_id);
         bm.setBm_pw(req.getParameter("bm_pw"));
         if (mDAO.pwChange(bm)) {
-            req.setAttribute("contentPage", "member/pwChangeSuccess.jsp");
+            req.setAttribute("contentPage", "member/login.jsp");
         } else {
             req.setAttribute("contentPage", "member/login.jsp");
         }
