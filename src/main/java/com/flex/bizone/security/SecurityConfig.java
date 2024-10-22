@@ -63,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .and()
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasAuthority("ADMIN")
-                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/loan-products", "/member/info").authenticated()
+                    .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/api/bizone/getChartDataForDetail**", "/loan-products", "/member/info", "/rank").authenticated()
                     .anyRequest().permitAll()
                     .and()
                 .formLogin()

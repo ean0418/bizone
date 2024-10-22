@@ -42,10 +42,11 @@ public class LoanProductController {
         // API 호출 URL 구성
         String apiUrl = "https://apis.data.go.kr/B553701/LoanProductSearchingInfo/LoanProductSearchingInfo/getLoanProductSearchingInfo";
         String serviceKey = "KXIrRVbtDNFBWxGmRv9lOsyI1M6sliCnAzV8GtqYLdn+kWmu0mtjpRtqWyRdKM27O/zbuY27RYOSXbgAtii7fw==";
-        String encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
+        String encodedServiceKey = "";
+        encodedServiceKey = URLEncoder.encode(serviceKey, StandardCharsets.UTF_8);
 
         // 요청 URL 구성
-        String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=100";
+        String url = apiUrl + "?serviceKey=" + encodedServiceKey + "&pageNo=1&numOfRows=50";
         if (irtCtg != null && !irtCtg.isEmpty()) url += "&IRT_CTG=" + String.join(", ", irtCtg);
         if (usge != null && !usge.isEmpty()) url += String.join(", ", usge);
         if (instCtg != null && !instCtg.isEmpty()) url += "&INST_CTG=" + String.join(", ", instCtg);
@@ -68,7 +69,6 @@ public class LoanProductController {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-
 
         List<Map<String, String>> loanProducts = new ArrayList<>();
 

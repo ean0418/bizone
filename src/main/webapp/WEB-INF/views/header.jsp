@@ -69,12 +69,15 @@
                     <a class="nav-link ms-4" href="${contextPath}/main" style="text-align: left">지도</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
+                    <a class="nav-link ms-4" href="${contextPath}/rank" style="text-align: left">파워랭킹</a>
                 </li>
                 <li class="nav-item">
                     <form method="get" action="<c:url value="/loan-products"/>">
                         <button class="nav-link ms-4" style="text-align: left">마이대출</button>
                     </form>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link ms-4" href="${contextPath}/board" style="text-align: left">게시판</a>
                 </li>
                 <security:authorize access="isAuthenticated()">
                     <li class="nav-item">
@@ -89,9 +92,6 @@
                         <a class="nav-link ms-4" href="${contextPath}/admin/boardManagement" style="text-align: left">게시판관리</a>
                     </li>
                 </security:authorize>
-                <li class="nav-item">
-                    <a class="nav-link ms-4" href="${contextPath}/rank" style="text-align: left">파워랭킹</a>
-                </li>
             </ul>
         </div>
     </div>
