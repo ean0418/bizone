@@ -3,6 +3,8 @@
 <html>
 <head>
     <title>비밀번호 변경</title>
+    <meta name="_csrf" content="${_csrf.token}">
+    <meta name="_csrf_header" content="${_csrf.headerName}">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
@@ -97,6 +99,9 @@
     </style>
 
     <script language="JavaScript">
+        const csrfToken = document.querySelector("meta[name='_csrf']").getAttribute("content")
+        const csrfHeader = document.querySelector("meta[name='_csrf_header']").getAttribute("content")
+
         function checkPwBox() {
             let pw = document.querySelector("#bm_pw").value;
             if (pw === null || pw === "" || pw.length <= 4) {
@@ -133,6 +138,7 @@
                 xhr.open('POST', '/api/getCurrentPW.do', true);
                 xhr.responseType = "json";
                 xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.setRequestHeader("token", csrfToken);
                 xhr.send(JSON.stringify(reqJson));
             });
         });

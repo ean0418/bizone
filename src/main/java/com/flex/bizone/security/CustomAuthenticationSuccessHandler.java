@@ -20,7 +20,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         System.out.println("Authentication 성공: " + authentication.getName());
 
         // 예: 홈 페이지로 리디렉션
-        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_KAKAO"))) {
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("KAKAO"))) {
             response.sendRedirect("/member/fillIn");
         } else {
             response.sendRedirect("/");

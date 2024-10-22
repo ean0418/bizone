@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,8 @@ public class MemberController {
 
     @Autowired
     private MemberDAO mDAO;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // 설명 버튼을 클릭하면 first.jsp로 이동
     @GetMapping("/first")
@@ -108,12 +111,11 @@ public class MemberController {
     }
 
     @GetMapping("/delete")
-    public String memberDelete(HttpServletRequest req, HttpServletResponse res, Principal principal, Authentication auth) throws UnsupportedEncodingException {
+    public String memberDelete(HttpServletRequest req, HttpServletResponse res, Principal principal, Authentication auth, RedirectAttributes rdAttr) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
-        mDAO.delete(req, principal.getName(), res, auth);
-        req.setAttribute("contentPage", "map/map.jsp");
-        return "index";
+        mDAO.delete(req, principal.getName(), res, auth, rdAttr);
+        return "redirect:/";
     }
 
     @PostMapping("/update")
@@ -207,11 +209,12 @@ public class MemberController {
         String bm_id = ((Bizone_member) req.getSession().getAttribute("biz_mem")).getBm_id();
         System.out.println(bm_id);
         bm.setBm_id(bm_id);
-        bm.setBm_pw(req.getParameter("bm_pw"));
+        String hashedPW = passwordEncoder.encode(req.getParameter("bm_pw"));
+        bm.setBm_pw(hashedPW);
         if (mDAO.pwChange(bm)) {
             req.setAttribute("contentPage", "member/login.jsp");
         } else {
-            req.setAttribute("contentPage", "member/login.jsp");
+            return "redirect:/member/changePW";
         }
         return "index";
     }

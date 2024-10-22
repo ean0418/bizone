@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -122,19 +123,19 @@ public class MemberDAO {
         }
     }
 
-    public void delete(HttpServletRequest req, String bm_id, HttpServletResponse res, Authentication authentication) {
+    public void delete(HttpServletRequest req, String bm_id, HttpServletResponse res, Authentication authentication, RedirectAttributes rdAttr) {
         try {
             Bizone_member m = new Bizone_member();
             m.setBm_id(bm_id);
             if (ss.getMapper(MemberMapper.class).deleteMember(m) == 1) {
-                req.setAttribute("r", "탈퇴 성공");
+                rdAttr.addFlashAttribute("r", "탈퇴 성공");
                 new SecurityContextLogoutHandler().logout(req, res, authentication);
             } else {
-                req.setAttribute("r", "이미 탈퇴처리 됨");
+                rdAttr.addFlashAttribute("r", "이미 탈퇴처리 됨");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            req.setAttribute("r", "탈퇴 실패(DB서버)");
+            rdAttr.addFlashAttribute("r", "탈퇴 실패(DB서버)");
         }
     }
 

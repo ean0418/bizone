@@ -99,52 +99,54 @@
         <button type="submit" class="btn btn-primary">조회</button>
     </form>
 
-    <!-- 회원 목록 테이블 -->
-
-    <table class="table table-bordered">
-        <thead class="thead-dark">
-        <tr>
-            <th>회원 ID</th>
-            <th>회원 PW</th>
-            <th>회원 이름</th>
-            <th>회원 별명</th>
-            <th>회원 주소</th>
-            <th>회원 번호</th>
-            <th>회원 생일</th>
-            <th>이메일</th>
-            <th>가입 날짜</th>
-            <th>삭제</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach var="member" items="${members}">
+    <!-- 테이블이 삐져나오지 않도록 수평 스크롤 추가 -->
+    <div style="overflow-x: auto;">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
             <tr>
-                <td>${member.bm_id}</td>
-                <td>${member.bm_pw}</td>
-                <td>${member.bm_name}</td>
-                <td>${member.bm_nickname}</td>
-                <td>${member.bm_address}</td>
-                <td>${member.bm_phoneNum}</td>
-                <td>${member.bm_birthday}</td>
-                <td>${member.bm_mail}</td>
-                <td>${member.bm_signupDate}</td>
-
-                <td>
-                    <form action="${contextPath}/admin/deleteMember" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
-                        <input type="hidden" name="bm_id" value="${member.bm_id}">
-                        <button type="submit" class="btn btn-sm btn-danger">삭제</button>
-                    </form>
-                </td>
+                <th>회원 ID</th>
+                <th>회원 PW</th>
+                <th>회원 이름</th>
+                <th>회원 별명</th>
+                <th>회원 주소</th>
+                <th>회원 번호</th>
+                <th>회원 생일</th>
+                <th>이메일</th>
+                <th>가입 날짜</th>
+                <th>삭제</th>
             </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            <c:forEach var="member" items="${members}">
+                <tr>
+                    <td>${member.bm_id}</td>
+                    <td>****</td>
+                    <td>${member.bm_name}</td>
+                    <td>${member.bm_nickname}</td>
+                    <td>${member.bm_address}</td>
+                    <td>${member.bm_phoneNum}</td>
+                    <td>${member.bm_birthday}</td>
+                    <td>${member.bm_mail}</td>
+                    <td>${member.bm_signupDate}</td>
 
+                    <td>
+                        <form action="${contextPath}/admin/deleteMember" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                            <input type="hidden" name="bm_id" value="${member.bm_id}">
+                            <button type="submit" class="btn btn-sm btn-danger">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
 
     <c:if test="${empty members}">
         <p>조회된 회원이 없습니다.</p>
     </c:if>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

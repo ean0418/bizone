@@ -246,7 +246,7 @@
             <tr>
                 <td colspan="2">
                     <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
-                    <input type="hidden" name="bm_role" value="ROLE_USER">
+                    <input type="hidden" name="bm_role" value="USER">
                     <input name="bm_pw" placeholder="PASSWORD" autocomplete="off"
                            maxlength="10" class="i1" type="password">
                 </td>

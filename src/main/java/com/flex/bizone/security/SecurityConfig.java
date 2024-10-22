@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .ignoringAntMatchers("/api/**", "/loan-products")
                     .and()
                 .authorizeRequests()
-                    .antMatchers("/admin/**").hasAuthority("ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                     .antMatchers("/member/logout", "/board/insert.go", "/board/update.go", "/board/delete", "/loan-products", "/member/info", "/rank").authenticated()
                     .anyRequest().permitAll()
                     .and()
