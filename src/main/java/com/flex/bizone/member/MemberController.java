@@ -3,6 +3,7 @@ package com.flex.bizone.member;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.flex.bizone.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -92,7 +93,14 @@ public class MemberController {
         if (loggedInMember != null) {
             model.addAttribute("member", loggedInMember);
         } else {
-            model.addAttribute("error", "User not found.");
+            Bizone_member m = new Bizone_member();
+            m.setBm_kakao_id(username);
+            loggedInMember = mDAO.findByKakaoID(m);
+            if (loggedInMember != null) {
+                model.addAttribute("member", loggedInMember);
+            } else {
+                model.addAttribute("error", "User not found.");
+            }
         }
 
         req.setAttribute("contentPage", "member/info.jsp");
@@ -112,7 +120,12 @@ public class MemberController {
     public String memberUpdate(HttpServletRequest req, HttpServletResponse res, Principal principal) throws UnsupportedEncodingException {
         req.setCharacterEncoding("UTF-8");
         res.setCharacterEncoding("UTF-8");
-        mDAO.update(req, principal.getName());
+        if (SecurityUtils.hasRole("ROLE_KAKAO")) {
+            System.out.println(principal.getName());
+            mDAO.updateKakao(req, principal.getName());
+        } else {
+            mDAO.update(req, principal.getName());
+        }
         req.setAttribute("contentPage", "map/map.jsp");
         return "index";
     }

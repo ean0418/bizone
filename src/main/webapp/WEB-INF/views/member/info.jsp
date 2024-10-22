@@ -141,7 +141,7 @@
     <div class="info-section">
         <h2 class="section-title">회원 정보</h2>
         <form action="${contextPath}/member/update" name="updateForm" method="post"
-              enctype="multipart/form-data" onsubmit="return updateCheck();">
+               onsubmit="return updateCheck();">
             <table class="info-table">
                 <c:if test="${not empty member}">
                 <tr>

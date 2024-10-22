@@ -8,6 +8,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
+            padding: 0;
         }
 
         h2 {
@@ -90,7 +91,7 @@
         }
     </style>
 </head>
-<body>
+<body id="boardListBody">
 <h2>게시물 목록</h2>
 <div class="btn-container" style="text-align: right;">
     <button class="btn" onclick="location.href='${contextPath}/board/insert.go'">글쓰기</button>

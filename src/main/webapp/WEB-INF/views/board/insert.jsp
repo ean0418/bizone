@@ -5,10 +5,11 @@
   Time: 오후 11:41
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>게시글 작성</title>
   <style>
     @font-face {
@@ -89,6 +90,50 @@
       color: white;
     }
   </style>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+  <script language="JavaScript">
+    console.log("JavaScript Loaded")
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('bb_title').addEventListener('input', function () {
+        console.log("test")
+        console.log(document.getElementById('bb_title').value);
+      })
+    })
+    $(document).ready(function() {
+      let globalIsKakaoLogin;
+      console.log("jQuery Connected")
+
+      $.ajax({
+        url: '/api/auth/status',  // API URL
+        type: 'GET',
+        contentType: 'application/json; charset=UTF-8',
+        dataType: 'json',  // 응답 데이터를 JSON으로 처리
+        success: function(response) {
+          if (response.loggedIn) {
+            // 로그인 상태일 때 처리
+            console.log("Logged in as: " + response.username);
+            console.log("AJAXed Data: " + response.realID)
+            $('#statusMessage').text("Logged in as: " + response.username);
+            globalIsKakaoLogin = response.isKakaoLogin;
+            bm_id = response.realID
+            console.log("Logged in With Kakao: " + globalIsKakaoLogin);
+            if (globalIsKakaoLogin) {
+              $("#bb_bm_id").attr("value", bm_id);
+            }
+          } else {
+            // 비로그인 상태일 때 처리
+            console.log("Not logged in");
+            $('#statusMessage').text("Not logged in");
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX 요청 실패:", error);
+          $('#statusMessage').text("Failed to retrieve login status");
+        }
+      });
+    });
+
+  </script>
 </head>
 <body>
 <div class="container">

@@ -1,6 +1,7 @@
 package com.flex.bizone.board;
 
 import com.flex.bizone.member.Bizone_member;
+import com.flex.bizone.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,9 +12,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.net.Authenticator;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +66,7 @@ public class BoardController {
     @RequestMapping(value = "/board/insert", method = RequestMethod.POST)
     public String insertBoard(Bizone_board board, HttpServletRequest req, RedirectAttributes rdAttr) {
         try {
+
             boardDAO.insertBoard(board, req);
             boardDAO.reorderBoardNumbers(req); // 게시물 번호 재정렬
             rdAttr.addFlashAttribute("successMsg", "게시글이 작성되었습니다.");

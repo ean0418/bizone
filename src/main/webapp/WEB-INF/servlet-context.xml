@@ -2,82 +2,33 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
-       xmlns:jee="http://www.springframework.org/schema/jee"
-       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.1.xsd
-        http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <!-- This tag registers the DefaultAnnotationHandlerMapping and
-         AnnotationMethodHandlerAdapter beans that are required for Spring MVC  -->
+    <!-- Spring MVC 설정 -->
     <mvc:annotation-driven />
-    <bean class="org.springframework.web.filter.CharacterEncodingFilter">
-        <property name="encoding" value="UTF-8" />
-        <property name="forceEncoding" value="true" />
-    </bean>
-    <!-- This tag allows for mapping the DispatcherServlet to "/" -->
     <mvc:default-servlet-handler />
 
-    <!-- Process annotations on registered beans like @Autowired... -->
-    <context:annotation-config/>
-    <!-- 컴포넌트 스캔 -->
-    <context:component-scan base-package="com.flex.bizone" />
-
-    <!-- 추가함-세훈 -->
+    <!-- 정적 리소스 매핑 설정 -->
     <mvc:resources mapping="/resources/**" location="/resources/" />
 
-    <bean id="viewResolver"
-          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <!-- 컴포넌트 스캔 (Controller 및 웹 관련 클래스 검색) -->
+    <context:component-scan base-package="com.flex.bizone" />
+    <context:annotation-config />
+
+    <!-- View Resolver 설정 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/" />
         <property name="suffix" value=".jsp" />
     </bean>
 
+    <!-- JSON 메시지 컨버터 -->
     <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
-
-    <!-- DB 설정파일 로딩 -->
-    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:properties/jdbc.properties</value>
-            </list>
-        </property>
-    </bean>
-
-    <!-- DBMS 설정 (db서버 대기시간 최대 3초) / 학원에서 할 때 jdbc도 같이 바꿔야함!(ip관련) 세훈 -->
-    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${spring.datasource.driver-class-name}"/>
-        <property name="url" value="${spring.datasource.url}"/>
-        <property name="username" value="${spring.datasource.username}"/>
-        <property name="password" value="${spring.datasource.password}"/>
-        <property name="maxWaitMillis" value="3000"/>
-        <property name="poolPreparedStatements" value="true"/>
-        <property name="maxOpenPreparedStatements" value="50"/>
-    </bean>
-
-    <!-- MyBatis 설정 -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="typeAliasesPackage" value="com.flex.bizone" />
-        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
-    </bean>
-
-    <!-- map 읽어와지지 않아(500오류, MapperScan) 추가한 부분 - 세훈 -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.flex.bizone.map" />
-    </bean>
-
-    <!-- sqlSession 취득 (생성자에 인자 넣기) -->
-    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
-        <constructor-arg index="0" ref="sqlSessionFactory"/>
-        <constructor-arg index="1" value="SIMPLE"/>
-    </bean>
 
     <!-- 파일 업로드 설정 -->
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
